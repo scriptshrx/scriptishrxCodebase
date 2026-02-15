@@ -613,7 +613,7 @@ RESTRICTIONS
                                 customerPhone: { type: 'string', description: 'Customer phone number' },
                                 customerName: { type: 'string', description: 'Customer name' },
                                 bookingDate: { type: 'string', description: 'Booking date in ISO format' },
-                                product: { type: 'string', description: 'Product/service booked' },
+                                product: { type: 'string', description: 'Product/service booked/needs or goals of the customer' },
                                 bookingId: { type: 'string', description: 'Booking reference ID' }
                             },
                             required: ['customerEmail', 'customerName', 'bookingDate', 'product']
