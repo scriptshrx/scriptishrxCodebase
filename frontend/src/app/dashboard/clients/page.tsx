@@ -71,7 +71,7 @@ export default function ClientsPage() {
                     const data = await res.json();
                     setClients(data.clients || []);
                 } else {
-                    console.error('Received non-JSON response from API');
+                    console.error('Received a non-JSON response from API');
                 }
             }
         } catch (error) {

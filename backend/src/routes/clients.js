@@ -101,7 +101,7 @@ router.post('/',
                 });
                 return res.status(400).json({
                     success: false,
-                    error: 'Tenant context is missing. Please select an organization or log in again.'
+                    error: 'The Tenant context is missing. Please select an organization or log in again.'
                 });
             }
 
