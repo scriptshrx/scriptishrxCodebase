@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useInboundCalls, deleteInboundCall } from '@/hooks/useInboundCalls';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { Search, Mail, Phone, ChevronLeft, ChevronRight, Trash2, PhoneCall, Loader2, Users } from 'lucide-react';
@@ -29,25 +30,32 @@ export default function LeadsPage() {
 
     useEffect(() => {
         const fetchTeamMembers = async () => {
+            setLoadingLeads(true);
+            let token = localStorage.getItem('token');
             try {
-                const token = localStorage.getItem('token');
-                if (!token) return;
-                const res = await fetch('https://scriptshrxcodebase.onrender.com/api/organization/team', {
-                    headers: { 'Authorization': `Bearer ${token}` }
+                console.log('[Leads] Fetching team members (same as bookings)...');
+                const response = await axios.get('https://scriptshrxcodebase.onrender.com/api/organization/team', {
+                    headers: { Authorization: `Bearer ${token}` }
                 });
-                if (res.ok) {
-                    const data = await res.json();
-                    console.log('Team members response:', data);
-                    console.log('Team members data:', data.team);
-                    if (data.success && data.team) {
-                        setTeamMembers(data.team || []);
-                        if(data.team.length){
-                            setLoadingLeads(false);return;
-                        }
-                    }
+                console.log('[Leads] team-members response', response.data);
+                setTeamMembers(response.data.team || []);
+            } catch (error: any) {
+                console.error('[Leads] ❌ Error fetching team members:', error.message);
+                console.error('[Leads] Status:', error.response?.status);
+
+                // fallback to clients endpoint if team fails
+                try {
+                    console.log('[Leads] Falling back to /api/clients...');
+                    const response = await axios.get('https://scriptshrxcodebase.onrender.com/api/clients', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    console.log('[Leads] clients fallback response', response.data);
+                    setTeamMembers(response.data.clients || []);
+                } catch (fallbackError: any) {
+                    console.error('[Leads] ❌ Fallback also failed:', fallbackError.message);
                 }
-            } catch (error) {
-                console.error('Error fetching team members:', error);
+            } finally {
+                setLoadingLeads(false);
             }
         };
         fetchTeamMembers();
