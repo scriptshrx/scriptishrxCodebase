@@ -157,10 +157,9 @@ export default function LeadsPage() {
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-zinc-50/50 border-b border-zinc-100">
-                                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Caller Information</th>
-                                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Phone Number</th>
-                                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Duration</th>
-                                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Caller Name</th>
+                                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Phone</th>
+                                <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Email</th>
                                 <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider">Call Date</th>
                                 <th className="px-6 py-4 text-xs font-bold text-zinc-500 uppercase tracking-wider text-right">Action</th>
                             </tr>
@@ -169,14 +168,14 @@ export default function LeadsPage() {
                             {inboundLoading ? (
                                 Array.from({ length: 5 }).map((_, i) => (
                                     <tr key={i} className="animate-pulse">
-                                        <td className="px-6 py-6" colSpan={6}>
+                                        <td className="px-6 py-6" colSpan={5}>
                                             <div className="h-12 bg-zinc-100 rounded-lg w-full"></div>
                                         </td>
                                     </tr>
                                 ))
                             ) : inboundCalls.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="px-6 py-20 text-center">
+                                    <td colSpan={5} className="px-6 py-20 text-center">
                                         <div className="flex flex-col items-center justify-center space-y-3">
                                             <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center">
                                                 <PhoneCall className="w-8 h-8 text-zinc-300" />
@@ -202,40 +201,23 @@ export default function LeadsPage() {
                                                     </div>
                                                     <div>
                                                         <p className="font-semibold text-zinc-900">{call.callerName || 'Unknown Lead'}</p>
-                                                        <p className="text-xs text-zinc-500 flex items-center gap-1">
-                                                            <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${call.type === 'inbound' ? 'bg-blue-500' : 'bg-purple-500'}`}></span>
-                                                            {call.type === 'inbound' ? 'Inbound Call' : 'Lead'}
-                                                        </p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2 text-sm text-zinc-600 font-mono">
                                                     <Phone className="w-3.5 h-3.5 text-zinc-400" />
-                                                    {call.callerPhone}
+                                                    {call.callerPhone || '—'}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span className="text-sm text-zinc-600">
-                                                    {call.duration ? `${call.duration}s` : 'N/A'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                    call.status === 'completed'
-                                                        ? 'bg-green-50 text-green-700 border border-green-100'
-                                                        : call.status === 'missed'
-                                                        ? 'bg-yellow-50 text-yellow-700 border border-yellow-100'
-                                                        : 'bg-red-50 text-red-700 border border-red-100'
-                                                }`}>
-                                                    {call.status.charAt(0).toUpperCase() + call.status.slice(1)}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-2 text-sm text-zinc-500">
-                                                    <Phone className="w-3.5 h-3.5 text-zinc-400" />
-                                                    {new Date(call.createdAt).toLocaleDateString()}
+                                                <div className="flex items-center gap-2 text-sm text-zinc-600">
+                                                    <Mail className="w-3.5 h-3.5 text-zinc-400" />
+                                                    {call.callerEmail || '—'}
                                                 </div>
+                                            </td>
+                                            <td className="px-6 py-4 text-zinc-600">
+                                                {call.createdAt ? new Date(call.createdAt).toLocaleDateString() : '—'}
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2">
