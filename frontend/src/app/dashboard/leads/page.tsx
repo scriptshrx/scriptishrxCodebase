@@ -130,7 +130,7 @@ export default function LeadsPage() {
                     }`}
                 >
                     <PhoneCall className="w-4 h-4 inline mr-2" />
-                    Inbound Call Leads ({inboundPagination.total})
+                    Leads ({inboundPagination.total})
                 </button>
                
             </div>
@@ -166,7 +166,7 @@ export default function LeadsPage() {
                                             <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center">
                                                 <PhoneCall className="w-8 h-8 text-zinc-300" />
                                             </div>
-                                            <p className="text-zinc-500 font-medium">No inbound calls yet.</p>
+                                            <p className="text-zinc-500 font-medium">No leads yet.</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -186,10 +186,10 @@ export default function LeadsPage() {
                                                         <PhoneCall className="w-5 h-5" />
                                                     </div>
                                                     <div>
-                                                        <p className="font-semibold text-zinc-900">{call.callerName || 'Unknown Caller'}</p>
+                                                        <p className="font-semibold text-zinc-900">{call.callerName || 'Unknown Lead'}</p>
                                                         <p className="text-xs text-zinc-500 flex items-center gap-1">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-                                                            Inbound Call
+                                                            <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${call.type === 'inbound' ? 'bg-blue-500' : 'bg-purple-500'}`}></span>
+                                                            {call.type === 'inbound' ? 'Inbound Call' : 'Lead'}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -226,9 +226,9 @@ export default function LeadsPage() {
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
                                                         onClick={() => handleCallInbound(call.callerPhone)}
-                                                        disabled={callingId === call.callerPhone}
+                                                        disabled={callingId === call.callerPhone || !call.callerPhone}
                                                         className="p-2 hover:bg-green-100 rounded-lg transition-colors text-zinc-400 hover:text-green-600 disabled:opacity-50"
-                                                        title="Call back"
+                                                        title="Call"
                                                     >
                                                         {callingId === call.callerPhone ? (
                                                             <Loader2 className="w-4 h-4 animate-spin" />
@@ -236,18 +236,20 @@ export default function LeadsPage() {
                                                             <PhoneCall className="w-4 h-4" />
                                                         )}
                                                     </button>
-                                                    <button
-                                                        onClick={() => handleDeleteInbound(call.id)}
-                                                        disabled={deletingId === call.id}
-                                                        className="p-2 hover:bg-red-100 rounded-lg transition-colors text-zinc-400 hover:text-red-600 disabled:opacity-50"
-                                                        title="Delete"
-                                                    >
-                                                        {deletingId === call.id ? (
-                                                            <Loader2 className="w-4 h-4 animate-spin" />
-                                                        ) : (
-                                                            <Trash2 className="w-4 h-4" />
-                                                        )}
-                                                    </button>
+                                                    {call.type === 'inbound' && (
+                                                        <button
+                                                            onClick={() => handleDeleteInbound(call.id)}
+                                                            disabled={deletingId === call.id}
+                                                            className="p-2 hover:bg-red-100 rounded-lg transition-colors text-zinc-400 hover:text-red-600 disabled:opacity-50"
+                                                            title="Delete"
+                                                        >
+                                                            {deletingId === call.id ? (
+                                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                                            ) : (
+                                                                <Trash2 className="w-4 h-4" />
+                                                            )}
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </td>
                                         </motion.tr>
@@ -261,7 +263,7 @@ export default function LeadsPage() {
                 {/* Pagination */}
                 <div className="px-6 py-4 bg-zinc-50/50 border-t border-zinc-100 flex items-center justify-between">
                     <p className="text-sm text-zinc-500 font-medium">
-                        Showing <span className="text-zinc-900">{inboundCalls.length}</span> of <span className="text-zinc-900">{inboundPagination.total}</span> calls
+                        Showing <span className="text-zinc-900">{inboundCalls.length}</span> of <span className="text-zinc-900">{inboundPagination.total}</span> items
                     </p>
 
                     <div className="flex items-center gap-2">

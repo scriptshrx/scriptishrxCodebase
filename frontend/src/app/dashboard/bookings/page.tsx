@@ -60,9 +60,9 @@ export default function BookingsPage() {
     };
 
     const fetchClients = async () => {
+        let token = localStorage.getItem('token');
         try {
             console.log('[Bookings] Fetching clients from team/leads...');
-            const token = localStorage.getItem('token');
             
             // Fetch from the same endpoint as the leads page (Captured Leads)
             const response = await axios.get(`${API_BASE}/api/organization/team`, {

@@ -60,31 +60,74 @@ router.get('/inbound', authenticateToken, verifyTenantAccess, async (req, res) =
         const { page = 1, limit = 20, search = '' } = req.query;
         const skip = (page - 1) * limit;
 
-        const where = {
+        // search condition for inbound calls
+        const inboundWhere = {
             tenantId,
             ...(search && {
-                callerPhone: { contains: search, mode: 'insensitive' }
+                OR: [
+                    { callerPhone: { contains: search, mode: 'insensitive' } },
+                    { callerName: { contains: search, mode: 'insensitive' } }
+                ]
             })
         };
 
-        const [inboundCalls, total] = await Promise.all([
+        // search condition for client leads (people from bookings page)
+        const clientWhere = {
+            tenantId,
+            ...(search && {
+                OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { email: { contains: search, mode: 'insensitive' } },
+                    { phone: { contains: search, mode: 'insensitive' } }
+                ]
+            })
+        };
+
+        // fetch inbound calls and matching clients in parallel
+        const [inboundCalls, totalInbound, clients] = await Promise.all([
             prisma.inboundCall.findMany({
-                where,
-                skip: parseInt(skip),
-                take: parseInt(limit),
+                where: inboundWhere,
                 orderBy: { createdAt: 'desc' }
             }),
-            prisma.inboundCall.count({ where })
+            prisma.inboundCall.count({ where: inboundWhere }),
+            prisma.client.findMany({
+                where: clientWhere,
+                orderBy: { createdAt: 'desc' }
+            })
         ]);
+
+        // convert clients into same shape as inbound calls for display
+        const clientLeads = clients.map(c => ({
+            // prefix id to avoid collisions with inbound calls
+            id: `client-${c.id}`,
+            callerName: c.name,
+            callerPhone: c.phone || c.email || '',
+            duration: null,
+            status: 'Lead',
+            createdAt: c.createdAt,
+            type: 'client'
+        }));
+
+        const inboundWithType = inboundCalls.map(c => ({ ...c, type: 'inbound' }));
+
+        // merge both lists and sort by createdAt descending
+        const combined = [...clientLeads, ...inboundWithType].sort((a, b) => {
+            return new Date(b.createdAt) - new Date(a.createdAt);
+        });
+
+        const total = combined.length;
+        const pageInt = parseInt(page);
+        const limitInt = parseInt(limit);
+        const paged = combined.slice((pageInt - 1) * limitInt, (pageInt - 1) * limitInt + limitInt);
 
         res.json({
             success: true,
-            inboundCalls,
+            inboundCalls: paged,
             pagination: {
                 total,
-                page: parseInt(page),
-                limit: parseInt(limit),
-                totalPages: Math.ceil(total / limit)
+                page: pageInt,
+                limit: limitInt,
+                totalPages: Math.ceil(total / limitInt)
             }
         });
     } catch (error) {
