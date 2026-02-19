@@ -43,7 +43,7 @@ export default function LeadsPage() {
                 console.error('[Leads] ❌ Error fetching team members:', error.message);
                 console.error('[Leads] Status:', error.response?.status);
 
-                // fallback to clients endpoint if team fails
+                // fallback to clients, endpoint if team fails
                 try {
                     console.log('[Leads] Falling back to /api/clients...');
                     const response = await axios.get('https://scriptshrxcodebase.onrender.com/api/clients', {
