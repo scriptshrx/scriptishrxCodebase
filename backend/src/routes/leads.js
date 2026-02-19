@@ -60,31 +60,8 @@ router.get('/inbound', authenticateToken, verifyTenantAccess, async (req, res) =
         const { page = 1, limit = 20, search = '' } = req.query;
         const skip = (page - 1) * limit;
 
-        // search condition for inbound calls
-        const inboundWhere = {
-            tenantId,
-            ...(search && {
-                OR: [
-                    { callerPhone: { contains: search, mode: 'insensitive' } },
-                    { callerName: { contains: search, mode: 'insensitive' } }
-                ]
-            })
-        };
-
-        // search condition for client leads (people from bookings page)
-        const clientWhere = {
-            tenantId,
-            ...(search && {
-                OR: [
-                    { name: { contains: search, mode: 'insensitive' } },
-                    { email: { contains: search, mode: 'insensitive' } },
-                    { phone: { contains: search, mode: 'insensitive' } }
-                ]
-            })
-        };
-
-        // search condition for team members (same as bookings page)
-        const teamWhere = {
+        // only pull team members (users) – same source as bookings page
+        const where = {
             tenantId,
             ...(search && {
                 OR: [
@@ -95,36 +72,17 @@ router.get('/inbound', authenticateToken, verifyTenantAccess, async (req, res) =
             })
         };
 
-        // fetch inbound calls, clients, and team members in parallel
-        const [inboundCalls, totalInbound, clients, users] = await Promise.all([
-            prisma.inboundCall.findMany({
-                where: inboundWhere,
-                orderBy: { createdAt: 'desc' }
-            }),
-            prisma.inboundCall.count({ where: inboundWhere }),
-            prisma.client.findMany({
-                where: clientWhere,
-                orderBy: { createdAt: 'desc' }
-            }),
+        const [users, total] = await Promise.all([
             prisma.user.findMany({
-                where: teamWhere,
+                where,
+                skip: parseInt(skip),
+                take: parseInt(limit),
                 orderBy: { createdAt: 'desc' }
-            })
+            }),
+            prisma.user.count({ where })
         ]);
 
-        // convert clients into same shape as inbound calls for display
-        const clientLeads = clients.map(c => ({
-            id: `client-${c.id}`,
-            callerName: c.name,
-            callerPhone: c.phone || c.email || '',
-            duration: null,
-            status: 'Lead',
-            createdAt: c.createdAt,
-            type: 'client'
-        }));
-
-        // convert team members into lead shape as well
-        const teamLeads = users.map(u => ({
+        const leads = users.map(u => ({
             id: `user-${u.id}`,
             callerName: u.name || u.email || 'Unknown',
             callerPhone: u.phoneNumber || u.email || '',
@@ -134,26 +92,14 @@ router.get('/inbound', authenticateToken, verifyTenantAccess, async (req, res) =
             type: 'client'
         }));
 
-        const inboundWithType = inboundCalls.map(c => ({ ...c, type: 'inbound' }));
-
-        // merge all lead sources and sort by createdAt descending
-        const combined = [...clientLeads, ...teamLeads, ...inboundWithType].sort((a, b) => {
-            return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-
-        const total = combined.length;
-        const pageInt = parseInt(page);
-        const limitInt = parseInt(limit);
-        const paged = combined.slice((pageInt - 1) * limitInt, (pageInt - 1) * limitInt + limitInt);
-
         res.json({
             success: true,
-            inboundCalls: paged,
+            inboundCalls: leads,
             pagination: {
                 total,
-                page: pageInt,
-                limit: limitInt,
-                totalPages: Math.ceil(total / limitInt)
+                page: parseInt(page),
+                limit: parseInt(limit),
+                totalPages: Math.ceil(total / limit)
             }
         });
     } catch (error) {
