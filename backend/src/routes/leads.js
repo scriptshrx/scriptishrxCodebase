@@ -83,8 +83,20 @@ router.get('/inbound', authenticateToken, verifyTenantAccess, async (req, res) =
             })
         };
 
-        // fetch inbound calls and matching clients in parallel
-        const [inboundCalls, totalInbound, clients] = await Promise.all([
+        // search condition for team members (same as bookings page)
+        const teamWhere = {
+            tenantId,
+            ...(search && {
+                OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { email: { contains: search, mode: 'insensitive' } },
+                    { phoneNumber: { contains: search, mode: 'insensitive' } }
+                ]
+            })
+        };
+
+        // fetch inbound calls, clients, and team members in parallel
+        const [inboundCalls, totalInbound, clients, users] = await Promise.all([
             prisma.inboundCall.findMany({
                 where: inboundWhere,
                 orderBy: { createdAt: 'desc' }
@@ -93,12 +105,15 @@ router.get('/inbound', authenticateToken, verifyTenantAccess, async (req, res) =
             prisma.client.findMany({
                 where: clientWhere,
                 orderBy: { createdAt: 'desc' }
+            }),
+            prisma.user.findMany({
+                where: teamWhere,
+                orderBy: { createdAt: 'desc' }
             })
         ]);
 
         // convert clients into same shape as inbound calls for display
         const clientLeads = clients.map(c => ({
-            // prefix id to avoid collisions with inbound calls
             id: `client-${c.id}`,
             callerName: c.name,
             callerPhone: c.phone || c.email || '',
@@ -108,10 +123,21 @@ router.get('/inbound', authenticateToken, verifyTenantAccess, async (req, res) =
             type: 'client'
         }));
 
+        // convert team members into lead shape as well
+        const teamLeads = users.map(u => ({
+            id: `user-${u.id}`,
+            callerName: u.name || u.email || 'Unknown',
+            callerPhone: u.phoneNumber || u.email || '',
+            duration: null,
+            status: 'Lead',
+            createdAt: u.createdAt,
+            type: 'client'
+        }));
+
         const inboundWithType = inboundCalls.map(c => ({ ...c, type: 'inbound' }));
 
-        // merge both lists and sort by createdAt descending
-        const combined = [...clientLeads, ...inboundWithType].sort((a, b) => {
+        // merge all lead sources and sort by createdAt descending
+        const combined = [...clientLeads, ...teamLeads, ...inboundWithType].sort((a, b) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         });
 

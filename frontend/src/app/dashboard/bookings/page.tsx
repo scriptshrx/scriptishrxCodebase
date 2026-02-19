@@ -32,6 +32,10 @@ export default function BookingsPage() {
     const [showAddModal, setShowAddModal] = useState(false);
     const [newBooking, setNewBooking] = useState({ clientId: '', date: '', time: '', purpose: '', meetingLink: '' });
 
+    // loading indicators
+    const [isLoadingBookings, setIsLoadingBookings] = useState(false);
+    const [isLoadingClients, setIsLoadingClients] = useState(false);
+
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
     const showToast = (message: string, type: 'success' | 'error') => setToast({ message, type });
 
@@ -41,6 +45,7 @@ export default function BookingsPage() {
     const [editForm, setEditForm] = useState({ date: '', time: '', purpose: '', status: '', meetingLink: '' });
 
     const fetchBookings = async () => {
+        setIsLoadingBookings(true);
         try {
             console.log('[Bookings] Fetching bookings...');
             const token = localStorage.getItem('token');
@@ -56,10 +61,13 @@ export default function BookingsPage() {
             console.error('[Bookings] ❌ Error:', error.message);
             console.error('[Bookings] Status:', error.response?.status);
             console.error('[Bookings] Data:', error.response?.data);
+        } finally {
+            setIsLoadingBookings(false);
         }
     };
 
     const fetchClients = async () => {
+        setIsLoadingClients(true);
         let token = localStorage.getItem('token');
         try {
             console.log('[Bookings] Fetching clients from team/leads...');
@@ -86,6 +94,8 @@ export default function BookingsPage() {
             } catch (fallbackError: any) {
                 console.error('[Bookings] ❌ Fallback also failed:', fallbackError.message);
             }
+        } finally {
+            setIsLoadingClients(false);
         }
     };
 
@@ -245,7 +255,11 @@ export default function BookingsPage() {
                 </button>
             </div>
 
-            {bookings.length === 0 ? (
+            {isLoadingBookings ? (
+                <div className="flex justify-center py-20">
+                    <span className="text-gray-500">Loading bookings...</span>
+                </div>
+            ) : bookings.length === 0 ? (
                 <EmptyState
                     title="No bookings yet"
                     description="Get started by scheduling your first appointment with a client."

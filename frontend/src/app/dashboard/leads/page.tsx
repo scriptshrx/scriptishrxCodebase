@@ -21,6 +21,13 @@ export default function LeadsPage() {
     const inboundPagination = inboundData?.pagination || { total: 0, totalPages: 1 };
 
     useEffect(() => {
+        if (inboundData) {
+            console.log('[Leads] inboundData:', inboundData);
+            console.log('[Leads] computed inboundCalls length', inboundCalls.length);
+        }
+    }, [inboundData]);
+
+    useEffect(() => {
         const fetchTeamMembers = async () => {
             try {
                 const token = localStorage.getItem('token');
@@ -130,7 +137,7 @@ export default function LeadsPage() {
                     }`}
                 >
                     <PhoneCall className="w-4 h-4 inline mr-2" />
-                    Leads ({inboundPagination.total})
+                    Call Leads ({inboundPagination.total})
                 </button>
                
             </div>
