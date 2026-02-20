@@ -289,7 +289,7 @@ export default function LeadsPage() {
                 {/* Pagination */}
                 <div className="px-6 py-4 bg-zinc-50/50 border-t border-zinc-100 flex items-center justify-between">
                     <p className="text-sm text-zinc-500 font-medium">
-                        Showing <span className="text-zinc-900">{inboundCalls.length}</span> of <span className="text-zinc-900">{inboundPagination.total}</span> items
+                        Showing <span className="text-zinc-900">{inboundCalls.length}</span> of <span className="text-zinc-900">{inboundCalls.length}</span> items
                     </p>
 
                     <div className="flex items-center gap-2">
