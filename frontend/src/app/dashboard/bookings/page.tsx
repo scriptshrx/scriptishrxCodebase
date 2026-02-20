@@ -111,8 +111,8 @@ export default function BookingsPage() {
             console.warn('[Bookings] ⚠️ No token found - cannot fetch data');
         }
         
-        const interval = setInterval(fetchBookings, 10000);
-        return () => clearInterval(interval);
+        //const interval = setInterval(fetchBookings, 10000);
+        //return () => clearInterval(interval);
     }, []);
 
     const handleAddBooking = async () => {
