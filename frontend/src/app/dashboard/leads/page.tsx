@@ -172,7 +172,7 @@ export default function LeadsPage() {
                     }`}
                 >
                     <PhoneCall className="w-4 h-4 inline mr-2" />
-                    Team ({inboundPagination.total})
+                    Team ({inboundCalls?.length})
                 </button>
                
             </div>
@@ -196,7 +196,7 @@ export default function LeadsPage() {
                                 Array.from({ length: 5 }).map((_, i) => (
                                     <tr key={i} className="animate-pulse">
                                         <td className="px-6 py-6" colSpan={5}>
-                                            <div className="h-12 bg-zinc-100 rounded-lg w-full"></div>
+                                            <div className="h-12 bg-zinc-400 rounded-lg w-full"></div>
                                         </td>
                                     </tr>
                                 ))
