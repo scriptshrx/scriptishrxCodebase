@@ -106,7 +106,7 @@ export default function LeadsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Team Leads</h1>
-                    <p className="text-zinc-500 mt-1">Members pulled from the organization team API.</p>
+                    <p className="text-zinc-500 mt-1">Memberss pulled from the organization team API.</p>
                 </div>
 
                 <div className="flex items-center gap-3">
