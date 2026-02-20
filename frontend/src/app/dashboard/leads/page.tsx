@@ -55,6 +55,39 @@ export default function LeadsPage() {
     fetchInboundCalls();
     }, []);
 
+     useEffect(() => {
+        const fetchTeamMembers = async () => {
+            setLoadingLeads(true);
+            let token = localStorage.getItem('token');
+            try {
+                console.log('[Leads] Fetching team members (same as bookings)...');
+                const response = await axios.get('https://scriptshrxcodebase.onrender.com/api/organization/team', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                console.log('[Leads] team-members response', response.data);
+                setTeamMembers(response.data.team || []);
+            } catch (error: any) {
+                console.error('[Leads] ❌ Error fetching team members:', error.message);
+                console.error('[Leads] Status:', error.response?.status);
+
+                // fallback to clients, endpoint if team fails
+                try {
+                    console.log('[Leads] Falling back to /api/clients...');
+                    const response = await axios.get('https://scriptshrxcodebase.onrender.com/api/clients', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    console.log('[Leads] clients fallback response', response.data);
+                    setTeamMembers(response.data.clients || []);
+                } catch (fallbackError: any) {
+                    console.error('[Leads] ❌ Fallback also failed:', fallbackError.message);
+                }
+            } finally {
+                setLoadingLeads(false);
+            }
+        };
+        fetchTeamMembers();
+    }, []);
+
     const handleDeleteInbound = async (id: string) => {
         if (!confirm('Are you sure you want to delete this inbound call record?')) return;
         
@@ -194,20 +227,20 @@ export default function LeadsPage() {
                                                         <PhoneCall className="w-5 h-5" />
                                                     </div>
                                                     <div>
-                                                        <p className="font-semibold text-zinc-900">{call.name || 'Unknown Lead'}</p>
+                                                        <p className="font-semibold text-zinc-900">{call.client?.name || 'Unknown Lead'}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2 text-sm text-zinc-600 font-mono">
                                                     <Phone className="w-3.5 h-3.5 text-zinc-400" />
-                                                    {call.callerPhone || '—'}
+                                                    {call.client?.phone || '—'}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-2 text-sm text-zinc-600">
                                                     <Mail className="w-3.5 h-3.5 text-zinc-400" />
-                                                    {call.email || '—'}
+                                                    {call.client?.email || '—'}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 text-zinc-600">
@@ -216,12 +249,12 @@ export default function LeadsPage() {
                                             <td className="px-6 py-4 text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <button
-                                                        onClick={() => handleCallInbound(call.phone)}
-                                                        disabled={callingId === call.phone || !call.phone}
+                                                        onClick={() => handleCallInbound(call.client?.phone || '')}
+                                                        disabled={callingId === call.client?.phone || !call.client?.phone}
                                                         className="p-2 hover:bg-green-100 rounded-lg transition-colors text-zinc-400 hover:text-green-600 disabled:opacity-50"
                                                         title="Call"
                                                     >
-                                                        {callingId === call.phone ? (
+                                                        {callingId === call.client?.phone ? (
                                                             <Loader2 className="w-4 h-4 animate-spin" />
                                                         ) : (
                                                             <PhoneCall className="w-4 h-4" />
