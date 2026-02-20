@@ -17,7 +17,9 @@ export default function LeadsPage() {
     const[loadingLeads,setLoadingLeads]=useState<boolean>(true);
     const[inboundCalls,setInboundCalls]=useState<any[]>([]);
     
-    const { data: inboundData, isLoading: inboundLoading, refetch: refetchInbound } = useInboundCalls(page, 10, search);
+    const { data: inboundData, isLoading: inboundLoading, refetch: refetchInbound } =
+        useInboundCalls(page, 10, search, { poll: false }); // polling disabled so list only updates on manual refetch
+
 
     //const inboundCalls = inboundData?.inboundCalls || [];
     const inboundPagination = inboundData?.pagination || { total: 0, totalPages: 1 };
