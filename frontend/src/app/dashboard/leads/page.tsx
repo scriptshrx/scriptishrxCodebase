@@ -132,8 +132,8 @@ export default function LeadsPage() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Team Leads</h1>
-                    <p className="text-zinc-500 mt-1">Memberss pulled from the organization team API.</p>
+                    <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">All Leads</h1>
+                    <p className="text-zinc-500 mt-1">Leads captured from invite and voice calls.</p>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -172,7 +172,7 @@ export default function LeadsPage() {
                     }`}
                 >
                     <PhoneCall className="w-4 h-4 inline mr-2" />
-                    Team ({inboundCalls?.length})
+                    Voice Call Leads ({inboundCalls?.length})
                 </button>
                
             </div>
