@@ -111,10 +111,29 @@ router.post('/register', registerLimiter, async (req, res) => {
                 return res.status(400).json({ error: 'Invite has expired' });
             }
 
-            // Use email from the invite, not from request body
-            email = invite.email;
+            // determine which email address should actually be used for the new user
+            // by default we keep the one stored on the invite; however the front end may
+            // have shown the email field if the invite configuration allowed it.  in
+            // that case we honor the value supplied by the user.
+            const wantsEmailOverride =
+                invite.metadata?.fieldsConfig?.email === true;
 
-            // Check if user with this email already exists
+            if (wantsEmailOverride && email) {
+                // if the user typed a different address, update the invite row so that
+                // subsequent resends/cancellations reference the correct e‑mail.
+                if (email !== invite.email) {
+                    await prisma.invite.update({
+                        where: { id: invite.id },
+                        data: { email }
+                    });
+                }
+                // ``email`` already contains the submitted value from the request body
+            } else {
+                // ignore whatever was posted and force the invited address
+                email = invite.email;
+            }
+
+            // Check if a user with the chosen address already exists in the system
             const existingUser = await prisma.user.findUnique({ where: { email } });
             if (existingUser) return res.status(400).json({ error: 'User already exists' });
 
