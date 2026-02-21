@@ -65,7 +65,17 @@ async function sendInviteEmail(email, organizationName, inviteLink, inviterName,
         console.log('✅ Invite email sent successfully to:', email);
         return true;
     } catch (error) {
-        console.error('❌ Failed to send invite email:', error.message);
+        // some errors thrown by the ZeptoMail client are just plain objects
+        // or have no `message` field, which is why the previous log showed
+        // "undefined".  Dump the entire value so we can debug.
+        console.error('❌ Failed to send invite email:', error);
+        if (error && error.message) {
+            console.error('   message:', error.message);
+        }
+        if (error && error.response) {
+            // axios‑style response, log status/text
+            console.error('   response:', error.response.status, error.response.data || error.response.statusText);
+        }
         return false;
     }
 }
