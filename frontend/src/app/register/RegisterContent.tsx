@@ -303,7 +303,7 @@ export default function RegisterContent() {
 
             const payload = {
                 name,
-                email: !isInviteRegistration ? email : undefined, // Email comes from invite token for invite registrations
+                email: !isInviteRegistration ? email :fieldsConfig.email?email: undefined, // Email comes from invite token for invite registrations
                 password: !isInviteRegistration ? password : undefined, // Password not needed for invite registrations
                 phone: fieldsConfig.phone ? phone : undefined,
                 country: fieldsConfig.country ? country : undefined,
@@ -390,7 +390,7 @@ export default function RegisterContent() {
                     </div>
 
                     {/* Email Address - Hidden for invite registration, shown for regular signup */}
-                    {!isInviteRegistration && (
+                    {(!isInviteRegistration || fieldsConfig.email) && (
                         <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
                             <input
