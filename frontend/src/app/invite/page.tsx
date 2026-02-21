@@ -138,10 +138,10 @@ export default function InvitePage() {
         switch (role) {
             case 'ADMIN':
                 return 'bg-red-100 text-red-800 border-red-300';
-            case 'MANAGER':
-                return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-            default:
+            case 'MEMBER':
                 return 'bg-blue-100 text-blue-800 border-blue-300';
+            default:
+                return 'bg-blue-300 text-blue-800 border-blue-300';
         }
     };
 
@@ -211,8 +211,8 @@ export default function InvitePage() {
                                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                                 >
                                     <option value="MEMBER">Member</option>
-                                    <option value="MANAGER">Manager</option>
                                     <option value="ADMIN">Admin</option>
+                                    <option value="SUPER_ADMIN">Super Admin</option>
                                 </select>
                             </div>
                             <div className="flex items-end">
