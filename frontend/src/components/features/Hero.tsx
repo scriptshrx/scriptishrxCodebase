@@ -40,9 +40,9 @@ export const Hero = () => {
                             transition={{ duration: 0.8, delay: 0.1 }}
                             className="text-4xl md:text-5xl lg:text-7xl font-bold text-slate-900 leading-[1.1] md:leading-[1.1]"
                         >
-                            Make The Best <br />
+                            AI-Powered <br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-start to-primary-end">
-                                Business Decisions
+                                Welness Practice Hub for Smarter Care Delivery
                             </span>
                         </motion.h1>
 
