@@ -98,7 +98,7 @@ export default function VoicePage() {
     
     const userString = localStorage.getItem('user');
     if(userString){setUser(JSON.parse(userString));
-      setTenant(JSON.parse(userString).tenant);
+      setTenant(JSON.parse(userString));
     console.log('User is',userString);}
     fetchAgents();
 
