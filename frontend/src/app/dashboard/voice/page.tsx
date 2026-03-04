@@ -42,7 +42,7 @@ type Agent = {
 };
 
 // api helper
-const API_BASE = 'https://scriptshrxcodebase.onrender.com';
+const API_BASE = 'https://scriptishrxcodebase.onrender.com/api';
 
 async function apiFetch(path: string, opts: any = {}) {
   const headers: any = {

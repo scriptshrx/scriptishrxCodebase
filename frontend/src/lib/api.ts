@@ -1,12 +1,13 @@
 import axios from 'axios';
 
 const getBaseUrl = () => {
-
-    return 'https://scriptishrxcodebase.onrender.com';
+    // base host for API calls; add `/api` here so client code can use paths
+    // like `/notifications` without needing to remember the prefix.
+    return 'https://scriptishrxcodebase.onrender.com/api';
 };
 
 const api = axios.create({
-    baseURL: getBaseUrl(),
+    baseURL: getBaseUrl(), // already includes /api
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
