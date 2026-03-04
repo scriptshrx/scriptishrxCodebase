@@ -195,6 +195,7 @@ app.use('/api/notifications', notificationsRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/voice', voiceRouter);
+app.use('/api/voice-agents', require('./routes/voiceAgents')); // new voice agent management
 app.use('/api/marketing', marketingRouter);
 app.use('/api/organization', organizationRouter);
 app.use('/api/services', servicesRouter);

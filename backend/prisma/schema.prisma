@@ -55,6 +55,7 @@ model Tenant {
   customTools      CustomTool[]
   transactions     Transaction[]
   services         Service[]
+  voiceAgents       VoiceAgent[]
 
   @@index([name])
   @@map("tenants")
@@ -343,6 +344,34 @@ model AuditLog {
   @@index([model])
   @@index([createdAt])
   @@map("audit_logs")
+}
+
+// relation added by voice agents feature
+model VoiceAgent {
+  id               String   @id @default(uuid())
+  tenantId         String
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  name             String
+  agentType        String
+  voiceName        String
+  provider         String   @default("retell")
+  providerAgentId  String?
+  phoneNumber      String?
+  status           String   @default("draft")
+
+  prompt           String?
+  promptsJson      Json?
+  llmConfigJson    Json?
+  lastEditedBy     String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([tenantId])
+  @@unique([tenantId, phoneNumber])
+  @@unique([tenantId, providerAgentId])
+  @@map("voice_agents")
 }
 
 model Campaign {
