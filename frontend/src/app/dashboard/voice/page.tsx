@@ -66,6 +66,7 @@ export default function VoicePage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const[user,setUser]=useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<'All' | AgentType>('All');
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
@@ -94,6 +95,11 @@ export default function VoicePage() {
   };
 
   useEffect(() => {
+    
+    const userString = localStorage.getItem('user');
+    if(userString){setUser(JSON.parse(userString));
+      setTenant(JSON.parse(userString).tenant);
+    console.log('User is',userString);}
     fetchAgents();
 
     // fetch tenant details via settings endpoint (user object includes tenant)

@@ -1,0 +1,16 @@
+{
+  "github.copilot.chat.enabled": true,
+  "github.copilot.editor.enableAutoCompletions": false,
+  "github.copilot.enable": {
+    "*": false,
+    "yaml": false,
+    "plaintext": false,
+    "markdown": false,
+    "javascript": false,
+    "typescript": false,
+    "typescriptreact": false,
+    "javascriptreact": false
+  },
+  "editor.inlineSuggest.enabled": false
+}
+
