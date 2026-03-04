@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
+import axios from 'axios';
 import {
   Stethoscope,
   Bot,
@@ -41,17 +42,14 @@ type Agent = {
 };
 
 // api helper
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || '';
-const TENANT_HEADER = process.env.NEXT_PUBLIC_TENANT_ID || '';
+const API_BASE = 'https://scriptshrxcodebase.onrender.com';
 
 async function apiFetch(path: string, opts: any = {}) {
   const headers: any = {
     'Content-Type': 'application/json',
     ...opts.headers
   };
-  if (TENANT_HEADER) {
-    headers['x-tenant-id'] = TENANT_HEADER;
-  }
+
   const res = await fetch(`${API_BASE}${path}`, {
     credentials: 'include',
     ...opts,
@@ -71,6 +69,9 @@ export default function VoicePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<'All' | AgentType>('All');
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
+
+  // tenant details
+  const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
 
   // modal state
   const [modalOpen, setModalOpen] = useState(false);
@@ -94,6 +95,20 @@ export default function VoicePage() {
 
   useEffect(() => {
     fetchAgents();
+
+    // fetch tenant details via settings endpoint (user object includes tenant)
+    (async () => {
+      try {
+        const res = await axios.get(`${API_BASE}/api/settings`, { withCredentials: true });
+        if (res.data && res.data.user && res.data.user.tenant) {
+         console.log('user info', res.data);
+          console.log('tenant info', res.data.user.tenant);
+          setTenant(res.data.user.tenant);
+        }
+    }
+    catch (err) {
+      console.error('fetch tenant error', err);}
+  })();
   }, []);
 
   const filteredAgents = useMemo(() => {
@@ -201,9 +216,9 @@ export default function VoicePage() {
           </div>
           <div className="px-6 mb-6 flex items-center gap-3">
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium">
-              M
+              {tenant ? tenant.name.charAt(0).toUpperCase() : 'T'}
             </div>
-            <span className="truncate">Mark’s Workspace</span>
+            <span className="truncate">{tenant ? `${tenant.name}’s Workspace` : "Tenant's Workspace"}</span>
           </div>
           <nav className="px-4 space-y-1">
             {[
@@ -237,9 +252,9 @@ export default function VoicePage() {
           </div>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium">
-              K
+              {tenant ? tenant.name.charAt(0).toUpperCase() : 'T'}
             </div>
-            <span className="text-sm truncate">kramtelmot@gmail.com</span>
+            <span className="text-sm truncate">{tenant?.email || '—'}</span>
           </div>
         </div>
       </aside>
