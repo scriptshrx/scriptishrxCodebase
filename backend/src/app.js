@@ -24,6 +24,7 @@ const corsOptions = {
             'http://localhost:5000',
             'http://localhost:5001',
             'https://scriptishrx.net',
+            'https://scriptishrx-new.vercel.app',
             'https://www.scriptishrx.net',
             'https://scriptishrxcodebase.onrender.com',
             process.env.FRONTEND_URL
