@@ -22,7 +22,7 @@ export const Hero = () => {
             <div className="container mx-auto px-4 relative z-10">
                 <div className="flex flex-col lg:flex-row items-center gap-16">
 
-                    {/* Left part Content */}
+                    {/* Left Content */}
                     <div className="lg:w-1/2 space-y-8 text-center lg:text-left">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
