@@ -258,7 +258,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Section>
 
                     <Section title="AI CONCIERGE">
-                        <NavItem href="/dashboard/voice" label="Voice Agent" icon={<Phone />} active={pathname === '/dashboard/voice'} />
+                        <NavItem href="/dashboard/voice" label="Voice Agents" icon={<Phone />} active={pathname === '/dashboard/voice'} />
                         <NavItem href="/dashboard/chat" label="Chatbot" icon={<MessageSquare />} active={pathname === '/dashboard/chat'} />
                         <NavItem href="/dashboard/workflows" label="Workflows" icon={<Zap />} active={pathname === '/dashboard/workflows'} />
                     </Section>
