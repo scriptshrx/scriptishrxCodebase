@@ -249,7 +249,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
           <select
             value={llmModel}
             onChange={(e) => setLlmModel(e.target.value)}
-            className="h-8 px-2 border rounded"
+            className="h-8 px-2 bg-blue-100 shadow-sm rounded"
           >
             <option>GPT-4o</option>
             <option>GPT-4o-mini</option>
@@ -258,7 +258,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
           <select
             value={voiceName}
             onChange={(e) => setVoiceName(e.target.value)}
-            className="h-8 px-2 border rounded"
+            className="h-8 px-2 bg-blue-100 shadow-sm rounded"
           >
             <option>Markkio</option>
             <option>Jenny</option>
@@ -268,7 +268,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="h-8 px-2 border rounded"
+            className="h-8 px-2 bg-blue-100 shadow-sm rounded"
           >
             <option>English</option>
             <option>Spanish</option>
