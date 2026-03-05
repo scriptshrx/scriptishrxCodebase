@@ -249,7 +249,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
           <select
             value={llmModel}
             onChange={(e) => setLlmModel(e.target.value)}
-            className="h-8 px-2flex items-center justify-center bg-blue-100/90 shadow-sm rounded"
+            className="h-8 px-2 flex items-center tex-[16px] justify-center bg-blue-100/90 shadow-sm rounded"
           >
             <option>GPT-4o</option>
             <option>GPT-4o-mini</option>
