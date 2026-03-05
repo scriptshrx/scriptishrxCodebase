@@ -81,6 +81,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [callSettings, setCallSettings] = useState({ silenceTimeout: 5, maxDuration: 10 });
   const [postCall, setPostCall] = useState({ enableSummaries: false });
   const [security, setSecurity] = useState({ piiRedaction: false });
+  const[buttonChoice, setButtonChoice]=useState('test-audio')
   const [webhookUrl, setWebhookUrl] = useState("");
 
   const [saving, setSaving] = useState(false);
@@ -354,13 +355,13 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         </div>
 
         {/* right column testing panel */}
-        <div className="w-full md:w-80 p-6 overflow-y-auto">
+        <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
           <div className="border rounded-lg p-4 flex justify-between flex-col items-center">
             <div className="flex gap-2 bg-blue-200">
-              <button className="p-2 text-gray-700 font-bold text-md px-4">
+              <button onClick={()=>setButtonChoice('test-audio')} className={`p-2 text-gray-700 rounded-lg ${buttonChoice=='test-audio'?'bg-blue-600':'bg-gray-800'} font-bold text-sm px-4`}>
                 Test Audio
               </button>
-               <button className="p-2 text-gray-700 font-bold text-md px-4">
+               <button onClick={()=>setButtonChoice('test-llm')} className={`p-2 text-gray-700 rounded-lg ${buttonChoice=='test-llm'?'bg-blue-600':'bg-gray-800'} font-bold text-md px-4`}>
                 Test LLM
               </button>
               <Button size="xs" variant="outline">
