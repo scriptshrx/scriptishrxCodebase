@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { Plus, Phone, X, Bot } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-   import usePathname from 'next/navigation'
    
 
 interface CreateAgentModalProps {
@@ -121,7 +120,8 @@ export default function CreateAgentModal({
 }: CreateAgentModalProps) {
   const router = useRouter();
   const [promptMode, setPromptMode] = useState<PromptMode>("single");
-   const path = usePathname();
+  
+ const path = usePathname();
 
   const handleTemplateSelect = (templateId: TemplateType) => {
     // Close modal
