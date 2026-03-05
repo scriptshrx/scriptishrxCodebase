@@ -90,6 +90,7 @@ export default function VoicePage() {
       }));
       setAgents(list);
     }
+    catch(e){setError('Error fetching:',e)}
   };
 
   useEffect(() => {
