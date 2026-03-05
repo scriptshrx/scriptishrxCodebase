@@ -245,7 +245,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
             Single prompt • Agent ID: {agentId || "Not created yet"}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex-col flex md:flex-row items-center gap-2">
           <select
             value={llmModel}
             onChange={(e) => setLlmModel(e.target.value)}
