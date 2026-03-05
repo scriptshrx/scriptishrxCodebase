@@ -69,7 +69,7 @@ export default function VoicePage() {
   const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const[user,setUser]=useState({});
+  const [user, setUser] = useState<any>({}); // typed loosely to avoid missing property errors
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedType, setSelectedType] = useState<'All' | AgentType>('All');
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
@@ -198,8 +198,9 @@ export default function VoicePage() {
   };
 
   const handleDuplicate = async (agent: Agent) => {
-    const copy = { ...agent, name: `${agent.name} (copy)` };
-    delete copy.id;
+    // remove id by destructuring, avoids TS delete issue
+    const { id, ...rest } = agent as any;
+    const copy = { ...rest, name: `${agent.name} (copy)` } as Partial<Agent>;
     try {
       await apiFetch('/api/voice-agents', { method: 'POST', body: JSON.stringify(copy) });
       await fetchAgents();
