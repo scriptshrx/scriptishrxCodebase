@@ -52,7 +52,14 @@ router.post(
                 status,
                 prompt,
                 promptsJson,
-                llmConfigJson
+                llmConfigJson,
+                // new single-prompt specific
+                mode,
+                welcomeMessage,
+                llmModel,
+                language,
+                template,
+                config
             } = req.body;
 
             if (!name || !agentType || !voiceName) {
@@ -71,6 +78,13 @@ router.post(
                     prompt,
                     promptsJson,
                     llmConfigJson,
+                    mode: mode || 'single',
+                    welcomeMessage,
+                    llmModel,
+                    language,
+                    // store raw template for reference
+                    template,
+                    configJson: config,
                     tenantId
                 }
             });
@@ -131,7 +145,14 @@ router.patch(
                 'status',
                 'prompt',
                 'promptsJson',
-                'llmConfigJson'
+                'llmConfigJson',
+                // single prompt extras
+                'mode',
+                'welcomeMessage',
+                'llmModel',
+                'language',
+                'template',
+                'configJson'
             ];
             const updateData = {};
             allowed.forEach(k => {
@@ -173,6 +194,31 @@ router.delete(
         } catch (error) {
             console.error('[VoiceAgents] delete error', error);
             res.status(500).json({ success: false, error: 'Failed to delete agent' });
+        }
+    }
+);
+
+/**
+ * POST /api/voice-agents/:id/test - simple health/test endpoint
+ */
+router.post(
+    '/:id/test',
+    authenticateToken,
+    verifyTenantAccess,
+    checkPermission('voice_agents', 'read'),
+    async (req, res) => {
+        try {
+            const tenantId = req.scopedTenantId;
+            const { id } = req.params;
+            const agent = await prisma.voiceAgent.findFirst({ where: { id, tenantId } });
+            if (!agent) {
+                return res.status(404).json({ success: false, error: 'Agent not found' });
+            }
+            // placeholder response
+            res.json({ ok: true });
+        } catch (error) {
+            console.error('[VoiceAgents] test error', error);
+            res.status(500).json({ success: false, error: 'Failed to test agent' });
         }
     }
 );

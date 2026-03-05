@@ -360,6 +360,14 @@ model VoiceAgent {
   phoneNumber      String?
   status           String   @default("draft")
 
+  // single-prompt specific
+  mode             String   @default("single")
+  welcomeMessage   String?  @db.Text
+  llmModel         String?  @default("gpt-4o")
+  language         String?  @default("English")
+  template         String?
+  configJson       Json?
+
   prompt           String?
   promptsJson      Json?
   llmConfigJson    Json?
