@@ -23,13 +23,26 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-const TENANT_ID = process.env.NEXT_PUBLIC_TENANT_ID || "";
+const API_BASE = "https://scriptshrxcodebase.onrender.com";
+
+// Get tenant ID from locaLStorage (stored during login/registration)
+function getTenantId(): string {
+  if (typeof window === "undefined") return "";
+  const userString = localStorage.getItem("user");
+  if (!userString) return "";
+  try {
+    const user = JSON.parse(userString);
+    return user.tenantId || user.id || "";
+  } catch {
+    return "";
+  }
+}
 
 async function apiFetch(path: string, opts: any = {}) {
+  const tenantId = getTenantId();
   const headers: any = {
     "Content-Type": "application/json",
-    "x-tenant-id": TENANT_ID,
+    "x-tenant-id": tenantId,
     ...opts.headers,
   };
   const res = await fetch(`${API_BASE}${path}`, {
