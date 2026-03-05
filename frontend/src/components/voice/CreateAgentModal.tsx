@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Phone, X } from "lucide-react";
+import { Plus, Phone, X, Bot } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface CreateAgentModalProps {
@@ -27,7 +27,7 @@ const templates: Template[] = [
     title: "Start from blank",
     subtitle: "Start from blank",
     description: "Start from blank",
-    icon: <Plus className="w-8 h-8 text-gray-400" />
+    icon: <Plus className="w-8 h-8 bg-blue-100 text-blue-400" />
   },
   {
     id: "healthcare_checkin",
@@ -53,20 +53,20 @@ function TemplateCard({
   return (
     <div
       onClick={onClick}
-      className="p-6 bg-white border border-gray-200 rounded-lg hover:border-gray-400 hover:shadow-md transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
+      className="p-6 bg-white border border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-md transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
     >
       {template.icon ? (
         <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
           {template.icon}
         </div>
       ) : (
-        <Phone className="w-6 h-6 text-gray-400" />
+        <Bot className="w-6 h-6 text-blue-400" />
       )}
       <div className="text-center">
-        <div className="font-semibold text-gray-900 text-sm">{template.title}</div>
-        <div className="text-xs text-gray-500 mt-1">{template.subtitle}</div>
+        <div className="font-semibold text-blue-900 text-sm">{template.title}</div>
+        <div className="text-xs text-blue-500 mt-1">{template.subtitle}</div>
       </div>
-      <p className="text-xs text-gray-600 text-center leading-relaxed">
+      <p className="text-xs text-blue-600 text-center leading-relaxed">
         {template.description}
       </p>
     </div>
@@ -88,7 +88,7 @@ function PromptModeSelector({
           onClick={() => onSelect("single")}
           className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-all ${
             selected === "single"
-              ? "bg-gray-900 text-white border border-gray-900"
+              ? "bg-blue-900 text-white border border-gray-900"
               : "bg-white text-gray-900 border border-gray-300 hover:border-gray-400"
           }`}
         >
@@ -98,7 +98,7 @@ function PromptModeSelector({
           onClick={() => onSelect("multi")}
           className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-all ${
             selected === "multi"
-              ? "bg-gray-900 text-white border border-gray-900"
+              ? "bg-blue-900 text-white border border-gray-900"
               : "bg-white text-gray-900 border border-gray-300 hover:border-gray-400"
           }`}
         >
@@ -131,13 +131,13 @@ export default function CreateAgentModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <div className="flex items-center justify-between shadow-xs px-6 py-4 border-b border-gray-200">
           <h2 className="text-xl font-bold text-gray-900">Select Template</h2>
           <button
             onClick={() => onOpenChange(false)}
             className="p-1 hover:bg-gray-100 rounded-full transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-red-500" />
           </button>
         </div>
 
