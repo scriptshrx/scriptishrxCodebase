@@ -287,7 +287,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 h-full overflow-hidden">
         {/* left column */}
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="space-y-4">
