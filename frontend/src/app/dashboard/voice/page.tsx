@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import CreateAgentModal from '@/components/voice/CreateAgentModal';
 
 // types
 
@@ -64,6 +65,8 @@ async function apiFetch(path: string, opts: any = {}) {
 
 export default function VoicePage() {
   const [agents, setAgents] = useState<Agent[]>([]);
+  // tenant details
+  const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const[user,setUser]=useState({});
@@ -71,12 +74,10 @@ export default function VoicePage() {
   const [selectedType, setSelectedType] = useState<'All' | AgentType>('All');
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
 
-  // tenant details
-  const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
-
   // modal state
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'create' | 'edit' | 'assignPhone' | null>(null);
+  const [modalMode, setModalMode] = useState<'edit' | 'assignPhone' | null>(null);
   const [modalAgent, setModalAgent] = useState<Partial<Agent> | null>(null);
   const [rowMenuOpenId, setRowMenuOpenId] = useState<string | null>(null);
 
@@ -139,10 +140,12 @@ export default function VoicePage() {
   }, [agents, searchQuery, selectedType, sortOrder]);
 
   // actions
-  const openCreate = () => {
-    setModalMode('create');
-    setModalAgent({ agentType: 'Single Prompt', provider: 'retell' });
-    setModalOpen(true);
+  const openCreateModal = () => {
+    setCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setCreateModalOpen(false);
   };
 
   const openEdit = (agent: Agent) => {
@@ -166,12 +169,7 @@ export default function VoicePage() {
   const handleSave = async () => {
     if (!modalAgent) return;
     try {
-      if (modalMode === 'create') {
-        await apiFetch('/api/voice-agents', {
-          method: 'POST',
-          body: JSON.stringify(modalAgent)
-        });
-      } else if (modalMode === 'edit' && modalAgent.id) {
+      if (modalMode === 'edit' && modalAgent.id) {
         await apiFetch(`/api/voice-agents/${modalAgent.id}`, {
           method: 'PATCH',
           body: JSON.stringify(modalAgent)
@@ -283,7 +281,7 @@ export default function VoicePage() {
             <p className="text-sm text-gray-500">Manage ScriptishRx voice agents</p>
           </div>
           <div className="relative">
-            <Button onClick={openCreate} className="bg-gray-900 text-white">
+            <Button onClick={openCreateModal} className="bg-gray-900 text-white">
               <Plus className="w-4 h-4 mr-2" />Create Voice Agent <ChevronDown className="w-4 h-4 ml-2" />
             </Button>
           </div>
@@ -435,11 +433,11 @@ export default function VoicePage() {
       </main>
 
       {/* modals */}
+      <CreateAgentModal open={createModalOpen} onOpenChange={setCreateModalOpen} />
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
             <h2 className="text-xl font-bold mb-4">
-              {modalMode === 'create' && 'Create Voice Agent'}
               {modalMode === 'edit' && 'Edit Voice Agent'}
               {modalMode === 'assignPhone' && 'Assign Phone'}
             </h2>
