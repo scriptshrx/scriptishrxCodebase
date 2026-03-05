@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft,
@@ -56,14 +56,8 @@ async function apiFetch(path: string, opts: any = {}) {
   return res.json();
 }
 
-export default function SinglePromptAgentPage() {
+function SinglePromptAgentContent({ template }: { template: "blank" | "healthcare_checkin" | "notification" }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const template = (searchParams.get("template") || "blank") as
-    | "blank"
-    | "healthcare_checkin"
-    | "notification";
 
   const [loading, setLoading] = useState(true);
 
@@ -528,4 +522,22 @@ export default function SinglePromptAgentPage() {
         return null;
     }
   }
+}
+
+function SinglePromptAgentPageContent() {
+  const searchParams = useSearchParams();
+  const template = (searchParams.get("template") || "blank") as
+    | "blank"
+    | "healthcare_checkin"
+    | "notification";
+
+  return <SinglePromptAgentContent template={template} />;
+}
+
+export default function SinglePromptAgentPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-center">Loading...</div>}>
+      <SinglePromptAgentPageContent />
+    </Suspense>
+  );
 }
