@@ -84,6 +84,10 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [postCall, setPostCall] = useState({ enableSummaries: false });
   const [security, setSecurity] = useState({ piiRedaction: false });
   const[buttonChoice, setButtonChoice]=useState('test-call')
+
+
+
+
   const [webhookUrl, setWebhookUrl] = useState("");
 
   const [saving, setSaving] = useState(false);
@@ -102,9 +106,10 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
           );
           break;
         case "appointment":
-          setName("Notification Agent");
+          setName("Appointment Agent");
           setPrompt(
-`You are calling to deliver a notification. First verify the recipient's identity. Deliver the message clearly. Ask if they have any questions. End the call politely.`
+`You are a booking management agent for ScriptishRx company, Check that schedules align with company calendar before booking appointment for a caller. 
+Remember to collect the Name, phone, and email of the customer before booking appointment.`
           );
           setWelcomeMessage(
             "Hi, this is ScriptishRx with an important update for you."
@@ -431,7 +436,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
                 onChange={(e) =>
                   setSpeechSettings((s) => ({ ...s, speed: +e.target.value }))
                 }
-                className="w-full"
+                className={`w-full ${speechSettings.speed<30?'accent-black/90':speechSettings.speed<50?'accent-blue-600':'accent-red-500'}`}
               />
             </div>
             <div>
