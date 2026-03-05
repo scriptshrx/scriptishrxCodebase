@@ -23,6 +23,7 @@ interface Template {
 
 const templates: Template[] = [
   {
+    
     id: "blank",
     title: "Start from blank",
     subtitle: "Start from blank",
@@ -45,15 +46,17 @@ const templates: Template[] = [
 
 function TemplateCard({
   template,
+  index,
   onClick
 }: {
   template: Template;
+  index:Number;
   onClick: () => void;
 }) {
   return (
     <div
       onClick={onClick}
-      className="p-6 bg-blue-50 border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
+      className="p-6 bg-blue-50 relative border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
     >
       {template.icon ? (
         <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -62,6 +65,7 @@ function TemplateCard({
       ) : (
         <Bot className="w-6 h-6 text-blue-600" />
       )}
+      <div className="items-center flex justify-center text-sm text-blue-500 border border-blue-400 h-8 w-8 rounded-full absolute top-4 right-4">{index}</div>
       <div className="text-center">
         <div className="font-semibold text-gray-600 text-sm">{template.title}</div>
         <div className="text-xs text-blue-600 mt-1">{template.subtitle}</div>
@@ -156,9 +160,10 @@ export default function CreateAgentModal({
           {/* Main Panel - Cards Grid */}
           <div className="flex-1 p-6 overflow-y-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {templates.map(template => (
+              {templates.map((template,i) => (
                 <TemplateCard
                   key={template.id}
+                  index={i}
                   template={template}
                   onClick={() => handleTemplateSelect(template.id)}
                 />
