@@ -356,17 +356,17 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
 
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
-          <div className="border rounded-lg p-4 flex justify-between flex-col items-center">
-            <div className="flex gap-2 bg-blue-200">
-              <button onClick={()=>setButtonChoice('test-audio')} className={`p-2 text-gray-700 rounded-lg ${buttonChoice=='test-audio'?'bg-blue-600':'bg-gray-800'} font-bold text-sm px-4`}>
+          <div className="border rounded-lg p-4 h-full flex justify-between flex-col items-center">
+            <div className="flex gap-2 p-[1px] bg-gray-200">
+              <button onClick={()=>setButtonChoice('test-audio')} className={`p-[4px] text-gray-700 rounded-lg ${buttonChoice=='test-audio'?'bg-blue-600':'bg-gray-800'} font-bold text-[12px] px-[8px]`}>
                 Test Audio
               </button>
-               <button onClick={()=>setButtonChoice('test-llm')} className={`p-2 text-gray-700 rounded-lg ${buttonChoice=='test-llm'?'bg-blue-600':'bg-gray-800'} font-bold text-md px-4`}>
+               <button onClick={()=>setButtonChoice('test-llm')} className={`p-[4px] text-gray-700 rounded-lg ${buttonChoice=='test-llm'?'bg-blue-600':'bg-gray-800'} font-bold text-[12px] px-[8px]`}>
                 Test LLM
               </button>
-              <Button size="xs" variant="outline">
+              <button className="p-[4px] flex items-center justify-center">
                 <Codepen className="w-4 h-4" />
-              </Button>
+              </button>
             </div>
             <Mic className="w-12 h-12 text-gray-400" />
             <div className="text-gray-600">Test your agent</div>
