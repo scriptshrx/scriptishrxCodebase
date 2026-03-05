@@ -96,27 +96,15 @@ export default function VoicePage() {
   };
 
   useEffect(() => {
-    
     const userString = localStorage.getItem('user');
-    if(userString){setUser(JSON.parse(userString));
-      setTenant(JSON.parse(userString));
-    console.log('User is',userString);}
-    fetchAgents();
-
-    // fetch tenant details via settings endpoint (user object includes tenant)
-    (async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/api/settings`, { withCredentials: true });
-        if (res.data && res.data.user && res.data.user.tenant) {
-         console.log('user info', res.data);
-          console.log('tenant info', res.data.user.tenant);
-          setTenant(res.data.user.tenant);
-        }
+    if(userString){
+      const userData = JSON.parse(userString);
+      setUser(userData);
+      setTenant(userData);
+      console.log('User is', userString);
     }
-    catch (err) {
-      console.error('fetch tenant error', err);}
-  })();
-  }, [user]);
+    fetchAgents();
+  }, []);
 
   const filteredAgents = useMemo(() => {
     let arr = [...agents];
