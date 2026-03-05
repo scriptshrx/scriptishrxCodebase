@@ -246,7 +246,7 @@ export default function SinglePromptAgentPage() {
           >
             <option>Markkio</option>
             <option>Jenny</option>
-             <option>Jenny</option>
+             <option>Gillian</option>
             <option>Default</option>
           </select>
           <select
