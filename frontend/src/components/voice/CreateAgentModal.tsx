@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, Phone, X, Bot } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+   import usePathname from 'next/navigation'
+   
 
 interface CreateAgentModalProps {
   open: boolean;
@@ -119,11 +121,14 @@ export default function CreateAgentModal({
 }: CreateAgentModalProps) {
   const router = useRouter();
   const [promptMode, setPromptMode] = useState<PromptMode>("single");
+   const path = usePathname();
 
   const handleTemplateSelect = (templateId: TemplateType) => {
     // Close modal
     onOpenChange(false);
-    
+ 
+ 
+    console.log('Current path is',path);
     // Route based on prompt mode and template
     const route = `/voice/new/${promptMode}?template=${templateId}`;
     router.push(route);
@@ -138,7 +143,7 @@ export default function CreateAgentModal({
       onClick={(e)=>e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between shadow-xs px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-blue-700">Select Template</h2>
+          <h2 className="text-xl font-bold text-blue-700">Create or Use Template</h2>
           <button
             onClick={() => onOpenChange(false)}
             className="p-1 hover:bg-gray-100 rounded-full transition-colors"
