@@ -221,9 +221,12 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
               <Input
                 ref={titleInputRef}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onKeyDown={(e)=>{if(e.key==='Enter')setShowTitleInput(false)}}
+                onChange={(e) => {setName(e.target.value);
+              
+                }}
                 onBlur={() => setShowTitleInput(false)}
-                className="w-full"
+                className="w-full text-gray-500"
               />
             ) : (
               <h1 className="text-xl font-bold truncate">{name}</h1>
@@ -318,7 +321,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         </div>
 
         {/* middle column settings list */}
-        <div className="w-80 border-l border-r border-gray-200 overflow-y-auto">
+        <div className="w-full md:w-80 border-l border-r rounded-md shadow-md border-gray-200 overflow-y-auto">
           <nav className="space-y-1 p-4">
             {[
               { name: "Functions", icon: Code, key: "functions" },
@@ -351,16 +354,16 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         </div>
 
         {/* right column testing panel */}
-        <div className="w-80 p-6 overflow-y-auto">
-          <div className="border rounded-lg p-4 flex flex-col items-center gap-4">
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" disabled>
+        <div className="w-full md:w-80 p-6 overflow-y-auto">
+          <div className="border rounded-lg p-4 flex justify-between flex-col items-center">
+            <div className="flex gap-2 bg-blue-200">
+              <button className="p-2 text-gray-700 font-bold text-md px-4">
                 Test Audio
-              </Button>
-              <Button size="sm" variant="outline" disabled>
+              </button>
+               <button className="p-2 text-gray-700 font-bold text-md px-4">
                 Test LLM
-              </Button>
-              <Button size="sm" variant="outline">
+              </button>
+              <Button size="xs" variant="outline">
                 <Codepen className="w-4 h-4" />
               </Button>
             </div>
@@ -378,7 +381,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
       </div>
 
       {error && (
-        <div className="p-4 bg-red-100 text-red-800">{error}</div>
+        <div className="fixed top-20 left-20 p-4 bg-red-100 text-red-800">{error}</div>
       )}
     </div>
   );
