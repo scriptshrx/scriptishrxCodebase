@@ -351,7 +351,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
               <div className="mt-2 text-xs text-gray-500">
                 Detected variables: {dynamicVariables.join(", ")}
               </div>
-            )
+            )}
             <p className="text-xs text-gray-500">
               {'Use {{}} to add variables. (Learn more)'}
             </p>
