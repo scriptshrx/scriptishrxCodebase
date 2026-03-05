@@ -14,7 +14,9 @@ import {
   Shield,
   Link as LinkIcon,
   Play,
-  Codepen
+  Codepen,
+  PhoneOutgoing,
+  MessageCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -81,7 +83,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [callSettings, setCallSettings] = useState({ silenceTimeout: 5, maxDuration: 10 });
   const [postCall, setPostCall] = useState({ enableSummaries: false });
   const [security, setSecurity] = useState({ piiRedaction: false });
-  const[buttonChoice, setButtonChoice]=useState('test-audio')
+  const[buttonChoice, setButtonChoice]=useState('test-call')
   const [webhookUrl, setWebhookUrl] = useState("");
 
   const [saving, setSaving] = useState(false);
@@ -356,13 +358,15 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
 
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
-          <div className="border rounded-lg p-4 h-full flex justify-between flex-col items-center">
-            <div className="flex gap-2 p-[1px] bg-gray-200">
-              <button onClick={()=>setButtonChoice('test-audio')} className={`p-[4px] text-gray-700 rounded-lg ${buttonChoice=='test-audio'?'bg-blue-600':'bg-gray-800'} font-bold text-[12px] px-[8px]`}>
-                Test Audio
+          <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center">
+            <div className="flex gap-2 p-[1px] bg-gray-200 rounded-lg">
+              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] text-gray-700 rounded-lg ${buttonChoice=='test-audio'?'bg-blue-600':'bg-gray-800'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
+                <PhoneOutgoing className="w-3 h-3" />
+                Test Call
               </button>
-               <button onClick={()=>setButtonChoice('test-llm')} className={`p-[4px] text-gray-700 rounded-lg ${buttonChoice=='test-llm'?'bg-blue-600':'bg-gray-800'} font-bold text-[12px] px-[8px]`}>
-                Test LLM
+               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] text-gray-700 rounded-lg ${buttonChoice=='test-llm'?'bg-blue-600':'bg-gray-800'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
+                <MessageCircle className="w-3 h-3" />
+                Test Chat
               </button>
               <button className="p-[4px] flex items-center justify-center">
                 <Codepen className="w-4 h-4" />
