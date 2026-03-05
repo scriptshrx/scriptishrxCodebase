@@ -1,9 +1,5 @@
 "use client";
 
-// this page uses client-only hooks (router, searchParams) and should
-// never be prerendered; force dynamic to avoid build-time errors
-export const dynamic = "force-dynamic";
-
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -23,6 +19,9 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
+// Force dynamic rendering to prevent prerender errors with client-only hooks
+export const dynamic = "force-dynamic";
+
 const API_BASE = "https://scriptshrxcodebase.onrender.com";
 
 // Get tenant ID from locaLStorage (stored during login/registration)
@@ -32,7 +31,7 @@ function getTenantId(): string {
   if (!userString) return "";
   try {
     const user = JSON.parse(userString);
-    return user.tenantId || user.id || "";
+    return user.tenantId;
   } catch {
     return "";
   }
