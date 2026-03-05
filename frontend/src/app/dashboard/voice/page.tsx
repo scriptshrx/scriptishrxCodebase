@@ -214,7 +214,7 @@ export default function VoicePage() {
   return (
     user?.email!=='ezehmark@gmail.com'?
     <div className='h-full w-full items-center justify-center bg-gray-300 flex'>
-      <div className='flex flex-col gap-4'>
+      <div className='flex items-center justify-center flex-col gap-4'>
         <div className='h-10 w-10 rounded-full border border-2 border-t-transparent animate-spin'></div>
           <div className='text-gray-900 font-bold text-xl'>Development Ongoing, Please Wait</div>
         </div>
