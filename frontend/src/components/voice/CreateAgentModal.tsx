@@ -53,20 +53,20 @@ function TemplateCard({
   return (
     <div
       onClick={onClick}
-      className="p-6 bg-white border border-gray-200 rounded-lg hover:border-blue-400 hover:shadow-md transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
+      className="p-6 bg-blue-50 border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
     >
       {template.icon ? (
-        <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
           {template.icon}
         </div>
       ) : (
-        <Bot className="w-6 h-6 text-blue-400" />
+        <Bot className="w-6 h-6 text-blue-600" />
       )}
       <div className="text-center">
-        <div className="font-semibold text-blue-900 text-sm">{template.title}</div>
-        <div className="text-xs text-blue-500 mt-1">{template.subtitle}</div>
+        <div className="font-semibold text-blue-800 text-sm">{template.title}</div>
+        <div className="text-xs text-blue-600 mt-1">{template.subtitle}</div>
       </div>
-      <p className="text-xs text-blue-600 text-center leading-relaxed">
+      <p className="text-xs text-blue-700 text-center leading-relaxed">
         {template.description}
       </p>
     </div>
@@ -132,7 +132,7 @@ export default function CreateAgentModal({
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between shadow-xs px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">Select Template</h2>
+          <h2 className="text-xl font-bold text-blue-900">Select Template</h2>
           <button
             onClick={() => onOpenChange(false)}
             className="p-1 hover:bg-gray-100 rounded-full transition-colors"
