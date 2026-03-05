@@ -43,7 +43,7 @@ const corsOptions = {
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-Id', 'Accept'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Request-Id', 'Accept', 'x-tenant-id'],
     exposedHeaders: ['Content-Length', 'X-JSON-Response-Length'],
     optionsSuccessStatus: 200,
     maxAge: 3600
@@ -57,7 +57,7 @@ app.use((req, res, next) => {
         console.log(`[Preflight] OPTIONS ${req.url} from ${req.headers.origin}`);
         res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD');
-        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Request-Id, Accept');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Request-Id, Accept, x-tenant-id');
         res.header('Access-Control-Allow-Credentials', 'true');
         return res.sendStatus(200);
     }
