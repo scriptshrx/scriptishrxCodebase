@@ -211,7 +211,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   return (
     <div className="flex flex-col h-full">
       {/* header */}
-      <header className="sticky top-0 bg-white z-20 flex items-center justify-between px-6 py-3 shadow">
+      <header className="sticky top-0 right-0 bg-white z-20 flex items-center justify-between px-6 py-3 shadow">
         <button
           onClick={() => router.back()}
           className="p-2 rounded hover:bg-gray-100"
@@ -287,7 +287,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         </div>
       </header>
 
-      <div className="flex-col w-full md:flex h-full overflow-hidden">
+      <div className="flex flex-col w-full md:flex-row h-full overflow-hidden">
         {/* left column */}
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="space-y-4">
