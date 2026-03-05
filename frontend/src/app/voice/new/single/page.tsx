@@ -428,16 +428,19 @@ Remember to collect the Name, phone, and email of the customer before booking ap
           <div className="space-y-4">
             <div>
               <label className="text-xs font-medium">Voice speed</label>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={speechSettings.speed}
-                onChange={(e) =>
-                  setSpeechSettings((s) => ({ ...s, speed: +e.target.value }))
-                }
-                className={`w-full ${speechSettings.speed<30?'accent-black/90':speechSettings.speed<50?'accent-blue-600':'accent-red-500'}`}
-              />
+            <input
+  type="range"
+  min={0}
+  max={100}
+  value={speechSettings.speed}
+  onChange={(e) =>
+    setSpeechSettings((s) => ({ ...s, speed: +e.target.value }))
+  }
+  style={{
+    background: `linear-gradient(to right, #4f46e5 ${speechSettings.speed}%, #e5e7eb ${speechSettings.speed}%)`
+  }}
+  className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+/>
             </div>
             <div>
               <label className="text-xs font-medium">
@@ -454,7 +457,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
                     sensitivity: +e.target.value,
                   }))
                 }
-                className="w-full"
+                className={`linear-gradient(to right, #4f46e5 ${speechSettings.sensitivity}%, #e5e7eb ${speechSettings.sensitivity}%)`}
               />
             </div>
           </div>
