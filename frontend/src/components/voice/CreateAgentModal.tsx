@@ -33,15 +33,15 @@ const templates: Template[] = [
   },
   {
     id: "healthcare_checkin",
-    title: "Healthcare Check-In",
-    subtitle: "Transfer call",
+    title: "Wellness Agent",
+    subtitle: "Address wellness challlenges from patients",
     description: "Ask questions to gather information, can transfer call."
   },
   {
-    id: "notification",
-    title: "Notification",
-    subtitle: "Then end the call",
-    description: "After giving the notification, end the call."
+    id: "appointment",
+    title: "Appointment Agent",
+    subtitle: "Books callers, as per company schedules",
+    description: "Check that schedules align with company calendar before booking."
   }
 ];
 

@@ -93,15 +93,15 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
     const init = () => {
       switch (template) {
         case "healthcare_checkin":
-          setName("Healthcare Check-In");
+          setName("Wellness Agent");
           setPrompt(
-`You are calling a patient for a health check-in. Greet them, confirm their name and date of birth, ask about symptoms and severity, inquire about allergies and medications. If you detect any emergency signs, advise them to seek emergency services. Offer to transfer to a human if necessary.`
+`You are a wellnes or health voice agent. Greet the patient in a empathic way, confirm their name and date of birth, ask about symptoms and severity, inquire about allergies and medications. If you detect any emergency signs, advise them to seek emergency services. Offer to transfer to a human if necessary.`
           );
           setWelcomeMessage(
-            "Hi, this is ScriptishRx assistant calling for a quick health check-in. How are you feeling today?"
+            "Hi, this is ScriptishRx Wellness voice agent calling for a quick health check-in. How are you feeling today?"
           );
           break;
-        case "notification":
+        case "appointment":
           setName("Notification Agent");
           setPrompt(
 `You are calling to deliver a notification. First verify the recipient's identity. Deliver the message clearly. Ask if they have any questions. End the call politely.`
