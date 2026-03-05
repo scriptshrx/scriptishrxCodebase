@@ -115,7 +115,7 @@ export default function VoicePage() {
     catch (err) {
       console.error('fetch tenant error', err);}
   })();
-  }, []);
+  }, [user]);
 
   const filteredAgents = useMemo(() => {
     let arr = [...agents];
@@ -212,6 +212,16 @@ export default function VoicePage() {
 
   // render
   return (
+    user?.email!=='ezehmark@gmail.com'?
+    <div className='h-full w-full items-center justify-center bg-gray-300 flex'>
+      <div className='flex flex-col gap-4'>
+        <div className='h-10 w-10 rounded-full border border-4 border-t-transparent animate-spin'>
+          <div className='text-gray-900 font-bold text-xl'>Development Ongoing, Please Wait</div>
+        </div>
+      </div>
+
+    </div>
+    :
     <div className="flex min-h-screen bg-gray-50 text-gray-800">
       {/* sidebar (same as before) */}
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between">
@@ -224,7 +234,7 @@ export default function VoicePage() {
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium">
               {tenant ? tenant.name.charAt(0).toUpperCase() : 'T'}
             </div>
-            <span className="truncate">{tenant ? `${tenant.name}’s Workspace` : "Tenant's Workspace"}</span>
+            <span className="truncate">{tenant ? `${tenant.name.slice(0,8)}’s Workspace` : "Tenant's Workspace"}</span>
           </div>
           <nav className="px-4 space-y-1">
             {[
