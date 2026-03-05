@@ -1,5 +1,9 @@
 "use client";
 
+// this page uses client-only hooks (router, searchParams) and should
+// never be prerendered; force dynamic to avoid build-time errors
+export const dynamic = "force-dynamic";
+
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
