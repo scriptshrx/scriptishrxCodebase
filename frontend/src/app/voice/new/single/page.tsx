@@ -287,7 +287,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         </div>
       </header>
 
-      <div className="flex flex-1 h-full overflow-hidden">
+      <div className="flex w-full md:flex-col h-full overflow-hidden">
         {/* left column */}
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="space-y-4">
@@ -357,14 +357,14 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         </div>
 
         {/* right column testing panel */}
-        <div className="w-full md:w-80 p-6 h-50 bg-red-400 md:h-full overflow-y-auto">
+        <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
           <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center">
             <div className="flex gap-2 p-[2px] bg-gray-200 rounded-lg">
-              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] text-gray-200 rounded-lg ${buttonChoice=='test-call'?'bg-blue-800':'bg-gray-800'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
+              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] text-gray-200 rounded-lg ${buttonChoice=='test-call'?'bg-blue-800':'bg-gray-300'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
                 <PhoneOutgoing className="w-3 h-3" />
                 Test Call
               </button>
-               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] text-gray-200 rounded-lg ${buttonChoice=='test-chat'?'bg-blue-800':'bg-gray-800'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
+               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] text-gray-200 rounded-lg ${buttonChoice=='test-chat'?'bg-blue-800':'bg-gray-300'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
                 <MessageCircle className="w-3 h-3" />
                 Test Chat
               </button>
