@@ -172,7 +172,7 @@ export default function VoicePage() {
         await apiFetch(`/api/voice-agents/${modalAgent.id}`, {
           method: 'PATCH',
           body: JSON.stringify(patchBody)
-          body: JSON.stringify({ phoneNumber: modalAgent.phoneNumber })
+    
         });
       }
       await fetchAgents();
