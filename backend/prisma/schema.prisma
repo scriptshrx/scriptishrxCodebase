@@ -348,37 +348,21 @@ model AuditLog {
 
 // relation added by voice agents feature
 model VoiceAgent {
-  id               String   @id @default(uuid())
-  tenantId         String
-  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  tenantId   String
 
-  name             String
-  agentType        String
-  voiceName        String
-  provider         String   @default("retell")
-  providerAgentId  String?
-  phoneNumber      String?
-  status           String   @default("draft")
+  name       String
+  mode       String   @default("single") // single | multi
+  agentType  String   @default("Single Prompt")
 
-  // single-prompt specific
-  mode             String   @default("single")
-  welcomeMessage   String?  @db.Text
-  llmModel         String?  @default("gpt-4o")
-  language         String?  @default("English")
-  template         String?
-  configJson       Json?
+  agentConfig Json
 
-  prompt           String?
-  promptsJson      Json?
-  llmConfigJson    Json?
-  lastEditedBy     String?
+  status     String   @default("draft")
 
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@index([tenantId])
-  @@unique([tenantId, phoneNumber])
-  @@unique([tenantId, providerAgentId])
   @@map("voice_agents")
 }
 

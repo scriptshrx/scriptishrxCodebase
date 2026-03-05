@@ -70,8 +70,11 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [welcomeMessage, setWelcomeMessage] = useState("");
   const [welcomeMode, setWelcomeMode] = useState("ai");
   const [llmModel, setLlmModel] = useState("GPT-4o");
-  const [voiceName, setVoiceName] = useState("Myra");
+  // voiceId represents agentConfig.voice.voice_id
+  const [voiceId, setVoiceId] = useState("Myra");
   const [language, setLanguage] = useState("English");
+  // dynamic variables detected in prompt ({{var}} syntax)
+  const [dynamicVariables, setDynamicVariables] = useState<string[]>([]);
 
   const [showTitleInput, setShowTitleInput] = useState(false);
   const titleInputRef = useRef<HTMLInputElement>(null);
@@ -98,19 +101,19 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
       switch (template) {
         case "healthcare_checkin":
           setName("Wellness Agent");
-          setPrompt(
-`You are a wellnes or health voice agent. Greet the patient in a empathic way, confirm their name and date of birth, ask about symptoms and severity, inquire about allergies and medications. If you detect any emergency signs, advise them to seek emergency services. Offer to transfer to a human if necessary.`
-          );
+          const hcPrompt = `You are a wellnes or health voice agent. Greet the patient in a empathic way, confirm their name and date of birth, ask about symptoms and severity, inquire about allergies and medications. If you detect any emergency signs, advise them to seek emergency services. Offer to transfer to a human if necessary.`;
+          setPrompt(hcPrompt);
+          setDynamicVariables(Array.from(new Set(Array.from(hcPrompt.matchAll(/\{\{(.*?)\}\}/g)).map(m => m[1]))));
           setWelcomeMessage(
             "Hi, this is ScriptishRx Wellness voice agent calling for a quick health check-in. How are you feeling today?"
           );
           break;
         case "appointment":
           setName("Appointment Agent");
-          setPrompt(
-`You are a booking management agent for ScriptishRx company, Check that schedules align with company calendar before booking appointment for a caller. 
-Remember to collect the Name, phone, and email of the customer before booking appointment.`
-          );
+          const apPrompt = `You are a booking management agent for ScriptishRx company, Check that schedules align with company calendar before booking appointment for a caller. 
+Remember to collect the Name, phone, and email of the customer before booking appointment.`;
+          setPrompt(apPrompt);
+          setDynamicVariables(Array.from(new Set(Array.from(apPrompt.matchAll(/\{\{(.*?)\}\}/g)).map(m => m[1]))));
           setWelcomeMessage(
             "Hi, this is ScriptishRx with an important update for you."
           );
@@ -118,6 +121,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
         default:
           setName("New Single Prompt Agent");
           setPrompt("");
+          setDynamicVariables([]);
           setWelcomeMessage("");
       }
       setLoading(false);
@@ -135,24 +139,43 @@ Remember to collect the Name, phone, and email of the customer before booking ap
     setSaving(true);
     setError("");
     try {
+      // construct agentConfig object according to spec
+      const agentConfig: any = {
+        prompt: {
+          system_prompt: prompt,
+          welcome_message: welcomeMessage,
+        },
+        voice: {
+          provider: "elevenlabs",
+          voice_id: voiceId,
+          speed: 1,
+        },
+        llm: {
+          provider: "openai",
+          model: llmModel,
+          temperature: 0.2,
+        },
+        speech: {
+          stt_provider: "deepgram",
+          model: "nova-2",
+          language,
+        },
+        call_settings: {
+          max_call_duration_seconds: callSettings.maxDuration * 60,
+          silence_timeout_seconds: callSettings.silenceTimeout,
+          interruption_sensitivity: speechSettings.sensitivity / 100,
+        },
+        functions: functionsList,
+        webhooks: { url: webhookUrl },
+        dynamic_variables: dynamicVariables,
+      };
+
       const body = {
         agentType: "Single Prompt",
         mode: "single",
         name,
-        prompt,
-        welcomeMessage,
-        voiceName,
-        llmModel,
-        language,
         template,
-        config: {
-          functions: functionsList,
-          speech: speechSettings,
-          callSettings,
-          postCall,
-          security,
-          webhook: { url: webhookUrl },
-        },
+        agentConfig,
       };
       const res = await apiFetch(`/api/voice-agents`, {
         method: "POST",
@@ -172,21 +195,37 @@ Remember to collect the Name, phone, and email of the customer before booking ap
     setSaving(true);
     setError("");
     try {
-      const body: any = {};
-      body.name = name;
-      body.prompt = prompt;
-      body.welcomeMessage = welcomeMessage;
-      body.voiceName = voiceName;
-      body.llmModel = llmModel;
-      body.language = language;
-      body.config = {
+      // build updated agentConfig
+      const agentConfig: any = {
+        prompt: {
+          system_prompt: prompt,
+          welcome_message: welcomeMessage,
+        },
+        voice: {
+          provider: "elevenlabs",
+          voice_id: voiceId,
+          speed: 1,
+        },
+        llm: {
+          provider: "openai",
+          model: llmModel,
+          temperature: 0.2,
+        },
+        speech: {
+          stt_provider: "deepgram",
+          model: "nova-2",
+          language,
+        },
+        call_settings: {
+          max_call_duration_seconds: callSettings.maxDuration * 60,
+          silence_timeout_seconds: callSettings.silenceTimeout,
+          interruption_sensitivity: speechSettings.sensitivity / 100,
+        },
         functions: functionsList,
-        speech: speechSettings,
-        callSettings,
-        postCall,
-        security,
-        webhook: { url: webhookUrl },
+        webhooks: { url: webhookUrl },
+        dynamic_variables: dynamicVariables,
       };
+      const body: any = { agentConfig };
       await apiFetch(`/api/voice-agents/${agentId}`, {
         method: "PATCH",
         body: JSON.stringify(body),
@@ -261,13 +300,13 @@ Remember to collect the Name, phone, and email of the customer before booking ap
             <option>GPT-3.5</option>
           </select>
           <select
-            value={voiceName}
-            onChange={(e) => setVoiceName(e.target.value)}
+            value={voiceId}
+            onChange={(e) => setVoiceId(e.target.value)}
             className="h-8 flex items-center justify-center px-2 bg-blue-100/90 shadow-sm rounded"
           >
             <option>Markkio</option>
             <option>Jenny</option>
-             <option>Gillian</option>
+            <option>Gillian</option>
             <option>Default</option>
           </select>
           <select
@@ -298,10 +337,21 @@ Remember to collect the Name, phone, and email of the customer before booking ap
           <div className="space-y-4">
             <textarea
               value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setPrompt(val);
+                // detect dynamic variables
+                const matches = Array.from(val.matchAll(/\{\{(.*?)\}\}/g)).map(m => m[1]);
+                setDynamicVariables(Array.from(new Set(matches)));
+              }}
               placeholder="Type in a universal prompt for your agent, such as its role, conversational style, objective, etc."
               className="w-full h-64 p-4 border border-gray-300 rounded shadow-sm font-mono resize-none focus:outline-none"
             />
+            {dynamicVariables.length > 0 && (
+              <div className="mt-2 text-xs text-gray-500">
+                Detected variables: {dynamicVariables.join(", ")}
+              </div>
+            )
             <p className="text-xs text-gray-500">
               {'Use {{}} to add variables. (Learn more)'}
             </p>

@@ -45,46 +45,23 @@ router.post(
             const {
                 name,
                 agentType,
-                voiceName,
-                provider,
-                providerAgentId,
-                phoneNumber,
-                status,
-                prompt,
-                promptsJson,
-                llmConfigJson,
-                // new single-prompt specific
                 mode,
-                welcomeMessage,
-                llmModel,
-                language,
-                template,
-                config
+                agentConfig,
+                status
             } = req.body;
 
-            if (!name || !agentType || !voiceName) {
-                return res.status(400).json({ success: false, error: 'name, agentType and voiceName are required' });
+            // agentConfig must be provided and should be an object
+            if (!name || !agentConfig || typeof agentConfig !== 'object') {
+                return res.status(400).json({ success: false, error: 'name and agentConfig are required' });
             }
 
             const agent = await prisma.voiceAgent.create({
                 data: {
                     name,
-                    agentType,
-                    voiceName,
-                    provider,
-                    providerAgentId,
-                    phoneNumber,
-                    status: status || 'draft',
-                    prompt,
-                    promptsJson,
-                    llmConfigJson,
+                    agentType: agentType || 'Single Prompt',
                     mode: mode || 'single',
-                    welcomeMessage,
-                    llmModel,
-                    language,
-                    // store raw template for reference
-                    template,
-                    configJson: config,
+                    agentConfig,
+                    status: status || 'draft',
                     tenantId
                 }
             });
@@ -133,31 +110,18 @@ router.patch(
         try {
             const tenantId = req.scopedTenantId;
             const { id } = req.params;
-            const data = req.body;
-            // only allow certain fields
-            const allowed = [
-                'name',
-                'agentType',
-                'voiceName',
-                'provider',
-                'providerAgentId',
-                'phoneNumber',
-                'status',
-                'prompt',
-                'promptsJson',
-                'llmConfigJson',
-                // single prompt extras
-                'mode',
-                'welcomeMessage',
-                'llmModel',
-                'language',
-                'template',
-                'configJson'
-            ];
+            const { agentConfig, name, mode, agentType, status } = req.body;
             const updateData = {};
-            allowed.forEach(k => {
-                if (data[k] !== undefined) updateData[k] = data[k];
-            });
+            if (agentConfig !== undefined) updateData.agentConfig = agentConfig;
+            if (name !== undefined) updateData.name = name;
+            if (mode !== undefined) updateData.mode = mode;
+            if (agentType !== undefined) updateData.agentType = agentType;
+            if (status !== undefined) updateData.status = status;
+
+            if (Object.keys(updateData).length === 0) {
+                return res.status(400).json({ success: false, error: 'No valid fields to update' });
+            }
+
             const agent = await prisma.voiceAgent.updateMany({
                 where: { id, tenantId },
                 data: updateData

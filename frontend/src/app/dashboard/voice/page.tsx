@@ -29,14 +29,11 @@ type Agent = {
   id: string;
   name: string;
   agentType: AgentType;
-  voiceName: string;
+  agentConfig: any;
   phoneNumber?: string | null;
   provider: string;
   providerAgentId?: string | null;
   status: string;
-  prompt?: string | null;
-  promptsJson?: any;
-  llmConfigJson?: any;
   lastEditedBy?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -86,12 +83,12 @@ export default function VoicePage() {
     setError(null);
     try {
       const data = await apiFetch('/api/voice-agents');
-      setAgents(data.agents || []);
-    } catch (err: any) {
-      console.error('fetchAgents error', err);
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      const list = (data.agents || []).map((a: any) => ({
+        ...a,
+        // ensure agentConfig exists
+        agentConfig: a.agentConfig || {},
+      }));
+      setAgents(list);
     }
   };
 
@@ -110,11 +107,16 @@ export default function VoicePage() {
     let arr = [...agents];
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      arr = arr.filter(a =>
-        a.name.toLowerCase().includes(q) ||
-        a.voiceName.toLowerCase().includes(q) ||
-        (a.phoneNumber || '').toLowerCase().includes(q)
-      );
+      arr = arr.filter(a => {
+        const voiceId = a.agentConfig?.voice?.voice_id || '';
+        const prompt = a.agentConfig?.prompt?.system_prompt || '';
+        return (
+          a.name.toLowerCase().includes(q) ||
+          voiceId.toLowerCase().includes(q) ||
+          prompt.toLowerCase().includes(q) ||
+          (a.phoneNumber || '').toLowerCase().includes(q)
+        );
+      });
     }
     if (selectedType !== 'All') {
       arr = arr.filter(a => a.agentType === selectedType);
@@ -138,7 +140,11 @@ export default function VoicePage() {
 
   const openEdit = (agent: Agent) => {
     setModalMode('edit');
-    setModalAgent(agent);
+    // ensure agentConfig exists so UI can read nested props
+    setModalAgent({
+      ...agent,
+      agentConfig: agent.agentConfig || {},
+    });
     setModalOpen(true);
   };
 
@@ -158,13 +164,13 @@ export default function VoicePage() {
     if (!modalAgent) return;
     try {
       if (modalMode === 'edit' && modalAgent.id) {
+        // when editing, send agentConfig along with name and agentType
+        const patchBody: any = { agentConfig: modalAgent.agentConfig };
+        if (modalAgent.name) patchBody.name = modalAgent.name;
+        if (modalAgent.agentType) patchBody.agentType = modalAgent.agentType;
         await apiFetch(`/api/voice-agents/${modalAgent.id}`, {
           method: 'PATCH',
-          body: JSON.stringify(modalAgent)
-        });
-      } else if (modalMode === 'assignPhone' && modalAgent.id) {
-        await apiFetch(`/api/voice-agents/${modalAgent.id}/assign-phone`, {
-          method: 'POST',
+          body: JSON.stringify(patchBody)
           body: JSON.stringify({ phoneNumber: modalAgent.phoneNumber })
         });
       }
@@ -358,9 +364,9 @@ export default function VoicePage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium">
-                        {agent.voiceName[0]}
+                        {((agent.agentConfig?.voice?.voice_id||'')[0]||'-')}
                       </div>
-                      <span className="truncate max-w-[120px]">{agent.voiceName}</span>
+                      <span className="truncate max-w-[120px]">{agent.agentConfig?.voice?.voice_id || '-'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -471,11 +477,20 @@ export default function VoicePage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-800">Voice Name</label>
+                    <label className="text-sm font-semibold text-gray-800">Voice ID</label>
                     <Input
-                      value={modalAgent?.voiceName || ''}
-                      onChange={e => setModalAgent({ ...modalAgent, voiceName: e.target.value })}
-                      placeholder="Ethan, Anna, etc."
+                      value={modalAgent?.agentConfig?.voice?.voice_id || ''}
+                      onChange={e => setModalAgent({
+                        ...modalAgent,
+                        agentConfig: {
+                          ...modalAgent.agentConfig,
+                          voice: {
+                            ...(modalAgent.agentConfig?.voice || {}),
+                            voice_id: e.target.value,
+                          },
+                        },
+                      })}
+                      placeholder="myra, jenny, etc."
                       className="bg-white border-gray-300 text-gray-900"
                     />
                   </div>
@@ -496,8 +511,14 @@ export default function VoicePage() {
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-gray-800">Prompt</label>
                     <textarea
-                      value={modalAgent?.prompt || ''}
-                      onChange={e => setModalAgent({ ...modalAgent, prompt: e.target.value })}
+                      value={modalAgent?.agentConfig?.prompt?.system_prompt || ''}
+                      onChange={e => setModalAgent({
+                        ...modalAgent,
+                        agentConfig: {
+                          ...modalAgent.agentConfig,
+                          prompt: { ...modalAgent.agentConfig.prompt, system_prompt: e.target.value },
+                        },
+                      })}
                       className="w-full min-h-[100px] p-3 border border-gray-300 rounded-xl text-gray-900"
                     />
                   </div>
