@@ -525,6 +525,7 @@ export default function PhoneNumbersView({
     const key = type === 'inbound' ? 'inboundAgents' : 'outboundAgents';
     const updated = [...(formData[key as keyof typeof formData] as WeightedBinding[] || [])];
     updated.push({ agentId: '', weight: 100 });
+    console.log('Updated binding [weightBinding]:',updated);
     setFormData({ ...formData, [key]: updated });
     setDirty(true);
   };
@@ -555,8 +556,10 @@ export default function PhoneNumbersView({
     <main className="flex-1 flex bg-gray-50">
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
-        <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-bold mb-4">Phone Numbers</h2>
+        <div className="p-6 border-b justify-between flex border-gray-200">
+          <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || numbersList[0].phoneNumber || 'No Nhone Number added'}</h2>
+          <button type='button'
+          onClick={()=>setShowSipModal(true)} className='p-1 px-2 cursor-pointer bg-blue-900 shadow-md items-center justifty-center'>Add</button>
           <div className="relative">
             <Input
               placeholder="Search numbers"

@@ -40,6 +40,7 @@ type Agent = {
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
 async function apiFetch(path: string, opts: any = {}) {
+    
   const headers: any = {
     'Content-Type': 'application/json',
     ...opts.headers
@@ -72,6 +73,7 @@ async function apiFetch(path: string, opts: any = {}) {
     try {
       err = JSON.parse(errText);
     } catch {
+        if(errText.includes('expired')){router.push('/login')}
       err = { error: errText || `HTTP ${res.status}` };
     }
     throw new Error(err.error || `Request failed with status ${res.status}`);
