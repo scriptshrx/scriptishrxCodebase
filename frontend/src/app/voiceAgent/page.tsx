@@ -1,25 +1,20 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from 'react';
 import {
   Stethoscope,
-  Bot,
   Phone,
   LayoutList,
   Users,
   CreditCard,
   Key,
   Globe,
-  ChevronDown,
-  MoreVertical,
-  Search as SearchIcon,
-  Plus,
   PhoneIncoming
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import CreateAgentModal from '@/components/voice/CreateAgentModal';
+import VoiceAgentsView from '@/components/voice/VoiceAgentsView';
+
 
 // types
 
@@ -38,6 +33,7 @@ type Agent = {
   createdAt: string;
   updatedAt: string;
 };
+
 
 // api helper
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
@@ -87,20 +83,15 @@ async function apiFetch(path: string, opts: any = {}) {
 
 export default function VoicePage() {
   const [agents, setAgents] = useState<Agent[]>([]);
-  // tenant details
+  const [selectedSideBar, setSelectSideBar] = useState('Voice Agents');
   const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<any>({}); // typed loosely to avoid missing property errors
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
-
-  // modal state
+  const [user, setUser] = useState<any>({});
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<'edit' | 'assignPhone' | null>(null);
   const [modalAgent, setModalAgent] = useState<Partial<Agent> | null>(null);
-  const [rowMenuOpenId, setRowMenuOpenId] = useState<string | null>(null);
 
   const fetchAgents = async () => {
     setLoading(true);
@@ -137,32 +128,9 @@ export default function VoicePage() {
     fetchAgents();
   }, []);
 
-  const filteredAgents = useMemo(() => {
-    let arr = [...agents];
-    if (searchQuery) {
-      const q = searchQuery.toLowerCase();
-      arr = arr.filter(a => a.name.toLowerCase().includes(q));
-    }
-    arr.sort((a, b) => {
-      const ta = new Date(a.createdAt).getTime();
-      const tb = new Date(b.createdAt).getTime();
-      return sortOrder === 'Newest' ? tb - ta : ta - tb;
-    });
-    return arr;
-  }, [agents, searchQuery, sortOrder]);
-
   // actions
-  const openCreateModal = () => {
-    setCreateModalOpen(true);
-  };
-
-  const closeCreateModal = () => {
-    setCreateModalOpen(false);
-  };
-
   const openEdit = (agent: Agent) => {
     setModalMode('edit');
-    // ensure agentConfig exists so UI can read nested props
     setModalAgent({
       ...agent,
       agentConfig: agent.agentConfig || {},
@@ -186,14 +154,12 @@ export default function VoicePage() {
     if (!modalAgent) return;
     try {
       if (modalMode === 'edit' && modalAgent.id) {
-        // when editing, send agentConfig along with name and agentType
         const patchBody: any = { agentConfig: modalAgent.agentConfig };
         if (modalAgent.name) patchBody.name = modalAgent.name;
         if (modalAgent.agentType) patchBody.agentType = modalAgent.agentType;
         await apiFetch(`/api/voice-agents/${modalAgent.id}`, {
           method: 'PATCH',
           body: JSON.stringify(patchBody)
-    
         });
       }
       await fetchAgents();
@@ -204,7 +170,6 @@ export default function VoicePage() {
   };
 
   const handleDelete = async (agent: Agent) => {
-    if (!confirm(`Delete agent '${agent.name}'?`)) return;
     try {
       await apiFetch(`/api/voice-agents/${agent.id}`, { method: 'DELETE' });
       await fetchAgents();
@@ -214,7 +179,6 @@ export default function VoicePage() {
   };
 
   const handleDuplicate = async (agent: Agent) => {
-    // remove id by destructuring, avoids TS delete issue
     const { id, ...rest } = agent as any;
     const copy = { ...rest, name: `${agent.name} (copy)` } as Partial<Agent>;
     try {
@@ -224,6 +188,8 @@ export default function VoicePage() {
       alert(err.message);
     }
   };
+
+
 
   // render
   return (
@@ -264,6 +230,7 @@ export default function VoicePage() {
               const Icon = item.icon;
               return (
                 <div
+                onClick={()=>{setSelectSideBar(item.name)}}
                   key={item.name}
                   className={`flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer ${
                     item.active ? 'bg-gray-100 font-semibold' : 'hover:bg-gray-100'
@@ -279,7 +246,7 @@ export default function VoicePage() {
         <div className="p-6 space-y-4 border-t border-gray-200">
           <div className="bg-gray-100 p-3 rounded-lg text-xs">
             <div className="font-semibold">Pay As You Go</div>
-            <div className="text-gray-600">Upcoming Invoice: $25.68</div>
+            <div className="text-gray-600">No upcoming bill</div>
           </div>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium">
@@ -291,135 +258,21 @@ export default function VoicePage() {
       </aside>
 
       {/* main */}
-      <main className="flex-1 p-8">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h1 className="text-2xl font-bold">Voice Agents</h1>
-            <p className="text-sm text-gray-500">Manage ScriptishRx voice agents</p>
-          </div>
-          <div className="relative">
-            <Button onClick={openCreateModal} className="bg-gray-900 text-white">
-              <Plus className="w-4 h-4 mr-2" />Create Voice Agent <ChevronDown className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-        </div>
+      {selectedSideBar === 'Voice Agents' && (
+        <VoiceAgentsView
+          agents={agents}
+          loading={loading}
+          error={error}
+          onFetchAgents={fetchAgents}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
+          createModalOpen={createModalOpen}
+          onCreateModalOpenChange={setCreateModalOpen}
+        />
+      )}
 
-        {/* controls */}
-        <div className="flex flex-wrap gap-4 mb-4">
-          <div className="relative flex-1 min-w-[200px]">
-            <Input
-              placeholder="Search agents by name"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 text-gray-800 placeholder:text-gray-800 border border-gray-400 shadow-md"
-            />
-            <SearchIcon className="absolute text-blue-900 left-3 top-3 w-4 h-4 text-gray-400" />
-          </div>
-          <div>
-            <select
-              value={sortOrder}
-              onChange={e => setSortOrder(e.target.value as any)}
-              className="h-10 px-3 rounded-md border border-gray-300 bg-white text-gray-700 text-sm"
-            >
-              <option>Newest</option>
-              <option>Oldest</option>
-            </select>
-          </div>
-        </div>
-
-        {/* list */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Name</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Type</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Created</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {loading && (
-                <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                    Loading...
-                  </td>
-                </tr>
-              )}
-              {error && (
-                <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-red-600">
-                    <div className="text-sm font-semibold">Error: {error}</div>
-                  </td>
-                </tr>
-              )}
-              {!loading && !error && filteredAgents.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
-                    No agents found.
-                  </td>
-                </tr>
-              )}
-              {filteredAgents.map(agent => (
-                <tr
-                  key={agent.id}
-                  className="hover:bg-gray-50 cursor-pointer relative"
-                >
-                  <td className="px-6 py-4">
-                    {agent.name}
-                  </td>
-                  <td className="px-6 py-4">
-                    {agent.agentType}
-                  </td>
-                  <td className="px-6 py-4">
-                    {agent.status}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
-                    {new Date(agent.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-6 py-4 text-right relative">
-                    <button
-                      onClick={e => {
-                        e.stopPropagation();
-                        setRowMenuOpenId(rowMenuOpenId === agent.id ? null : agent.id);
-                      }}
-                      className="p-1 hover:bg-gray-100 rounded-full"
-                    >
-                      <MoreVertical className="w-4 h-4" />
-                    </button>
-                    {rowMenuOpenId === agent.id && (
-                      <div className="absolute right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                        <button
-                          onClick={() => openEdit(agent)}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDuplicate(agent)}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                        >
-                          Duplicate
-                        </button>
-                        <button
-                          onClick={() => handleDelete(agent)}
-                          className="w-full text-left px-4 py-2 hover:bg-red-100 text-sm text-red-600"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </main>
-
-      {/* modals */}
-      <CreateAgentModal open={createModalOpen} onOpenChange={setCreateModalOpen} />
+      {/* Edit/AssignPhone Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
@@ -514,7 +367,6 @@ export default function VoicePage() {
                     />
                   </div>
                 )}
-                {/* additional config fields could be added for multi/custom */}
                 <div className="flex justify-end gap-2">
                   <Button variant="outline" onClick={closeModal}>Cancel</Button>
                   <Button onClick={handleSave}>Save</Button>
