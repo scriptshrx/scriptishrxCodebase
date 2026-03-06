@@ -511,7 +511,7 @@ export default function PhoneNumbersView({
     
     setFormData(newPhoneNumber);
     setSelectedNumber(newPhoneNumber as PhoneNumberDetails);
-    setSelectedNumberId(null); // No ID yet since it's not saved
+    setSelectedNumberId(null); // No ID yet since it's not save
     setIsCreatingNew(true);
     setDirty(true);
     setShowAddNumber(false);
