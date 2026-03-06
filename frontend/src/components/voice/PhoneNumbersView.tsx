@@ -233,13 +233,11 @@ const CountryTagInput = ({
 const ConnectPhoneProviderModal = ({
   open,
   onOpenChange,
-  onSave,
-  loading
+  onSave
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSave: (data: any) => void;
-  loading: boolean;
 }) => {
   const [formData, setFormData] = useState({
     phoneNumber: '',
@@ -342,11 +340,11 @@ const ConnectPhoneProviderModal = ({
         </div>
 
         <div className="flex justify-end gap-2 mt-6">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? 'Adding...' : 'Add Number'}
+          <Button onClick={handleSubmit}>
+            Add Number
           </Button>
         </div>
       </div>
@@ -376,6 +374,7 @@ export default function PhoneNumbersView({
   const [sipLoading, setSipLoading] = useState(false);
   const [formData, setFormData] = useState<Partial<PhoneNumberDetails> | null>(null);
   const [dirty, setDirty] = useState(false);
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
 
   // Fetch phone numbers list
   const fetchNumbers = async () => {
@@ -456,20 +455,40 @@ export default function PhoneNumbersView({
 
     setSaving(true);
     try {
-      await apiFetch(`/phone-numbers/${selectedNumber.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          nickname: formData.nickname,
-          inboundAgents: formData.inboundAgents,
-          outboundAgents: formData.outboundAgents,
-          inboundWebhookUrl: formData.inboundWebhookUrl,
-          allowedInboundCountryList: formData.allowedInboundCountryList,
-          allowedOutboundCountryList: formData.allowedOutboundCountryList
-        })
-      });
+      const payload = {
+        phoneNumber: formData.phoneNumber,
+        provider: formData.provider,
+        nickname: formData.nickname,
+        inboundAgents: formData.inboundAgents,
+        outboundAgents: formData.outboundAgents,
+        inboundWebhookUrl: formData.inboundWebhookUrl,
+        allowedInboundCountryList: formData.allowedInboundCountryList,
+        allowedOutboundCountryList: formData.allowedOutboundCountryList
+      };
+
+      let result;
+      if (isCreatingNew) {
+        // Create new phone number
+        result = await apiFetch('/phone-numbers', {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        setIsCreatingNew(false);
+      } else {
+        // Update existing phone number
+        await apiFetch(`/phone-numbers/${selectedNumber.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(payload)
+        });
+        result = { id: selectedNumber.id };
+      }
+
       setDirty(false);
       await fetchNumbers();
-      await fetchNumberDetails(selectedNumber.id);
+      if (result.id) {
+        await fetchNumberDetails(result.id);
+        setSelectedNumberId(result.id);
+      }
       alert('Saved successfully!');
     } catch (err: any) {
       alert(err.message);
@@ -478,24 +497,24 @@ export default function PhoneNumbersView({
     }
   };
 
-  const handleAddPhoneNumber = async (data: any) => {
-    setSipLoading(true);
-    try {
-      const result = await apiFetch('/phone-numbers', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
-      setShowSipModal(false);
-      await fetchNumbers();
-      if (result.id) {
-        setSelectedNumberId(result.id);
-      }
-      alert('Phone number added successfully!');
-    } catch (err: any) {
-      alert(err.message);
-    } finally {
-      setSipLoading(false);
-    }
+  const handleAddPhoneNumber = (data: any) => {
+    // Create a new phone number object without saving to DB yet
+    const newPhoneNumber: Partial<PhoneNumberDetails> = {
+      phoneNumber: data.phoneNumber,
+      provider: data.provider,
+      nickname: data.nickname,
+      inboundAgents: [],
+      outboundAgents: [],
+      allowedInboundCountryList: [],
+      allowedOutboundCountryList: []
+    };
+    
+    setFormData(newPhoneNumber);
+    setSelectedNumber(newPhoneNumber as PhoneNumberDetails);
+    setSelectedNumberId(null); // No ID yet since it's not saved
+    setIsCreatingNew(true);
+    setDirty(true);
+    setShowSipModal(false);
   };
 
   const addBinding = (type: 'inbound' | 'outbound') => {
@@ -534,10 +553,14 @@ export default function PhoneNumbersView({
     <main className="flex-1 flex bg-gray-50">
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+        <div>
         <div className="p-6 border-b justify-between flex border-gray-200">
+
           <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || 'No phone Number yet'}</h2>
           <button type='button'
-          onClick={()=>setShowSipModal(true)} className='p-1 px-2 cursor-pointer bg-blue-900 shadow-md items-center justifty-center'>Add</button>
+          onClick={()=>setShowSipModal(true)} className='p-1 px-2 cursor-pointer bg-blue-900 shadow-md items-center justifty-center'
+          >Add</button>
+          </div>
           <div className="relative">
             <Input
               placeholder="Search numbers"
@@ -546,8 +569,9 @@ export default function PhoneNumbersView({
               className="pl-10 text-gray-800 placeholder:text-gray-800 border border-gray-400 shadow-md"
             />
            
-          </div>
+          
            <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+        </div>
         </div>
 
         <div className="flex-1 overflow-y-auto">
@@ -815,7 +839,6 @@ export default function PhoneNumbersView({
         open={showSipModal}
         onOpenChange={setShowSipModal}
         onSave={handleAddPhoneNumber}
-        loading={sipLoading}
       />
     </main>
   );
