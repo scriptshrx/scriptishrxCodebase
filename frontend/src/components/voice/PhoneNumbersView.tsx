@@ -475,7 +475,7 @@ export default function PhoneNumbersView({
         });
         setIsCreatingNew(false);
       } else {
-        // Update existing phone number
+        // Update existing phone numbers
         await apiFetch(`/phone-numbers/${selectedNumber.id}`, {
           method: 'PATCH',
           body: JSON.stringify(payload)
