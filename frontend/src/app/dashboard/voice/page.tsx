@@ -48,8 +48,17 @@ async function apiFetch(path: string, opts: any = {}) {
     ...opts.headers
   };
 
+  // Get auth token from localStorage
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log('[apiFetch] Using token from localStorage');
+  } else {
+    console.warn('[apiFetch] No token found in localStorage');
+  }
+
   const url = `${API_BASE}${path}`;
-  console.log('[apiFetch] Requesting:', { url, method: opts.method || 'GET', opts });
+  console.log('[apiFetch] Requesting:', { url, method: opts.method || 'GET', hasAuth: !!token });
   
   const res = await fetch(url, {
     credentials: 'include',
@@ -97,7 +106,7 @@ export default function VoicePage() {
     setLoading(true);
     setError(null);
     try {
-      console.log('[fetchAgents] Starting fetch from:', `${API_BASE}/api/voice-agents`);
+      console.log('[fetchAgents] Starting fetch from:', `${API_BASE}/voice-agents`);
       const data = await apiFetch('/voice-agents');
       console.log('[fetchAgents] Raw response:', data);
       const list = (data.agents || []).map((a: any) => ({
