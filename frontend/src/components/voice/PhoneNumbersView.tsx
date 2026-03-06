@@ -553,7 +553,7 @@ export default function PhoneNumbersView({
         <div>
         <div className="p-4 mb-2 border-b justify-between gap-2 items-center flex border-gray-200">
 
-          <h2 className="text-md font-bold mb-4 my-auto">{formData?.phoneNumber || 'No phone Number yet'}</h2>
+          <h2 className="text-md font-bold mb-4 my-auto">{formData?.phoneNumber || 'Add New Number'}</h2>
            <button onClick={()=>setShowAddNumber(true)}
            type='button' 
            className="px-2 py-[8px] cursor-pointer bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center gap-2">
