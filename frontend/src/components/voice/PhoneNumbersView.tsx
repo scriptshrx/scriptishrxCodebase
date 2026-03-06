@@ -370,7 +370,7 @@ export default function PhoneNumbersView({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showSipModal, setShowSipModal] = useState(false);
+  const [showAddNumber, setShowAddNumber] = useState(false);
   const [sipLoading, setSipLoading] = useState(false);
   const [formData, setFormData] = useState<Partial<PhoneNumberDetails> | null>(null);
   const [dirty, setDirty] = useState(false);
@@ -514,7 +514,7 @@ export default function PhoneNumbersView({
     setSelectedNumberId(null); // No ID yet since it's not save
     setIsCreatingNew(true);
     setDirty(true);
-    setShowSipModal(false);
+    setShowAddNumber(false);
   };
 
   const addBinding = (type: 'inbound' | 'outbound') => {
@@ -557,9 +557,13 @@ export default function PhoneNumbersView({
         <div className="p-6 border-b justify-between flex border-gray-200">
 
           <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || 'No phone Number yet'}</h2>
-          <button type='button'
-          onClick={()=>setShowSipModal(true)} className='p-1 px-2 cursor-pointer bg-blue-900 shadow-md items-center justifty-center'
-          >Add</button>
+           <button onClick={()=>setShowAddNumber(true)}
+           type='button' 
+           className="px-4 py-2 cursor-pointer bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center gap-2">
+                  <Plus className="w-4 h-4" />
+                  Add
+                  <ChevronDown className="w-4 h-4" />
+                </button>
           </div>
           <div className="relative">
             <Input
@@ -610,11 +614,8 @@ export default function PhoneNumbersView({
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-bold">Phone Number Settings</h1>
               <div className="relative">
-                <button className="px-4 py-2 bg-gray-900 text-white rounded-lg flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
-                  Add
-                  <ChevronDown className="w-4 h-4" />
-                </button>
+        
+              
               </div>
             </div>
 
@@ -836,8 +837,8 @@ export default function PhoneNumbersView({
 
       {/* Phone Provider Modal */}
       <ConnectPhoneProviderModal
-        open={showSipModal}
-        onOpenChange={setShowSipModal}
+        open={showAddNumber}
+        onOpenChange={setShowAddNumber}
         onSave={handleAddPhoneNumber}
       />
     </main>
