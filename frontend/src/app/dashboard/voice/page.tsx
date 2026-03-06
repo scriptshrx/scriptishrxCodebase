@@ -311,7 +311,7 @@ export default function VoicePage() {
               placeholder="Search agents by name"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 text-gray-800 border border-gray-600"
+              className="pl-10 text-gray-800 placeholder:text-gray-800 border border-gray-400 shadow-md"
             />
             <SearchIcon className="absolute text-blue-900 left-3 top-3 w-4 h-4 text-gray-400" />
           </div>
