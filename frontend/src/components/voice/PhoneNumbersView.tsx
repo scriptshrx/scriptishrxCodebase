@@ -785,12 +785,14 @@ export default function PhoneNumbersView({
                   </label>
                   <Input
                     value={formData?.inboundWebhookUrl || ''}
+                    readOnly
+                    
                     onChange={e => {
                       setFormData({ ...formData, inboundWebhookUrl: e.target.value });
                       setDirty(true);
                     }}
-                    placeholder="https://example.com/webhook"
-                    className="text-gray-900"
+                    placeholder="https://scriptishrx.net/incomimg"
+                    className="text-gray-900 border-gray-700 placeholder:text-gray-500"
                   />
                 </div>
                 <div>
