@@ -273,7 +273,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
               
                 }}
                 onBlur={() => setShowTitleInput(false)}
-                className="w-full text-gray-500"
+                className="w-full p-0 border-0 text-[24px] text-gray-900"
               />
             ) : (
               <h1 className="text-xl font-bold truncate">{name}</h1>
@@ -581,6 +581,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
               placeholder="https://example.com/hook"
+              className="text-gray-600 border border-gray-400"
             />
           </div>
         );
