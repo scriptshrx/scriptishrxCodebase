@@ -63,9 +63,7 @@ router.post(
                 nickname,
                 inboundAgents,
                 outboundAgents,
-                inboundWebhookUrl,
-                allowedInboundCountryList,
-                allowedOutboundCountryList
+                inboundWebhookUrl
             } = req.body;
 
             if (!phoneNumber) {
@@ -80,9 +78,7 @@ router.post(
                     nickname,
                     inboundAgents: inboundAgents || [],
                     outboundAgents: outboundAgents || [],
-                    inboundWebhookUrl,
-                    allowedInboundCountryList: allowedInboundCountryList || [],
-                    allowedOutboundCountryList: allowedOutboundCountryList || []
+                    inboundWebhookUrl
                 }
             });
 
@@ -109,7 +105,25 @@ router.patch(
             const tenantId = req.scopedTenantId;
             const { id } = req.params;
 
-            const updateData = { ...req.body };
+            // Only copy allowed fields to avoid unknown-argument errors
+            const {
+                phoneNumber,
+                provider,
+                nickname,
+                inboundAgents,
+                outboundAgents,
+                inboundWebhookUrl,
+                status
+            } = req.body;
+            const updateData = {};
+            if (phoneNumber !== undefined) updateData.phoneNumber = phoneNumber;
+            if (provider !== undefined) updateData.provider = provider;
+            if (nickname !== undefined) updateData.nickname = nickname;
+            if (inboundAgents !== undefined) updateData.inboundAgents = inboundAgents;
+            if (outboundAgents !== undefined) updateData.outboundAgents = outboundAgents;
+            if (inboundWebhookUrl !== undefined) updateData.inboundWebhookUrl = inboundWebhookUrl;
+            if (status !== undefined) updateData.status = status;
+
             const updated = await prisma.phoneNumber.updateMany({
                 where: { id, tenantId },
                 data: updateData
