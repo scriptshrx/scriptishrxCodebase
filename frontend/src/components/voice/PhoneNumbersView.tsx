@@ -557,7 +557,7 @@ export default function PhoneNumbersView({
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6 border-b justify-between flex border-gray-200">
-          <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || numbersList[0].phoneNumber || 'No Nhone Number added'}</h2>
+          <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || 'No Nhone Number added'}</h2>
           <button type='button'
           onClick={()=>setShowSipModal(true)} className='p-1 px-2 cursor-pointer bg-blue-900 shadow-md items-center justifty-center'>Add</button>
           <div className="relative">
