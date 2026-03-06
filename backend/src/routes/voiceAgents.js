@@ -17,16 +17,27 @@ router.get(
     async (req, res) => {
         try {
             const tenantId = req.scopedTenantId;
-            console.log('[VoiceAgents] list called, tenantId=', tenantId);
+            console.log('[VoiceAgents] GET / list called');
+            console.log('[VoiceAgents] tenantId:', tenantId);
+            console.log('[VoiceAgents] user:', req.user);
+            
+            if (!tenantId) {
+                console.error('[VoiceAgents] No tenantId found');
+                return res.status(400).json({ success: false, error: 'No tenant context' });
+            }
+            
             const agents = await prisma.voiceAgent.findMany({
                 where: { tenantId },
                 orderBy: { updatedAt: 'desc' }
             });
-            console.log('[VoiceAgents] fetched', agents.length, 'agents');
+            
+            console.log('[VoiceAgents] Query successful, found', agents.length, 'agents');
+            console.log('[VoiceAgents] agents:', JSON.stringify(agents, null, 2));
+            
             res.json({ success: true, agents });
         } catch (error) {
-            console.error('[VoiceAgents] fetch list error', error);
-            res.status(500).json({ success: false, error: 'Failed to fetch voice agents' });
+            console.error('[VoiceAgents] GET / error:', error);
+            res.status(500).json({ success: false, error: 'Failed to fetch voice agents', details: error.message });
         }
     }
 );

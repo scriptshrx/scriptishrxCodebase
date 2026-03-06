@@ -48,16 +48,32 @@ async function apiFetch(path: string, opts: any = {}) {
     ...opts.headers
   };
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const url = `${API_BASE}${path}`;
+  console.log('[apiFetch] Requesting:', { url, method: opts.method || 'GET', opts });
+  
+  const res = await fetch(url, {
     credentials: 'include',
     ...opts,
     headers
   });
+  
+  console.log('[apiFetch] Response status:', res.status);
+  
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error || 'Request failed');
+    const errText = await res.text();
+    console.error('[apiFetch] Error response:', errText);
+    let err: any = {};
+    try {
+      err = JSON.parse(errText);
+    } catch {
+      err = { error: errText || `HTTP ${res.status}` };
+    }
+    throw new Error(err.error || `Request failed with status ${res.status}`);
   }
-  return res.json();
+  
+  const data = await res.json();
+  console.log('[apiFetch] Success response:', data);
+  return data;
 }
 
 export default function VoicePage() {
@@ -81,15 +97,22 @@ export default function VoicePage() {
     setLoading(true);
     setError(null);
     try {
+      console.log('[fetchAgents] Starting fetch from:', `${API_BASE}/api/voice-agents`);
       const data = await apiFetch('/api/voice-agents');
+      console.log('[fetchAgents] Raw response:', data);
       const list = (data.agents || []).map((a: any) => ({
         ...a,
         // ensure agentConfig exists
         agentConfig: a.agentConfig || {},
       }));
+      console.log('[fetchAgents] Parsed agents:', list);
       setAgents(list);
     }
-    catch(e){setError('Error fetching:',e)}
+    catch(e: any){
+      console.error('[fetchAgents] Error:', e);
+      const errorMsg = e?.message || String(e);
+      setError(errorMsg);
+    }
   };
 
   useEffect(() => {
@@ -313,7 +336,14 @@ export default function VoicePage() {
                   </td>
                 </tr>
               )}
-              {!loading && filteredAgents.length === 0 && (
+              {error && (
+                <tr>
+                  <td colSpan={5} className="px-6 py-12 text-center text-red-600">
+                    <div className="text-sm font-semibold">Error: {error}</div>
+                  </td>
+                </tr>
+              )}
+              {!loading && !error && filteredAgents.length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     No agents found.
