@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 
 // Force dynamic rendering to prevent prerender errors with client-only hooks
 export const dynamic = "force-dynamic";
@@ -257,7 +258,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
   return (
     <div className="flex flex-col h-full">
       {/* header */}
-      <header className="sticky top-0 right-0 bg-white z-20 flex items-center justify-between px-6 py-3 shadow">
+      <header className="sticky top-0 right-0 bg-white z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200">
         <button
           onClick={() => router.back()}
           className="p-2 rounded hover:bg-gray-100"
@@ -292,33 +293,36 @@ Remember to collect the Name, phone, and email of the customer before booking ap
           </div>
         </div>
         <div className="flex-col flex md:flex-row items-center gap-2">
-          <select
+          <Select
             value={llmModel}
             onChange={(e) => setLlmModel(e.target.value)}
-            className="h-8 px-2 flex items-center tex-[16px] justify-center bg-blue-100/90 shadow-sm rounded"
-          >
-            <option>GPT-4o</option>
-            <option>GPT-4o-mini</option>
-            <option>GPT-3.5</option>
-          </select>
-          <select
+            options={[
+              { value: "GPT-4o", label: "GPT-4o" },
+              { value: "GPT-4o-mini", label: "GPT-4o-mini" },
+              { value: "GPT-3.5", label: "GPT-3.5" },
+            ]}
+            className="h-8"
+          />
+          <Select
             value={voiceId}
             onChange={(e) => setVoiceId(e.target.value)}
-            className="h-8 flex items-center justify-center px-2 bg-blue-100/90 shadow-sm rounded"
-          >
-            <option>Markkio</option>
-            <option>Jenny</option>
-            <option>Gillian</option>
-            <option>Default</option>
-          </select>
-          <select
+            options={[
+              { value: "Markkio", label: "Markkio" },
+              { value: "Jenny", label: "Jenny" },
+              { value: "Gillian", label: "Gillian" },
+              { value: "Default", label: "Default" },
+            ]}
+            className="h-8"
+          />
+          <Select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            className="h-8 px-2 flex items-center justify-center  bg-blue-100/90 shadow-sm rounded"
-          >
-            <option>English</option>
-            <option>Spanish</option>
-          </select>
+            options={[
+              { value: "English", label: "English" },
+              { value: "Spanish", label: "Spanish" },
+            ]}
+            className="h-8"
+          />
           <span className="text-xs text-gray-500 hidden sm:block">
             Estimated Latency: 1100–1250ms
           </span>
@@ -361,16 +365,14 @@ Remember to collect the Name, phone, and email of the customer before booking ap
               <label className="text-sm font-semibold text-gray-700">
                 Welcome Message
               </label>
-              <select
+              <Select
                 value={welcomeMode}
                 onChange={(e) => setWelcomeMode(e.target.value)}
-                className="w-full h-8 px-2 border rounded"
-              >
-                <option value="ai">
-                  AI Initiates: AI begins with your defined begin message.
-                </option>
-                {/* other modes could be added */}
-              </select>
+                options={[
+                  { value: "ai", label: "AI Initiates: AI begins with your defined begin message." },
+                ]}
+                className="w-full h-8"
+              />
               <textarea
                 value={welcomeMessage}
                 onChange={(e) => setWelcomeMessage(e.target.value)}
@@ -416,16 +418,16 @@ Remember to collect the Name, phone, and email of the customer before booking ap
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
           <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center">
-            <div className="flex gap-2 p-[2px] bg-gray-200 rounded-lg">
-              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] text-gray-200 rounded-lg ${buttonChoice=='test-call'?'bg-blue-800':'bg-gray-300'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
+            <div className="flex gap-2 p-[2px] bg-gray-100 rounded-lg">
+              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] rounded-lg ${buttonChoice=='test-call'?'bg-slate-600 text-white':'bg-white text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
                 <PhoneOutgoing className="w-3 h-3" />
                 Test Call
               </button>
-               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] text-gray-200 rounded-lg ${buttonChoice=='test-chat'?'bg-blue-800':'bg-gray-300'} font-bold text-[12px] px-[8px] flex items-center gap-1`}>
+               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] rounded-lg ${buttonChoice=='test-chat'?'bg-slate-600 text-white':'bg-white text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
                 <MessageCircle className="w-3 h-3" />
                 Test Chat
               </button>
-              <button className="p-[4px] flex items-center justify-center">
+              <button className="p-[4px] flex items-center justify-center rounded-lg bg-white text-gray-700">
                 <Codepen className="w-4 h-4" />
               </button>
             </div>
@@ -489,7 +491,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
     setSpeechSettings((s) => ({ ...s, speed: +e.target.value }))
   }
   style={{
-    background: `linear-gradient(to right, #4f46e5 ${speechSettings.speed}%, #e5e7eb ${speechSettings.speed}%)`
+    background: `linear-gradient(to right, #6b7280 ${speechSettings.speed}%, #e5e7eb ${speechSettings.speed}%)`
   }}
   className="w-full h-2 rounded-lg appearance-none cursor-pointer"
 />
@@ -509,7 +511,10 @@ Remember to collect the Name, phone, and email of the customer before booking ap
                     sensitivity: +e.target.value,
                   }))
                 }
-                className={`linear-gradient(to right, #4f46e5 ${speechSettings.sensitivity}%, #e5e7eb ${speechSettings.sensitivity}%)`}
+                style={{
+                  background: `linear-gradient(to right, #6b7280 ${speechSettings.sensitivity}%, #e5e7eb ${speechSettings.sensitivity}%)`
+                }}
+                className="w-full h-2 rounded-lg appearance-none cursor-pointer"
               />
             </div>
           </div>
