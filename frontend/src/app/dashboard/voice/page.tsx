@@ -68,7 +68,6 @@ export default function VoicePage() {
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<any>({}); // typed loosely to avoid missing property errors
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedType, setSelectedType] = useState<'All' | AgentType>('All');
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
 
   // modal state
@@ -108,27 +107,15 @@ export default function VoicePage() {
     let arr = [...agents];
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      arr = arr.filter(a => {
-        const voiceId = a.agentConfig?.voice?.voice_id || '';
-        const prompt = a.agentConfig?.prompt?.system_prompt || '';
-        return (
-          a.name.toLowerCase().includes(q) ||
-          voiceId.toLowerCase().includes(q) ||
-          prompt.toLowerCase().includes(q) ||
-          (a.phoneNumber || '').toLowerCase().includes(q)
-        );
-      });
-    }
-    if (selectedType !== 'All') {
-      arr = arr.filter(a => a.agentType === selectedType);
+      arr = arr.filter(a => a.name.toLowerCase().includes(q));
     }
     arr.sort((a, b) => {
-      const ta = new Date(a.updatedAt).getTime();
-      const tb = new Date(b.updatedAt).getTime();
+      const ta = new Date(a.createdAt).getTime();
+      const tb = new Date(b.createdAt).getTime();
       return sortOrder === 'Newest' ? tb - ta : ta - tb;
     });
     return arr;
-  }, [agents, searchQuery, selectedType, sortOrder]);
+  }, [agents, searchQuery, sortOrder]);
 
   // actions
   const openCreateModal = () => {
@@ -287,24 +274,12 @@ export default function VoicePage() {
         <div className="flex flex-wrap gap-4 mb-4">
           <div className="relative flex-1 min-w-[200px]">
             <Input
-              placeholder="Search agents"
+              placeholder="Search agents by name"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="pl-10"
             />
             <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-          </div>
-          <div>
-            <select
-              value={selectedType}
-              onChange={e => setSelectedType(e.target.value as any)}
-              className="h-10 px-3 rounded-md border border-gray-300 bg-white text-gray-700 text-sm"
-            >
-              <option>All</option>
-              <option>Single Prompt</option>
-              <option>Multi Prompt</option>
-              <option>Custom LLM</option>
-            </select>
           </div>
           <div>
             <select
@@ -323,25 +298,24 @@ export default function VoicePage() {
           <table className="w-full text-left">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Agent Name</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Agent Type</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Voice</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Phone</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Edited</th>
+                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Name</th>
+                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Type</th>
+                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Status</th>
+                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Created</th>
                 <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {loading && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     Loading...
                   </td>
                 </tr>
               )}
               {!loading && filteredAgents.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     No agents found.
                   </td>
                 </tr>
@@ -352,35 +326,16 @@ export default function VoicePage() {
                   className="hover:bg-gray-50 cursor-pointer relative"
                 >
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <Bot className="w-4 h-4 text-gray-500" />
-                      <span className="truncate max-w-[200px]">{agent.name}</span>
-                    </div>
+                    {agent.name}
                   </td>
                   <td className="px-6 py-4">
-                    <span className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
-                      {agent.agentType}
-                    </span>
+                    {agent.agentType}
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium">
-                        {((agent.agentConfig?.voice?.voice_id||'')[0]||'-')}
-                      </div>
-                      <span className="truncate max-w-[120px]">{agent.agentConfig?.voice?.voice_id || '-'}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {agent.phoneNumber ? (
-                      <span className="inline-block bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-mono">
-                        {agent.phoneNumber}
-                      </span>
-                    ) : (
-                      <span className="text-gray-400">-</span>
-                    )}
+                    {agent.status}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
-                    {new Date(agent.updatedAt).toLocaleString()}
+                    {new Date(agent.createdAt).toLocaleString()}
                   </td>
                   <td className="px-6 py-4 text-right relative">
                     <button
@@ -405,12 +360,6 @@ export default function VoicePage() {
                           className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
                         >
                           Duplicate
-                        </button>
-                        <button
-                          onClick={() => openAssignPhone(agent)}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                        >
-                          Assign Phone
                         </button>
                         <button
                           onClick={() => handleDelete(agent)}
