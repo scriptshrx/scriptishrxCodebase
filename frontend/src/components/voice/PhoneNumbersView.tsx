@@ -554,7 +554,7 @@ export default function PhoneNumbersView({
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
         <div>
-        <div className="p-6 border-b justify-between gap-2 items-center flex border-gray-200">
+        <div className="p-4 mb-2 border-b justify-between gap-2 items-center flex border-gray-200">
 
           <h2 className="text-md font-bold mb-4">{formData?.phoneNumber || 'No phone Number yet'}</h2>
            <button onClick={()=>setShowAddNumber(true)}
