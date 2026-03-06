@@ -160,7 +160,7 @@ export default function VoicePage() {
         const patchBody: any = { agentConfig: modalAgent.agentConfig };
         if (modalAgent.name) patchBody.name = modalAgent.name;
         if (modalAgent.agentType) patchBody.agentType = modalAgent.agentType;
-        await apiFetch(`/api/voice-agents/${modalAgent.id}`, {
+        await apiFetch(`/voice-agents/${modalAgent.id}`, {
           method: 'PATCH',
           body: JSON.stringify(patchBody)
         });
@@ -174,7 +174,7 @@ export default function VoicePage() {
 
   const handleDelete = async (agent: Agent) => {
     try {
-      await apiFetch(`/api/voice-agents/${agent.id}`, { method: 'DELETE' });
+      await apiFetch(`/voice-agents/${agent.id}`, { method: 'DELETE' });
       await fetchAgents();
     } catch (err: any) {
       alert(err.message);
@@ -185,7 +185,7 @@ export default function VoicePage() {
     const { id, ...rest } = agent as any;
     const copy = { ...rest, name: `${agent.name} (copy)` } as Partial<Agent>;
     try {
-      await apiFetch('/api/voice-agents', { method: 'POST', body: JSON.stringify(copy) });
+      await apiFetch('/voice-agents', { method: 'POST', body: JSON.stringify(copy) });
       await fetchAgents();
     } catch (err: any) {
       alert(err.message);
