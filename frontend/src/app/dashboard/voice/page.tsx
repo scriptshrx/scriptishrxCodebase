@@ -116,10 +116,12 @@ export default function VoicePage() {
       }));
       console.log('[fetchAgents] Parsed agents:', list);
       setAgents(list);
+      setLoading(false);
     }
     catch(e: any){
       console.error('[fetchAgents] Error:', e);
       const errorMsg = e?.message || String(e);
+      setLoading(false)
       setError(errorMsg);
     }
   };
