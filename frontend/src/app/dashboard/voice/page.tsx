@@ -98,7 +98,7 @@ export default function VoicePage() {
     setError(null);
     try {
       console.log('[fetchAgents] Starting fetch from:', `${API_BASE}/api/voice-agents`);
-      const data = await apiFetch('/api/voice-agents');
+      const data = await apiFetch('/voice-agents');
       console.log('[fetchAgents] Raw response:', data);
       const list = (data.agents || []).map((a: any) => ({
         ...a,
