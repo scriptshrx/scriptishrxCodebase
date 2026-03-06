@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import VoiceAgentsView from '@/components/voice/VoiceAgentsView';
+import PhoneNumbersView from '@/components/voice/PhoneNumbersView';
 
 
 // types
@@ -219,7 +220,7 @@ export default function VoicePage() {
           </div>
           <nav className="px-4 space-y-1">
             {[
-              { name: 'Voice Agents', icon: LayoutList, active: true },
+              { name: 'Voice Agents', icon: LayoutList },
               { name: 'Phone Numbers', icon: Phone },
               { name: 'Call Logs', icon: PhoneIncoming },
               { name: 'Patients', icon: Users },
@@ -228,17 +229,19 @@ export default function VoicePage() {
               { name: 'Webhooks', icon: Globe }
             ].map(item => {
               const Icon = item.icon;
+              const isActive = selectedSideBar === item.name;
               return (
-                <div
-                onClick={()=>{setSelectSideBar(item.name)}}
+                <button
+                  type='button'
+                  onClick={() => setSelectSideBar(item.name)}
                   key={item.name}
-                  className={`flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer ${
-                    item.active ? 'bg-gray-100 font-semibold' : 'hover:bg-gray-100'
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
+                    isActive ? 'bg-gray-100 font-semibold' : 'hover:bg-gray-100'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
                   <span className="text-sm truncate">{item.name}</span>
-                </div>
+                </button>
               );
             })}
           </nav>
@@ -267,6 +270,12 @@ export default function VoicePage() {
           onEdit={openEdit}
           onDelete={handleDelete}
           onDuplicate={handleDuplicate}
+          createModalOpen={createModalOpen}
+          onCreateModalOpenChange={setCreateModalOpen}
+        />
+      )}
+      {selectedSideBar === 'Phone Numbers' && (
+        <PhoneNumbersView
           createModalOpen={createModalOpen}
           onCreateModalOpenChange={setCreateModalOpen}
         />
