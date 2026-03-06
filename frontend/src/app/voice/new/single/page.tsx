@@ -8,7 +8,6 @@ import {
   Mic,
   Zap,
   Code,
-  Music,
   PhoneCall,
   FileText,
   Shield,
@@ -16,7 +15,8 @@ import {
   Play,
   Codepen,
   PhoneOutgoing,
-  MessageCircle
+  MessageCircle,
+  AudioWaveform
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -385,7 +385,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
           <nav className="space-y-1 p-4">
             {[
               { name: "Functions", icon: Code, key: "functions" },
-              { name: "Speech Settings", icon: Music, key: "speech" },
+              { name: "Speech Settings", icon: AudioWaveform, key: "speech" },
               { name: "Call Settings", icon: PhoneCall, key: "call" },
               { name: "Post-Call Analysis", icon: FileText, key: "post" },
               { name: "Security Settings", icon: Shield, key: "security" },

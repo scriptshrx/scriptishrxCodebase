@@ -313,13 +313,13 @@ export default function VoicePage() {
               onChange={e => setSearchQuery(e.target.value)}
               className="pl-10 text-gray-800 placeholder:text-gray-800 border border-gray-400 shadow-md"
             />
-            <SearchIcon className="absolute text-blue-900 left-3 top-4 w-4 h-4 text-gray-400" />
+            <SearchIcon className="absolute text-blue-900 left-3 top-3 w-4 h-4 text-gray-400" />
           </div>
           <div>
             <select
               value={sortOrder}
               onChange={e => setSortOrder(e.target.value as any)}
-              className="h-10 px-3 rounded-md flex items-center justify-center border border-gray-300 bg-white text-gray-700 text-sm"
+              className="h-10 px-3 rounded-md border border-gray-300 bg-white text-gray-700 text-sm"
             >
               <option>Newest</option>
               <option>Oldest</option>
