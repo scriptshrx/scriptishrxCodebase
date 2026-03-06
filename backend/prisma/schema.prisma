@@ -367,6 +367,29 @@ model VoiceAgent {
   @@map("voice_agents")
 }
 
+// new table for managing multiple phone numbers per tenant
+model PhoneNumber {
+  id                           String   @id @default(uuid())
+  tenantId                     String
+  tenant                       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  nickname                     String?
+  phoneNumber                  String
+  provider                     String?
+  status                       String?
+
+  inboundAgents                Json     @default("[]")
+  outboundAgents               Json     @default("[]")
+  inboundWebhookUrl            String?
+
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+
+  @@index([tenantId])
+  @@unique([tenantId, phoneNumber])
+  @@map("phone_numbers")
+}
+
 model Campaign {
   id         String   @id @default(uuid())
   name       String

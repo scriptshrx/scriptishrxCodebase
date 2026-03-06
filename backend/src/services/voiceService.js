@@ -113,8 +113,24 @@ class VoiceService {
                 // Normalize digits for fuzzy matching
                 const calledDigits = normalizeDigits(calledNumber);
 
-                // 1) Try exact phoneNumber match first (preserves existing behavior)
+                // 1) check phone_numbers table for an exact match (new multi-number support)
                 if (calledNumber) {
+                    const pn = await prisma.phoneNumber.findFirst({
+                        where: { phoneNumber: calledNumber },
+                        include: { tenant: true }
+                    });
+                    if (pn && pn.tenant) {
+                        if (isAiConfigured(pn.tenant)) {
+                            t = pn.tenant;
+                            console.log(`[VoiceService] ✓ Tenant found via phone_numbers table: ${t.name} (ID: ${t.id})`);
+                        } else {
+                            console.log(`[VoiceService] ⚠ Tenant matched in phone_numbers but lacks AI config: ${pn.tenant.name} (ID: ${pn.tenant.id})`);
+                        }
+                    }
+                }
+
+                // 2) Try exact phoneNumber match first (preserves existing behavior)
+                if (calledNumber && !t) {
                     t = await prisma.tenant.findFirst({
                         where: { phoneNumber: calledNumber },
                         select: {

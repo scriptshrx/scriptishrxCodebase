@@ -34,8 +34,7 @@ type PhoneNumberDetails = {
   inboundAgents: WeightedBinding[];
   outboundAgents: WeightedBinding[];
   inboundWebhookUrl?: string | null;
-  allowedInboundCountryList?: string[];
-  allowedOutboundCountryList?: string[];
+
   createdAt: string;
   updatedAt: string;
 };
@@ -462,8 +461,7 @@ export default function PhoneNumbersView({
         inboundAgents: formData.inboundAgents,
         outboundAgents: formData.outboundAgents,
         inboundWebhookUrl: formData.inboundWebhookUrl,
-        allowedInboundCountryList: formData.allowedInboundCountryList,
-        allowedOutboundCountryList: formData.allowedOutboundCountryList
+
       };
 
       let result;
@@ -505,8 +503,7 @@ export default function PhoneNumbersView({
       nickname: data.nickname,
       inboundAgents: [],
       outboundAgents: [],
-      allowedInboundCountryList: [],
-      allowedOutboundCountryList: []
+      
     };
     
     setFormData(newPhoneNumber);
@@ -795,30 +792,7 @@ export default function PhoneNumbersView({
                     className="text-gray-900 border-gray-700 placeholder:text-gray-500"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-semibold text-gray-800 block mb-2">
-                    Allowed Inbound Countries
-                  </label>
-                  <CountryTagInput
-                    countries={formData?.allowedInboundCountryList || []}
-                    onChange={list => {
-                      setFormData({ ...formData, allowedInboundCountryList: list });
-                      setDirty(true);
-                    }}
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-semibold text-gray-800 block mb-2">
-                    Allowed Outbound Countries
-                  </label>
-                  <CountryTagInput
-                    countries={formData?.allowedOutboundCountryList || []}
-                    onChange={list => {
-                      setFormData({ ...formData, allowedOutboundCountryList: list });
-                      setDirty(true);
-                    }}
-                  />
-                </div>
+              
               </div>
             </div>
 

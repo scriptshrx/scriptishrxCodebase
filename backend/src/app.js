@@ -196,6 +196,8 @@ app.use('/api/payments', paymentsRouter);
 app.use('/api/upload', uploadRouter);
 app.use('/api/voice', voiceRouter);
 app.use('/api/voice-agents', require('./routes/voiceAgents')); // new voice agent management
+// phone numbers CRUD endpoints used by the new UI
+app.use('/api/phone-numbers', require('./routes/phoneNumbers'));
 app.use('/api/marketing', marketingRouter);
 app.use('/api/organization', organizationRouter);
 app.use('/api/services', servicesRouter);
