@@ -371,7 +371,6 @@ model VoiceAgent {
 model PhoneNumber {
   id                           String   @id @default(uuid())
   tenantId                     String
-  tenant                       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   nickname                     String?
   phoneNumber                  String

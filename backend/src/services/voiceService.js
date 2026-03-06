@@ -116,15 +116,28 @@ class VoiceService {
                 // 1) check phone_numbers table for an exact match (new multi-number support)
                 if (calledNumber) {
                     const pn = await prisma.phoneNumber.findFirst({
-                        where: { phoneNumber: calledNumber },
-                        include: { tenant: true }
+                        where: { phoneNumber: calledNumber }
                     });
-                    if (pn && pn.tenant) {
-                        if (isAiConfigured(pn.tenant)) {
-                            t = pn.tenant;
+                    if (pn) {
+                        // fetch tenant separately since relation has been removed
+                        const tenantMatch = await prisma.tenant.findUnique({
+                            where: { id: pn.tenantId },
+                            select: {
+                                id: true,
+                                name: true,
+                                phoneNumber: true,
+                                aiName: true,
+                                aiWelcomeMessage: true,
+                                customSystemPrompt: true,
+                                aiConfig: true,
+                                timezone: true
+                            }
+                        });
+                        if (tenantMatch && isAiConfigured(tenantMatch)) {
+                            t = tenantMatch;
                             console.log(`[VoiceService] ✓ Tenant found via phone_numbers table: ${t.name} (ID: ${t.id})`);
-                        } else {
-                            console.log(`[VoiceService] ⚠ Tenant matched in phone_numbers but lacks AI config: ${pn.tenant.name} (ID: ${pn.tenant.id})`);
+                        } else if (tenantMatch) {
+                            console.log(`[VoiceService] ⚠ Tenant matched via phone_numbers but lacks AI config: ${tenantMatch.name} (ID: ${tenantMatch.id})`);
                         }
                     }
                 }
