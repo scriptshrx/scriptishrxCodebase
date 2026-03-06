@@ -369,20 +369,20 @@ model VoiceAgent {
 
 // new table for managing multiple phone numbers per tenant
 model PhoneNumber {
-  id                           String   @id @default(uuid())
-  tenantId                     String
+  id                           String   @id @default(uuid()) @map("id")
+  tenantId                     String                       @map("tenantId")
 
-  nickname                     String?
-  phoneNumber                  String
-  provider                     String?
-  status                       String?
+  nickname                     String?                      @map("nickname")
+  phoneNumber                  String                       @map("phone_number")
+  provider                     String?                      @map("provider")
+  status                       String?                      @map("status")
 
-  inboundAgents                Json     @default("[]")
-  outboundAgents               Json     @default("[]")
-  inboundWebhookUrl            String?
+  inboundAgents                Json     @default("[]")      @map("inbound_agents")
+  outboundAgents               Json     @default("[]")      @map("outbound_agents")
+  inboundWebhookUrl            String?                      @map("inbound_webhook_url")
 
-  createdAt                    DateTime @default(now())
-  updatedAt                    DateTime @updatedAt
+  createdAt                    DateTime @default(now())     @map("created_at")
+  updatedAt                    DateTime @updatedAt          @map("updated_at")
 
   @@index([tenantId])
   @@unique([tenantId, phoneNumber])
