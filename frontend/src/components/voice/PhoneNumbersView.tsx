@@ -30,6 +30,7 @@ type PhoneNumberDetails = {
   phoneNumber: string;
   provider?: string | null;
   status?: string | null;
+  
   inboundAgents: WeightedBinding[];
   outboundAgents: WeightedBinding[];
   inboundWebhookUrl?: string | null;
@@ -229,7 +230,7 @@ const CountryTagInput = ({
   );
 };
 
-const ConnectSipModal = ({
+const ConnectPhoneProviderModal = ({
   open,
   onOpenChange,
   onSave,
@@ -242,17 +243,17 @@ const ConnectSipModal = ({
 }) => {
   const [formData, setFormData] = useState({
     phoneNumber: '',
-    terminationUri: '',
-    sipTrunkUsername: '',
-    sipTrunkPassword: '',
+    provider: '',
     nickname: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const PROVIDERS = ['Twilio', 'Vonage', 'Bandwidth', 'AWS Pinpoint', 'Other'];
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!formData.phoneNumber.trim()) newErrors.phoneNumber = 'Required';
-    if (!formData.terminationUri.trim()) newErrors.terminationUri = 'Required';
+    if (!formData.provider.trim()) newErrors.provider = 'Required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -262,9 +263,7 @@ const ConnectSipModal = ({
       onSave(formData);
       setFormData({
         phoneNumber: '',
-        terminationUri: '',
-        sipTrunkUsername: '',
-        sipTrunkPassword: '',
+        provider: '',
         nickname: ''
       });
       setErrors({});
@@ -277,7 +276,7 @@ const ConnectSipModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold">Connect to your number via SIP trunking</h2>
+          <h2 className="text-xl font-bold">Add Phone Number</h2>
           <button
             onClick={() => onOpenChange(false)}
             className="p-1 hover:bg-gray-100 rounded-full"
@@ -289,13 +288,13 @@ const ConnectSipModal = ({
         <div className="space-y-4">
           <div>
             <label className="text-sm font-semibold text-gray-800 block mb-2">
-              Phone Number
+              Phone Number *
             </label>
             <input
               type="text"
               value={formData.phoneNumber}
               onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })}
-              placeholder="Enter phone number"
+              placeholder="Enter phone number (e.g., +15551234567)"
               className={`w-full h-10 px-3 rounded-md border text-gray-900 text-sm ${
                 errors.phoneNumber ? 'border-red-300' : 'border-gray-300'
               }`}
@@ -307,46 +306,25 @@ const ConnectSipModal = ({
 
           <div>
             <label className="text-sm font-semibold text-gray-800 block mb-2">
-              Termination URI
+              Provider *
             </label>
-            <input
-              type="text"
-              value={formData.terminationUri}
-              onChange={e => setFormData({ ...formData, terminationUri: e.target.value })}
-              placeholder="Enter termination URI"
-              className={`w-full h-10 px-3 rounded-md border text-gray-900 text-sm ${
-                errors.terminationUri ? 'border-red-300' : 'border-gray-300'
+            <select
+              value={formData.provider}
+              onChange={e => setFormData({ ...formData, provider: e.target.value })}
+              className={`w-full h-10 px-3 rounded-md border text-gray-900 text-sm bg-white ${
+                errors.provider ? 'border-red-300' : 'border-gray-300'
               }`}
-            />
-            {errors.terminationUri && (
-              <p className="text-red-600 text-xs mt-1">{errors.terminationUri}</p>
+            >
+              <option value="">Select a provider</option>
+              {PROVIDERS.map(provider => (
+                <option key={provider} value={provider}>
+                  {provider}
+                </option>
+              ))}
+            </select>
+            {errors.provider && (
+              <p className="text-red-600 text-xs mt-1">{errors.provider}</p>
             )}
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-gray-800 block mb-2">
-              SIP Trunk User Name (Optional)
-            </label>
-            <input
-              type="text"
-              value={formData.sipTrunkUsername}
-              onChange={e => setFormData({ ...formData, sipTrunkUsername: e.target.value })}
-              placeholder="Enter SIP Trunk User Name"
-              className="w-full h-10 px-3 rounded-md border border-gray-300 text-gray-900 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-gray-800 block mb-2">
-              SIP Trunk Password (Optional)
-            </label>
-            <input
-              type="password"
-              value={formData.sipTrunkPassword}
-              onChange={e => setFormData({ ...formData, sipTrunkPassword: e.target.value })}
-              placeholder="Enter SIP Trunk Password"
-              className="w-full h-10 px-3 rounded-md border border-gray-300 text-gray-900 text-sm"
-            />
           </div>
 
           <div>
@@ -357,7 +335,7 @@ const ConnectSipModal = ({
               type="text"
               value={formData.nickname}
               onChange={e => setFormData({ ...formData, nickname: e.target.value })}
-              placeholder="Enter Nickname"
+              placeholder="Enter a nickname for this number"
               className="w-full h-10 px-3 rounded-md border border-gray-300 text-gray-900 text-sm"
             />
           </div>
@@ -368,7 +346,7 @@ const ConnectSipModal = ({
             Cancel
           </Button>
           <Button onClick={handleSubmit} disabled={loading}>
-            {loading ? 'Saving...' : 'Save'}
+            {loading ? 'Adding...' : 'Add Number'}
           </Button>
         </div>
       </div>
@@ -500,10 +478,10 @@ export default function PhoneNumbersView({
     }
   };
 
-  const handleSipConnect = async (data: any) => {
+  const handleAddPhoneNumber = async (data: any) => {
     setSipLoading(true);
     try {
-      const result = await apiFetch('/phone-numbers/connect-sip', {
+      const result = await apiFetch('/phone-numbers', {
         method: 'POST',
         body: JSON.stringify(data)
       });
@@ -512,7 +490,7 @@ export default function PhoneNumbersView({
       if (result.id) {
         setSelectedNumberId(result.id);
       }
-      alert('SIP trunk connected successfully!');
+      alert('Phone number added successfully!');
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -557,7 +535,7 @@ export default function PhoneNumbersView({
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-6 border-b justify-between flex border-gray-200">
-          <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || 'No Nhone Number added'}</h2>
+          <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || 'No phone Number yet'}</h2>
           <button type='button'
           onClick={()=>setShowSipModal(true)} className='p-1 px-2 cursor-pointer bg-blue-900 shadow-md items-center justifty-center'>Add</button>
           <div className="relative">
@@ -567,8 +545,9 @@ export default function PhoneNumbersView({
               onChange={e => setSearchQuery(e.target.value)}
               className="pl-10 text-gray-800 placeholder:text-gray-800 border border-gray-400 shadow-md"
             />
-            <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+           
           </div>
+           <SearchIcon className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
         </div>
 
         <div className="flex-1 overflow-y-auto">
@@ -831,11 +810,11 @@ export default function PhoneNumbersView({
         )}
       </div>
 
-      {/* SIP Modal */}
-      <ConnectSipModal
+      {/* Phone Provider Modal */}
+      <ConnectPhoneProviderModal
         open={showSipModal}
         onOpenChange={setShowSipModal}
-        onSave={handleSipConnect}
+        onSave={handleAddPhoneNumber}
         loading={sipLoading}
       />
     </main>
