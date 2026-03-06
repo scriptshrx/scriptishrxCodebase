@@ -13,7 +13,7 @@ router.get(
     async (req, res) => {
         try {
             const tenantId = req.scopedTenantId;
-            const numbers = await prisma.phoneNumber.findMany({
+            const numbers = await prisma.PhoneNumber.findMany({
                 where: { tenantId },
                 orderBy: { updatedAt: 'desc' }
             });
@@ -34,7 +34,7 @@ router.get(
         try {
             const tenantId = req.scopedTenantId;
             const { id } = req.params;
-            const number = await prisma.phoneNumber.findFirst({ where: { id, tenantId } });
+            const number = await prisma.PhoneNumber.findFirst({ where: { id, tenantId } });
             if (!number) {
                 return res.status(404).json({ success: false, error: 'Phone number not found' });
             }
@@ -70,7 +70,7 @@ router.post(
                 return res.status(400).json({ success: false, error: 'phoneNumber required' });
             }
 
-            const newNumber = await prisma.phoneNumber.create({
+            const newNumber = await prisma.PhoneNumber.create({
                 data: {
                     tenantId,
                     phoneNumber,
@@ -124,14 +124,14 @@ router.patch(
             if (inboundWebhookUrl !== undefined) updateData.inboundWebhookUrl = inboundWebhookUrl;
             if (status !== undefined) updateData.status = status;
 
-            const updated = await prisma.phoneNumber.updateMany({
+            const updated = await prisma.PhoneNumber.updateMany({
                 where: { id, tenantId },
                 data: updateData
             });
             if (updated.count === 0) {
                 return res.status(404).json({ success: false, error: 'Phone number not found' });
             }
-            const record = await prisma.phoneNumber.findUnique({ where: { id } });
+            const record = await prisma.PhoneNumber.findUnique({ where: { id } });
             res.json(record);
         } catch (error) {
             console.error('[PhoneNumbers] PATCH /:id error:', error);
