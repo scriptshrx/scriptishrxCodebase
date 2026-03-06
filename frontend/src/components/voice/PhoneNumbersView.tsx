@@ -554,15 +554,14 @@ export default function PhoneNumbersView({
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
         <div>
-        <div className="p-6 border-b justify-between flex border-gray-200">
+        <div className="p-6 border-b justify-between gap-2 flex border-gray-200">
 
-          <h2 className="text-lg font-bold mb-4">{formData?.phoneNumber || 'No phone Number yet'}</h2>
+          <h2 className="text-md font-bold mb-4">{formData?.phoneNumber || 'No phone Number yet'}</h2>
            <button onClick={()=>setShowAddNumber(true)}
            type='button' 
-           className="px-4 py-2 cursor-pointer bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center gap-2">
+           className="px-2 py-[8px] cursor-pointer bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center gap-2">
                   <Plus className="w-4 h-4" />
                   Add
-                  <ChevronDown className="w-4 h-4" />
                 </button>
           </div>
           <div className="relative">
@@ -570,7 +569,7 @@ export default function PhoneNumbersView({
               placeholder="Search numbers"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 text-gray-800 placeholder:text-gray-800 border border-gray-400 shadow-md"
+              className="pl-10 text-gray-800 mx-auto placeholder:text-gray-800 border w-[90%] border-gray-400 shadow-md"
             />
            
           
