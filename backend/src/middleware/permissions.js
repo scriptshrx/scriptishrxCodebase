@@ -88,8 +88,9 @@ function checkPermission(resource, action) {
             // - OR the user has a permission for the resource with action '*'
             // - OR the user is SUPER_ADMIN (implicit override)
 
-            if (effectiveRoleName === 'SUPER_ADMIN') {
-                return next(); // Super Admin bypass
+            // Super Admin & Owner bypass permissions
+            if (effectiveRoleName === 'SUPER_ADMIN' || effectiveRoleName === 'OWNER') {
+                return next(); // bypass for top-level roles
             }
 
             const hasPermission = assignedPermissions.some(perm =>
