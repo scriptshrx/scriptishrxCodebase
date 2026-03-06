@@ -41,9 +41,11 @@ function getTenantId(): string {
 
 async function apiFetch(path: string, opts: any = {}) {
   const tenantId = getTenantId();
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const headers: any = {
     "Content-Type": "application/json",
     "x-tenant-id": tenantId,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...opts.headers,
   };
   const res = await fetch(`${API_BASE}${path}`, {
