@@ -17,10 +17,12 @@ router.get(
     async (req, res) => {
         try {
             const tenantId = req.scopedTenantId;
+            console.log('[VoiceAgents] list called, tenantId=', tenantId);
             const agents = await prisma.voiceAgent.findMany({
                 where: { tenantId },
                 orderBy: { updatedAt: 'desc' }
             });
+            console.log('[VoiceAgents] fetched', agents.length, 'agents');
             res.json({ success: true, agents });
         } catch (error) {
             console.error('[VoiceAgents] fetch list error', error);
