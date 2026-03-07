@@ -55,7 +55,7 @@
     "csv-parse": "^6.1.0",
     "cheerio": "^1.0.0-rc.12",
     "tesseract.js": "^4.0.2",
-    "pptx2json": "^0.1.0"
+    "pptx2json": "^0.0.10"
   },
   "devDependencies": {
     "jest": "^29.0.0",
