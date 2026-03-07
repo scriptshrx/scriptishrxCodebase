@@ -112,5 +112,6 @@ async function listDocuments(req, res) {
 module.exports = {
     uploadDocument,
     listBases,
+    createBase,
     listDocuments
 };
