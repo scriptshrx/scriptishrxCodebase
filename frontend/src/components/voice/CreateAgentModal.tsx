@@ -123,14 +123,15 @@ export default function CreateAgentModal({
   
  const path = usePathname();
 
-  const handleTemplateSelect = (templateId: TemplateType) => {
+  const handleTemplateSelect = (item) => {
     // Close modal
     onOpenChange(false);
  
  
     console.log('Current path is',path);
     // Route based on prompt mode and template
-    const route = `/voice/new/${promptMode}?template=${templateId}`;
+    const route = `/voice/new/${promptMode}?template=${item.id}`;
+    localStorage.setItem('template',JSON.stringify(item))
     router.push(route);
   };
 
@@ -165,6 +166,13 @@ export default function CreateAgentModal({
           {/* Main Panel - Cards Grid */}
           <div className="flex-1 p-6 overflow-y-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <TemplateCard
+                 
+                  index={0}
+                  template={templates[0]}
+                 
+                  onClick={() => handleTemplateSelect([])}
+                />
               {agents.length<1?
               templates.map((template,i) => (
                 <TemplateCard
@@ -173,7 +181,7 @@ export default function CreateAgentModal({
                  
                   template={template}
                  
-                  onClick={() => handleTemplateSelect(template.id)}
+                  onClick={() => handleTemplateSelect(template)}
                 />
               ))
             :
@@ -183,7 +191,7 @@ export default function CreateAgentModal({
                   index={i}
                   agent={agent}
                  
-                  onClick={() => handleTemplateSelect(agent.id)}
+                  onClick={() => handleTemplateSelect(agent)}
                 />)}
             </div>
           </div>
