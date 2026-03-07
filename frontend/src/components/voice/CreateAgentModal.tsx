@@ -168,7 +168,7 @@ export default function CreateAgentModal({
               {agents.length<1?
               templates.map((template,i) => (
                 <TemplateCard
-                  key={template.id}
+                  key={i}
                   index={i}
                  
                   template={template}
@@ -177,9 +177,9 @@ export default function CreateAgentModal({
                 />
               ))
             :
-            agents.map((agent)=>
+            agents.map((agent,i)=>
             <TemplateCard
-                  key={agent.id}
+                  key={i}
                   index={i}
                   agent={agent}
                  
