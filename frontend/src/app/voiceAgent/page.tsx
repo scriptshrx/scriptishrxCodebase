@@ -207,7 +207,7 @@ export default function VoicePage() {
     </div>
     :
     <div className="flex min-h-screen bg-gray-50 text-gray-800">
-      {/* sidebar (same as before) */}
+      {/* sidebar (same as befoe) */}
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between">
         <div>
           <div className="p-6 flex items-center gap-2 text-xl font-bold">
