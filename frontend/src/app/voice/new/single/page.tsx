@@ -82,7 +82,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [showTitleInput, setShowTitleInput] = useState(false);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
-  // settings panels
+  // settings panel
   const [activePanel, setActivePanel] = useState<string | null>(null);
   const [functionsList, setFunctionsList] = useState<any[]>([]);
   const [speechSettings, setSpeechSettings] = useState({ speed: 50, sensitivity: 50 });
