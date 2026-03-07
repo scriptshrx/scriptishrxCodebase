@@ -67,6 +67,8 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
 
   const [loading, setLoading] = useState(true);
 
+  
+
   // core fields
   const [agentId, setAgentId] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -100,7 +102,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
+    useEffect(() => {
  if(window && typeof window !== undefined){
   const item = localStorage.getItem('template');
   if(item){
@@ -133,6 +135,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
       titleInputRef.current.focus();
     }
   }, [showTitleInput]);
+
 
   const handleCreate = async () => {
     setSaving(true);
@@ -599,11 +602,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
 }
 
 function SinglePromptAgentPageContent() {
-  const searchParams = useSearchParams();
-  const template = (searchParams.get("template") || "blank") as
-    | "blank"
-    | "healthcare_checkin"
-    | "notification";
+
 
   return <SinglePromptAgentContent template={template} />;
 }
