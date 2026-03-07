@@ -100,37 +100,32 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const init = () => {
-      switch (template) {
-        case "healthcare_checkin":
-          setName("Wellness Agent");
-          const hcPrompt = `You are a wellnes or health voice agent. Greet the patient in a empathic way, confirm their name and date of birth, ask about symptoms and severity, inquire about allergies and medications. If you detect any emergency signs, advise them to seek emergency services. Offer to transfer to a human if necessary.`;
-          setPrompt(hcPrompt);
-          setDynamicVariables(Array.from(new Set(Array.from(hcPrompt.matchAll(/\{\{(.*?)\}\}/g)).map(m => m[1]))));
-          setWelcomeMessage(
-            "Hi, this is ScriptishRx Wellness voice agent calling for a quick health check-in. How are you feeling today?"
-          );
-          break;
-        case "appointment":
-          setName("Appointment Agent");
-          const apPrompt = `You are a booking management agent for ScriptishRx company, Check that schedules align with company calendar before booking appointment for a caller. 
-Remember to collect the Name, phone, and email of the customer before booking appointment.`;
-          setPrompt(apPrompt);
-          setDynamicVariables(Array.from(new Set(Array.from(apPrompt.matchAll(/\{\{(.*?)\}\}/g)).map(m => m[1]))));
-          setWelcomeMessage(
-            "Hi, this is ScriptishRx with an important update for you."
-          );
-          break;
-        default:
-          setName("New Single Prompt Agent");
-          setPrompt("");
-          setDynamicVariables([]);
-          setWelcomeMessage("");
-      }
-      setLoading(false);
-    };
-    init();
-  }, [template]);
+ if(window && typeof window !== undefined){
+  const item = localStorage.getItem('template');
+  if(item){
+    const template = JSON.parse(item)
+    if(item.title){
+      setName(item.id);
+      setWelcomeMessage(item.subtitle);
+      setPrompt(item.description);
+      return
+    }
+    setAgentId(template.id);
+  setName(template.name);
+  setCallSettings(template.agentConfig.call_settings);
+  setLanguage(template.agentConfig.speech.language);
+  setLlmModel(template.agentConfig.llm.model);
+  setPrompt(template.agentConfig.prompt.system_prompt);
+  setWelcomeMessage(template.agentConfig.prompt.welcome_message);
+  setDynamicVariables(template.agentConfig.dynamic_variables);
+  setFunctionsList(template.agentConfig.functions);
+  setSpeechSettings(template.agentConfig.speech);
+  setVoiceId(template.agentConfig.voice.voice_id);
+ 
+
+  }
+ }
+  }, []);
 
   useEffect(() => {
     if (showTitleInput && titleInputRef.current) {
