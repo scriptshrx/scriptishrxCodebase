@@ -403,7 +403,7 @@ function SinglePromptAgentContent() {
                     setActivePanel((s) => (s === item.key ? null : item.key))
                   }
                 >
-                  <item.icon className="w-5 h-5 text-blue-600" />
+                  <item.icon className="w-5 h-5 text-blue-800" />
                   <span className="flex-1 text-sm text-gray-800">
                     {item.name}
                   </span>
