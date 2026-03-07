@@ -113,6 +113,7 @@ function SinglePromptAgentContent() {
       setName(item.id);
       setWelcomeMessage(item.subtitle);
       setPrompt(item.description);
+      setLoading(false)
       return
     }
     setAgentId(template.id);
@@ -126,6 +127,7 @@ function SinglePromptAgentContent() {
   setFunctionsList(template.agentConfig.functions);
   setSpeechSettings(template.agentConfig.speech);
   setVoiceId(template.agentConfig.voice.voice_id);
+  setLoading(false)
  
 
   }
