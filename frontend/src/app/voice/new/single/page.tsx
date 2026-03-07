@@ -142,7 +142,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
     setSaving(true);
     setError("");
     try {
-      // construct agentConfig object according to spec
+      // construct agentConfig object according to speci
       const agentConfig: any = {
         prompt: {
           system_prompt: prompt,
