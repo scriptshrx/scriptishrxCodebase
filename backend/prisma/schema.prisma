@@ -526,6 +526,7 @@ model KnowledgeBase {
   documents   KnowledgeDocument[]
 
   @@index([tenantId])
+  @@map("knowledge_base")
 }
 
 model KnowledgeDocument {
@@ -551,6 +552,7 @@ model KnowledgeDocument {
 
   @@index([tenantId])
   @@index([knowledgeBaseId])
+  @@map("knowledge_document")
 }
 
 model KnowledgeChunk {
@@ -568,4 +570,5 @@ model KnowledgeChunk {
 
   @@index([tenantId])
   @@index([documentId])
+  @@map("knowledge_chunk")
 }
