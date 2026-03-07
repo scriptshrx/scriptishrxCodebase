@@ -238,7 +238,7 @@ export default function VoicePage() {
                   onClick={() => setSelectSideBar(item.name)}
                   key={item.name}
                   className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
-                    isActive ? 'bg-gray-100 font-semibold' : 'hover:bg-gray-100'
+                    isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-blue-100'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -249,9 +249,9 @@ export default function VoicePage() {
           </nav>
         </div>
         <div className="p-6 space-y-4 border-t border-gray-200">
-          <div className="bg-gray-100 p-3 rounded-lg text-xs">
-            <div className="font-semibold">Pay As You Go</div>
-            <div className="text-gray-600">No upcoming bill</div>
+          <div className="bg-green-100/70 p-3 rounded-lg text-xs">
+            <div className="font-semibold text-green-600">Pay As You Go</div>
+            <div className="text-green-600/80">No upcoming bill</div>
           </div>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium">

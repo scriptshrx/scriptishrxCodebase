@@ -323,9 +323,7 @@ Remember to collect the Name, phone, and email of the customer before booking ap
             ]}
             className="h-8"
           />
-          <span className="text-xs text-gray-500 hidden sm:block">
-            Estimated Latency: 1100–1250ms
-          </span>
+         
           <Button
             variant="primary"
             size="default"

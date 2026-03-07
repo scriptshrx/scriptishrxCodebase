@@ -92,7 +92,9 @@ export default function VoiceAgentsView({
             <p className="text-sm text-gray-500">Manage ScriptishRx voice agents</p>
           </div>
           <div className="relative">
-            <Button onClick={() => onCreateModalOpenChange(true)} className="bg-gray-900 text-white">
+            <Button onClick={() => onCreateModalOpenChange(true)}
+            variant="primary"
+            size="default">
               <Plus className="w-4 h-4 mr-2" />Create Voice Agent <ChevronDown className="w-4 h-4 ml-2" />
             </Button>
           </div>
@@ -160,13 +162,13 @@ export default function VoiceAgentsView({
                   key={agent.id}
                   className="hover:bg-gray-50 cursor-pointer relative"
                 >
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-blue-800">
                     {agent.name}
                   </td>
                   <td className="px-6 py-4">
                     {agent.agentType}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className={`px-6 ${agent.status=='active'?'text-green-500':'text-gray-600'} py-4`}>
                     {agent.status}
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
@@ -180,7 +182,7 @@ export default function VoiceAgentsView({
                       }}
                       className="p-1 hover:bg-gray-100 rounded-full"
                     >
-                      <MoreVertical className="w-4 h-4" />
+                      <MoreVertical className="w-4 h-4 text-blue-800" />
                     </button>
                     {rowMenuOpenId === agent.id && (
                       <div className="absolute right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
