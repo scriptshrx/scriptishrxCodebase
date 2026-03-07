@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/Input';
 
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
-// Types 
+// Types of
 
 type KnowledgeBase = {
   id: string;
