@@ -61,8 +61,9 @@ async function apiFetch(path: string, opts: any = {}) {
   }
   return res.json();
 }
+ //const[template,setTemplate]=useState({})
 
-function SinglePromptAgentContent({ template }: { template: "blank" | "healthcare_checkin" | "notification" }) {
+function SinglePromptAgentContent() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
@@ -93,6 +94,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
   const [postCall, setPostCall] = useState({ enableSummaries: false });
   const [security, setSecurity] = useState({ piiRedaction: false });
   const[buttonChoice, setButtonChoice]=useState('test-call')
+ 
 
 
 
@@ -604,7 +606,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
 function SinglePromptAgentPageContent() {
 
 
-  return <SinglePromptAgentContent template={template} />;
+  return <SinglePromptAgentContent/>;
 }
 
 export default function SinglePromptAgentPage() {
