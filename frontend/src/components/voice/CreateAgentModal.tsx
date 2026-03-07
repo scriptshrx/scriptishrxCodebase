@@ -189,7 +189,7 @@ export default function CreateAgentModal({
             agents.map((agent,i)=>
             <TemplateCard
                   key={i}
-                  index={i}
+                  index={i+1}
                   agent={agent}
                  
                   onClick={() => handleTemplateSelect(agent)}
