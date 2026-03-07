@@ -10,7 +10,7 @@ import {
   Key,
   Globe,
   PhoneIncoming,
-  BrainCircuit
+  Brain
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -226,7 +226,7 @@ export default function VoicePage() {
             {[
               { name: 'Voice Agents', icon: LayoutList },
               { name: 'Phone Numbers', icon: Phone },
-              { name: 'Knowledge Resources', icon: BrainCircuit },
+              { name: 'Knowledge Resources', icon: Brain },
               { name: 'Call Logs', icon: PhoneIncoming },
               { name: 'Patients', icon: Users },
               { name: 'Billing', icon: CreditCard },
