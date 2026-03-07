@@ -171,6 +171,36 @@ async function semanticSearch(query, tenantId, topK = 3) {
 }
 
 /**
+ * Search tenant knowledge chunks using pgvector similarity
+ */
+async function searchKnowledgeChunks(query, tenantId, topK = 3) {
+  if (!openai) return [];
+  try {
+    const queryEmbedding = await generateEmbedding(query);
+    if (!queryEmbedding) return [];
+
+    const rows = await prisma.$queryRaw`
+      SELECT id, content, chunk_index
+      FROM knowledge_chunks
+      WHERE tenant_id = ${tenantId}
+      ORDER BY embedding <#> ${queryEmbedding}::vector
+      LIMIT ${topK}
+    `;
+    return rows;
+  } catch (err) {
+    console.error('[RAG] knowledge chunk search error', err.message);
+    return [];
+  }
+}
+
+module.exports = {
+  query,
+  semanticSearch,
+  keywordSearch,
+  searchKnowledgeChunks
+};
+
+/**
  * Keyword-based search (fallback)
  */
 async function keywordSearch(query, tenantId) {
@@ -206,27 +236,44 @@ Your goal is to assist users with services, booking, location, directions, and g
 - Do NOT make up services or prices not provided.
 `;
 
-  // Try semantic search first
+  // Try semantic search first against FAQ entries
   let searchResults = [];
   if (openai) {
     const semantic = await semanticSearch(userMessage, tenantId, 3);
     searchResults = semantic.results;
   }
 
-  // Fallback to keyword search
+  // also try searching any uploaded knowledge chunks (same embedding)
+  let chunkResults = [];
+  try {
+    chunkResults = await searchKnowledgeChunks(userMessage, tenantId, 3);
+  } catch (e) {
+    console.warn('[RAG] chunk search failed:', e.message);
+  }
+
+  // if there are chunk results we will surface them separately later
+
+  // Fallback to keyword search if no faq matches
   if (searchResults.length === 0) {
     const keyword = await keywordSearch(userMessage, tenantId);
     searchResults = keyword.results;
   }
 
-  // Build context from search results
+  // Build context from search results and chunk results (chunks get precedence)
+  if (chunkResults && chunkResults.length > 0) {
+    systemContext += `\n**Relevant Document Snippets:**\n`;
+    chunkResults.forEach(r => {
+      systemContext += `- ${r.content}\n\n`;
+    });
+  }
+
   if (searchResults.length > 0) {
-    systemContext += `\n**Relevant Knowledge:**\n`;
+    systemContext += `\n**Relevant Knowledge (FAQs):**\n`;
     searchResults.forEach(({ faq, score }) => {
       systemContext += `- **${faq.question}**: ${faq.answer}\n\n`;
     });
-  } else {
-    // Include all FAQs if no specific match
+  } else if (!(chunkResults && chunkResults.length > 0)) {
+    // Include all FAQs if no specific match anywhere
     systemContext += `\n**Knowledge Base:**\n`;
     faqs.forEach(faq => {
       systemContext += `- **${faq.question}**: ${faq.answer}\n\n`;
@@ -299,6 +346,7 @@ module.exports = {
   query,
   semanticSearch,
   keywordSearch,
+  searchKnowledgeChunks,
   getContextForVoice,
   generateEmbedding,
   clearCache,

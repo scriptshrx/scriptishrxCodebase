@@ -513,3 +513,59 @@ model Service {
   @@index([tenantId])
   @@map("services")
 }
+
+// ===== Knowledge Base Tables =====
+model KnowledgeBase {
+  id          String   @id @default(uuid())
+  tenantId    String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  documents   KnowledgeDocument[]
+
+  @@index([tenantId])
+}
+
+model KnowledgeDocument {
+  id              String   @id @default(uuid())
+  tenantId        String
+  knowledgeBaseId String
+  title           String
+  fileName        String
+  fileType        String?
+  mimeType        String?
+  fileSize        Int?
+  storagePath     String?
+  status          String   @default("processing")
+  extractedText   String?
+  chunkCount      Int      @default(0)
+  metadataJson    Json?
+  errorMessage    String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  knowledgeBase   KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+  chunks          KnowledgeChunk[]
+
+  @@index([tenantId])
+  @@index([knowledgeBaseId])
+}
+
+model KnowledgeChunk {
+  id          String   @id @default(uuid())
+  tenantId    String
+  documentId  String
+  chunkIndex  Int
+  content     String
+  tokenCount  Int?
+  metadataJson Json?
+  embedding   Unsupported("vector")?
+  createdAt   DateTime @default(now())
+
+  document    KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([documentId])
+}

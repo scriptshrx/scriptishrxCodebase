@@ -142,6 +142,8 @@ const marketingRouter = require('./routes/marketing');
 const organizationRouter = require('./routes/organization');
 const servicesRouter = require('./routes/services');
 const tenantCalendarRouter = require('./routes/tenantCalendar.routes');
+// knowledge base document ingestion
+const knowledgeBaseRouter = require('./routes/knowledgeBaseRoutes');
 
 // Load AI Chat routes (production: must exist)
 let chatAIRouter = null;
@@ -198,6 +200,9 @@ app.use('/api/voice', voiceRouter);
 app.use('/api/voice-agents', require('./routes/voiceAgents')); // new voice agent management
 // phone numbers CRUD endpoints used by the new UI
 app.use('/api/phone-numbers', require('./routes/phoneNumbers'));
+
+// Knowledge base document uploads
+app.use('/api/knowledge-bases', knowledgeBaseRouter);
 app.use('/api/marketing', marketingRouter);
 app.use('/api/organization', organizationRouter);
 app.use('/api/services', servicesRouter);

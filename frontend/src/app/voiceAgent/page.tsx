@@ -9,12 +9,14 @@ import {
   CreditCard,
   Key,
   Globe,
-  PhoneIncoming
+  PhoneIncoming,
+  BrainCircuit
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import VoiceAgentsView from '@/components/voice/VoiceAgentsView';
 import PhoneNumbersView from '@/components/voice/PhoneNumbersView';
+import KnowledgeResourcesView from '@/components/voice/KnowledgeResourcesView';
 
 
 // types
@@ -224,6 +226,7 @@ export default function VoicePage() {
             {[
               { name: 'Voice Agents', icon: LayoutList },
               { name: 'Phone Numbers', icon: Phone },
+              { name: 'Knowledge Resources', icon: BrainCircuit },
               { name: 'Call Logs', icon: PhoneIncoming },
               { name: 'Patients', icon: Users },
               { name: 'Billing', icon: CreditCard },
@@ -278,6 +281,12 @@ export default function VoicePage() {
       )}
       {selectedSideBar === 'Phone Numbers' && (
         <PhoneNumbersView
+          createModalOpen={createModalOpen}
+          onCreateModalOpenChange={setCreateModalOpen}
+        />
+      )}
+      {selectedSideBar === 'Knowledge Resources' && (
+        <KnowledgeResourcesView
           createModalOpen={createModalOpen}
           onCreateModalOpenChange={setCreateModalOpen}
         />
