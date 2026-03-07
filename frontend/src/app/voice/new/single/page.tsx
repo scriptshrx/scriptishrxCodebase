@@ -398,7 +398,7 @@ function SinglePromptAgentContent() {
             ].map((item) => (
               <div key={item.key}>
                 <button
-                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded"
+                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-100 rounded"
                   onClick={() =>
                     setActivePanel((s) => (s === item.key ? null : item.key))
                   }
