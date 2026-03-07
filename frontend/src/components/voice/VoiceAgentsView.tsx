@@ -4,7 +4,8 @@ import {
   Search as SearchIcon,
   Plus,
   ChevronDown,
-  Rotot
+  Bot,
+  
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -164,7 +165,7 @@ export default function VoiceAgentsView({
                   className="hover:bg-gray-50 cursor-pointer relative"
                 >
                   <td className="px-6 py-4 text-blue-900 font-bold flex items-center gap-2">
-                    <Rotot className="text-blue-700 w-4 h-4" />
+                    <Bot className="text-blue-700 w-4 h-4" />
                     {agent.name}
                   </td>
                   <td className="px-6 py-4">
