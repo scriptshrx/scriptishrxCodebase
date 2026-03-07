@@ -5,7 +5,7 @@ import { Plus, Search as SearchIcon, Trash2, AlertTriangle, Info, X } from 'luci
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
-const API_BASE = 'https://scriptshrxcodebase.onrender.com';
+const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
 // Types of
 
