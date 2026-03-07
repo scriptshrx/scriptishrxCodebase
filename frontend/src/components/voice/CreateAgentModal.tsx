@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 
 interface CreateAgentModalProps {
   open: boolean;
+  agents:[];
   onOpenChange: (open: boolean) => void;
 }
 
@@ -47,10 +48,12 @@ const templates: Template[] = [
 
 function TemplateCard({
   template,
+  agent,
   index,
   onClick
 }: {
   template: Template;
+  agent;
   index:Number;
   onClick: () => void;
 }) {
@@ -59,20 +62,16 @@ function TemplateCard({
       onClick={onClick}
       className="p-6 bg-blue-50 relative border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
     >
-      {template.icon ? (
-        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-          {template.icon}
-        </div>
-      ) : (
+      
         <Bot className="w-6 h-6 text-blue-600" />
-      )}
+  
       <div className="items-center flex justify-center text-sm text-blue-500 border border-blue-400 h-8 w-8 rounded-full absolute top-4 right-4">{index}</div>
       <div className="text-center">
-        <div className="font-semibold text-gray-600 text-sm">{template.title}</div>
-        <div className="text-xs text-blue-600 mt-1">{template.subtitle}</div>
+        <div className="font-semibold text-gray-600 text-sm">{agent?agent.name:template.title}</div>
+        <div className="text-xs text-blue-600 mt-1">{agent?agent.id:template.subtitle}</div>
       </div>
       <p className="text-xs text-gray-400 text-center leading-relaxed">
-        {template.description}
+        {agent?agent.agentConfig.prompt.welcome_message:template.description}
       </p>
     </div>
   );
@@ -116,6 +115,7 @@ function PromptModeSelector({
 
 export default function CreateAgentModal({
   open,
+  agents,
   onOpenChange
 }: CreateAgentModalProps) {
   const router = useRouter();
@@ -165,14 +165,26 @@ export default function CreateAgentModal({
           {/* Main Panel - Cards Grid */}
           <div className="flex-1 p-6 overflow-y-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {templates.map((template,i) => (
+              {agents.length<1?
+              templates.map((template,i) => (
                 <TemplateCard
                   key={template.id}
                   index={i}
+                 
                   template={template}
+                 
                   onClick={() => handleTemplateSelect(template.id)}
                 />
-              ))}
+              ))
+            :
+            agents.map((agent)=>
+            <TemplateCard
+                  key={agent.id}
+                  index={i}
+                  agent={agent}
+                 
+                  onClick={() => handleTemplateSelect(agent.id)}
+                />)}
             </div>
           </div>
         </div>

@@ -227,7 +227,7 @@ export default function VoiceAgentsView({
       </main>
 
       {/* Modal */}
-      <CreateAgentModal open={createModalOpen} onOpenChange={onCreateModalOpenChange} />
+      <CreateAgentModal open={createModalOpen} agents={agents} onOpenChange={onCreateModalOpenChange} />
     </>
   );
 }
