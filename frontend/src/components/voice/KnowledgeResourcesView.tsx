@@ -29,7 +29,7 @@ type KnowledgeDocument = {
   updatedAt: string;
 };
 
-// API helper (same as other view)
+// API helper (same as other views)
 async function apiFetch(path: string, opts: any = {}) {
   const headers: any = {
     'Content-Type': 'application/json',
