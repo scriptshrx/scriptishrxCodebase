@@ -516,12 +516,12 @@ model Service {
 
 // ===== Knowledge Base Tables =====
 model KnowledgeBase {
-  id          String   @id @default(uuid())
-  tenantId    String
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          String   @id @default(uuid()) @map("id")
+  tenantId    String   @map("tenant_id")
+  name        String   @map("name")
+  description String?  @map("description")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   documents   KnowledgeDocument[]
 
@@ -530,22 +530,22 @@ model KnowledgeBase {
 }
 
 model KnowledgeDocument {
-  id              String   @id @default(uuid())
-  tenantId        String
-  knowledgeBaseId String
-  title           String
-  fileName        String
-  fileType        String?
-  mimeType        String?
-  fileSize        Int?
-  storagePath     String?
-  status          String   @default("processing")
-  extractedText   String?
-  chunkCount      Int      @default(0)
-  metadataJson    Json?
-  errorMessage    String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id              String   @id @default(uuid()) @map("id")
+  tenantId        String   @map("tenant_id")
+  knowledgeBaseId String   @map("knowledge_base_id")
+  title           String   @map("title")
+  fileName        String   @map("file_name")
+  fileType        String?  @map("file_type")
+  mimeType        String?  @map("mime_type")
+  fileSize        Int?     @map("file_size")
+  storagePath     String?  @map("storage_path")
+  status          String   @default("processing") @map("status")
+  extractedText   String?  @map("extracted_text")
+  chunkCount      Int      @default(0) @map("chunk_count")
+  metadataJson    Json?    @map("metadata_json")
+  errorMessage    String?  @map("error_message")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   knowledgeBase   KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
   chunks          KnowledgeChunk[]
@@ -556,15 +556,15 @@ model KnowledgeDocument {
 }
 
 model KnowledgeChunk {
-  id          String   @id @default(uuid())
-  tenantId    String
-  documentId  String
-  chunkIndex  Int
-  content     String
-  tokenCount  Int?
-  metadataJson Json?
-  embedding   Unsupported("vector")?
-  createdAt   DateTime @default(now())
+  id          String   @id @default(uuid()) @map("id")
+  tenantId    String   @map("tenant_id")
+  documentId  String   @map("document_id")
+  chunkIndex  Int      @map("chunk_index")
+  content     String   @map("content")
+  tokenCount  Int?     @map("token_count")
+  metadataJson Json?   @map("metadata_json")
+  embedding   Unsupported("vector")? @map("embedding")
+  createdAt   DateTime @default(now()) @map("created_at")
 
   document    KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
