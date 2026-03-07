@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/Input';
 import VoiceAgentsView from '@/components/voice/VoiceAgentsView';
 import PhoneNumbersView from '@/components/voice/PhoneNumbersView';
 import KnowledgeResourcesView from '@/components/voice/KnowledgeResourcesView';
+import { useRouter } from 'next/router';
 
 
 // types
@@ -37,7 +38,7 @@ type Agent = {
   updatedAt: string;
 };
 
-
+const router = useRouter()
 // api helper
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
@@ -51,6 +52,19 @@ async function apiFetch(path: string, opts: any = {}) {
   // Get auth token from localStorage
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   if (token) {
+    // try to decode JWT and check exp claim
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.exp && Date.now() / 1000 > payload.exp) {
+        console.warn('[apiFetch] token expired, redirecting to login');
+        router.push('/login');
+        throw new Error('token_expired');
+      }
+    } catch (err) {
+      // if parsing fails we still attempt request, but log
+      console.warn('[apiFetch] failed to parse token payload', err);
+    }
+
     headers['Authorization'] = `Bearer ${token}`;
     console.log('[apiFetch] Using token from localStorage');
   } else {
