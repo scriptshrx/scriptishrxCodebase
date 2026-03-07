@@ -63,7 +63,7 @@ router.post(
                 status
             } = req.body;
 
-            // agentConfig must be provided and should be an object
+            // agentConfig must be provided and should be an objects
             if (!name || !agentConfig || typeof agentConfig !== 'object') {
                 return res.status(400).json({ success: false, error: 'name and agentConfig are required' });
             }
