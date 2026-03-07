@@ -517,7 +517,7 @@ function SinglePromptAgentContent({ template }: { template: "blank" | "healthcar
         );
         case 'brain':
           return(<div className="flex items-center justify-center p-4 px-2">
-        <Button variant="primary" size="default">Upload Files</Button>
+        <Button variant="primary" size="default">Upload Files Here</Button>
           </div>);
       case "call":
         return (
