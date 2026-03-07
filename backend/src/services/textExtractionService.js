@@ -1,6 +1,8 @@
 const pdfParse = require('pdf-parse');
 const xlsx = require('xlsx');
-const csvParse = require('csv-parse/lib/sync');
+// csv-parse v6 exports a clean "sync" entrypoint; earlier versions used an internal path
+// see https://csv.js.org/parse/ for docs
+const { parse: csvParse } = require('csv-parse/sync');
 const cheerio = require('cheerio');
 const { createWorker } = require('tesseract.js');
 const fs = require('fs');
