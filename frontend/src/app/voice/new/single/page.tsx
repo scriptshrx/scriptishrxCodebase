@@ -180,7 +180,7 @@ function SinglePromptAgentContent() {
         agentType: "Single Prompt",
         mode: "single",
         name,
-        template,
+        
         agentConfig,
       };
       const res = await apiFetch(`/api/voice-agents`, {
