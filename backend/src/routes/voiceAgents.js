@@ -74,7 +74,7 @@ router.post(
                     agentType: agentType || 'Single Prompt',
                     mode: mode || 'single',
                     agentConfig,
-                    status: status || 'draft',
+                    status: status || 'active',
                     tenantId
                 }
             });
