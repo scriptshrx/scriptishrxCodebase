@@ -24,6 +24,8 @@ async function extractText({ buffer, fileType, mimeType }) {
 
   fileType = (fileType || '').toLowerCase();
 
+  try{
+
   if (fileType === 'pdf') {
     const data = await pdfParse(buffer);
     text = data.text || '';
@@ -45,9 +47,6 @@ async function extractText({ buffer, fileType, mimeType }) {
     const html = buffer.toString('utf8');
     const $ = cheerio.load(html);
     text = $('body').text();
-  } else if (fileType === 'docx' || fileType === 'doc') {
-    const result = await mammoth.extractRawText({ buffer });
-    text = result.value || '';
   } else if (fileType === 'docx' || fileType === 'doc') {
     const result = await mammoth.extractRawText({ buffer });
     text = result.value || '';
@@ -85,7 +84,11 @@ async function extractText({ buffer, fileType, mimeType }) {
   if (!text || !text.trim()) {
     throw new Error('Extracted text is empty');
   }
-
+  }
+  catch(err){
+    console.error('[TextExtraction] error extracting text:', err.message);
+    throw err;
+  }
   // normalization
   text = text.replace(/\s+/g, ' ').trim();
   return text;
