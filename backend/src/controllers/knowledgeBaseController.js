@@ -38,7 +38,7 @@ async function uploadDocument(req, res) {
         }
 
         // create document record
-        const doc = await prisma.knowledgeDocument.create({
+        const doc = await prisma.knowledgeDocuments.create({
             data: {
                 tenantId,
                 knowledgeBaseId,
