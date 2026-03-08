@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/Input';
 import VoiceAgentsView from '@/components/voice/VoiceAgentsView';
 import PhoneNumbersView from '@/components/voice/PhoneNumbersView';
 import KnowledgeResourcesView from '@/components/voice/KnowledgeResourcesView';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 
 // types
@@ -38,12 +38,10 @@ type Agent = {
   updatedAt: string;
 };
 
-const router = useRouter()
-// api helper
+// api helper (router is supplied by the caller)
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
-async function apiFetch(path: string, opts: any = {}) {
-    
+async function apiFetch(path: string, opts: any = {}, router?: any) {
   const headers: any = {
     'Content-Type': 'application/json',
     ...opts.headers
@@ -57,7 +55,7 @@ async function apiFetch(path: string, opts: any = {}) {
       const payload = JSON.parse(atob(token.split('.')[1]));
       if (payload.exp && Date.now() / 1000 > payload.exp) {
         console.warn('[apiFetch] token expired, redirecting to login');
-        router.push('/login');
+        router?.push('/login');
         throw new Error('token_expired');
       }
     } catch (err) {
@@ -73,15 +71,15 @@ async function apiFetch(path: string, opts: any = {}) {
 
   const url = `${API_BASE}${path}`;
   console.log('[apiFetch] Requesting:', { url, method: opts.method || 'GET', hasAuth: !!token });
-  
+
   const res = await fetch(url, {
     credentials: 'include',
     ...opts,
     headers
   });
-  
+
   console.log('[apiFetch] Response status:', res.status);
-  
+
   if (!res.ok) {
     const errText = await res.text();
     console.error('[apiFetch] Error response:', errText);
@@ -89,18 +87,22 @@ async function apiFetch(path: string, opts: any = {}) {
     try {
       err = JSON.parse(errText);
     } catch {
-        if(errText.includes('expired')){router.push('/login')}
+      if (errText.includes('expired')) {
+        router?.push('/login');
+      }
       err = { error: errText || `HTTP ${res.status}` };
     }
     throw new Error(err.error || `Request failed with status ${res.status}`);
   }
-  
+
   const data = await res.json();
   console.log('[apiFetch] Success response:', data);
   return data;
 }
 
 export default function VoicePage() {
+  const router = useRouter();
+
   const [agents, setAgents] = useState<Agent[]>([]);
   const [selectedSideBar, setSelectSideBar] = useState('Voice Agents');
   const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
@@ -117,7 +119,7 @@ export default function VoicePage() {
     setError(null);
     try {
       console.log('[fetchAgents] Starting fetch from:', `${API_BASE}/voice-agents`);
-      const data = await apiFetch('/voice-agents');
+      const data = await apiFetch('/voice-agents', {}, router);
       console.log('[fetchAgents] Raw response:', data);
       const list = (data.agents || []).map((a: any) => ({
         ...a,
@@ -179,7 +181,7 @@ export default function VoicePage() {
         await apiFetch(`/voice-agents/${modalAgent.id}`, {
           method: 'PATCH',
           body: JSON.stringify(patchBody)
-        });
+        }, router);
       }
       await fetchAgents();
       closeModal();
@@ -190,7 +192,7 @@ export default function VoicePage() {
 
   const handleDelete = async (agent: Agent) => {
     try {
-      await apiFetch(`/voice-agents/${agent.id}`, { method: 'DELETE' });
+      await apiFetch(`/voice-agents/${agent.id}`, { method: 'DELETE' }, router);
       await fetchAgents();
     } catch (err: any) {
       alert(err.message);
@@ -201,7 +203,7 @@ export default function VoicePage() {
     const { id, ...rest } = agent as any;
     const copy = { ...rest, name: `${agent.name} (copy)` } as Partial<Agent>;
     try {
-      await apiFetch('/voice-agents', { method: 'POST', body: JSON.stringify(copy) });
+      await apiFetch('/voice-agents', { method: 'POST', body: JSON.stringify(copy) }, router);
       await fetchAgents();
     } catch (err: any) {
       alert(err.message);
