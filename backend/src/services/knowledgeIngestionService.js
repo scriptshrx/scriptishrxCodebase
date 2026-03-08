@@ -30,7 +30,7 @@ async function ingestDocument({ document, buffer, fileType, mimeType }) {
     }
 
     // 5. Update document record
-    await prisma.knowledgeDocument.update({
+    await prisma.knowledgeDocuments.update({
       where: { id: document.id },
       data: {
         status: 'ready',
@@ -42,7 +42,7 @@ async function ingestDocument({ document, buffer, fileType, mimeType }) {
   } catch (err) {
     console.error('[KnowledgeIngestion] error', err.message);
     try {
-      await prisma.knowledgeDocument.update({
+      await prisma.knowledgeDocuments.update({
         where: { id: document.id },
         data: { status: 'failed', errorMessage: err.message }
       });
