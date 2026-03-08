@@ -556,7 +556,7 @@ export default function PhoneNumbersView({
           <h2 className="text-md font-bold mb-4 my-auto">{formData?.phoneNumber || 'Add New Number'}</h2>
            <button onClick={()=>setShowAddNumber(true)}
            type='button' 
-           className="px-2 py-[8px] cursor-pointer bg-gray-800 dark:bg-gray-300 hover:bg-gray-900 text-white rounded-lg flex items-center gap-2">
+           className="px-2 py-[8px] cursor-pointer bg-gray-800 dark:bg-gray-300 hover:bg-gray-900 text-white dark:text-gray-900 rounded-lg flex items-center gap-2">
                   <Plus className="w-4 h-4 text-gray-200 dark:text-gray-900" />
                   Add
                 </button>
@@ -616,11 +616,11 @@ export default function PhoneNumbersView({
             </div>
 
             {/* Overview Section */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-              <h3 className="text-lg font-bold mb-4">Overview</h3>
+            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6 dark:bg-gray-800 dark:border-gray-700">
+              <h3 className="text-lg font-bold mb-4 dark:text-gray-100">Overview</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-semibold text-gray-800 block mb-2">
+                  <label className="text-sm font-semibold text-gray-800 dark:text-gray-200 block mb-2">
                     Nickname
                   </label>
                   <Input
@@ -630,30 +630,30 @@ export default function PhoneNumbersView({
                       setDirty(true);
                     }}
                     placeholder="Enter nickname"
-                    className="text-gray-900"
+                    className="text-gray-900 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-gray-800 block mb-2">
+                  <label className="text-sm font-semibold text-gray-800 dark:text-gray-200 block mb-2">
                     Phone Number
                   </label>
-                  <div className="px-3 py-2 bg-gray-100 rounded-md text-gray-600 text-sm">
+                  <div className="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-600 dark:text-gray-300 text-sm">
                     {formData?.phoneNumber}
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-gray-800 block mb-2">
+                  <label className="text-sm font-semibold text-gray-800 dark:text-gray-200 block mb-2">
                     Provider
                   </label>
-                  <div className="px-3 py-2 bg-gray-100 rounded-md text-gray-600 text-sm">
+                  <div className="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-600 dark:text-gray-300 text-sm">
                     {formData?.provider || 'N/A'}
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-semibold text-gray-800 block mb-2">
+                  <label className="text-sm font-semibold text-gray-800 dark:text-gray-200 block mb-2">
                     Status
                   </label>
-                  <div className="px-3 py-2 bg-gray-100 rounded-md text-gray-600 text-sm capitalize">
+                  <div className="px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-md text-gray-600 dark:text-gray-300 text-sm capitalize">
                     {formData?.status || 'Active'}
                   </div>
                 </div>
@@ -661,9 +661,9 @@ export default function PhoneNumbersView({
             </div>
 
             {/* Inbound Agents Section */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-              <h3 className="text-lg font-bold mb-2">Inbound Voice Agents</h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6 dark:bg-gray-800 dark:border-gray-700">
+              <h3 className="text-lg font-bold mb-2 dark:text-gray-100">Inbound Voice Agents</h3>
+              <p className="text-sm text-gray-600 mb-4 dark:text-gray-300">
                 Inbound agents answer calls to this number.
               </p>
 
