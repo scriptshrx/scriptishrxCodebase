@@ -5,6 +5,7 @@ const xlsx = require('xlsx');
 const { parse: csvParse } = require('csv-parse/sync');
 const cheerio = require('cheerio');
 const { createWorker } = require('tesseract.js');
+const mammoth = require('mammoth');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -44,6 +45,12 @@ async function extractText({ buffer, fileType, mimeType }) {
     const html = buffer.toString('utf8');
     const $ = cheerio.load(html);
     text = $('body').text();
+  } else if (fileType === 'docx' || fileType === 'doc') {
+    const result = await mammoth.extractRawText({ buffer });
+    text = result.value || '';
+  } else if (fileType === 'docx' || fileType === 'doc') {
+    const result = await mammoth.extractRawText({ buffer });
+    text = result.value || '';
   } else if (fileType === 'ppt' || fileType === 'pptx') {
     if (pptx2json) {
       // write buffer to temp file because pptx2json expects file path

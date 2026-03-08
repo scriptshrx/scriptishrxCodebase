@@ -23,12 +23,6 @@ async function uploadDocument(req, res) {
     }
 
     const file = req.file;
-    const ext = file.originalname.split('.').pop().toLowerCase();
-    const fileType = ext;
-    const allowed = ['pdf','txt','md','csv','html','htm','xlsx','xls','ppt','pptx'];
-    if (!allowed.includes(fileType) && !file.mimetype.startsWith('image/')) {
-        return res.status(400).json({ error: 'Unsupported file type' });
-    }
 
     try {
         // verify KB exists and belongs to tenant
@@ -38,13 +32,14 @@ async function uploadDocument(req, res) {
         }
 
         // create document record
+        const ext = file.originalname.split('.').pop().toLowerCase();
         const doc = await prisma.knowledgeDocument.create({
             data: {
                 tenantId,
                 knowledgeBaseId,
                 title: req.body.title || file.originalname,
                 fileName: file.originalname,
-                fileType,
+                fileType: ext,
                 mimeType: file.mimetype,
                 fileSize: file.size,
                 status: 'processing'
@@ -103,7 +98,7 @@ async function listDocuments(req, res) {
     if (!kb || kb.tenantId !== tenantId) {
         return res.status(403).json({ error: 'Access denied' });
     }
-    const docs = await prisma.knowledgeDocuments.findMany({
+    const docs = await prisma.knowledgeDocument.findMany({
         where: { knowledgeBaseId, tenantId }
     });
     res.json({ documents: docs });

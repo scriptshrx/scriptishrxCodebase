@@ -10,7 +10,7 @@ const MAX_FILE_SIZE = parseInt(process.env.KB_UPLOAD_MAX_SIZE || '50000000');
 // allowed extensions for knowledge base documents
 const allowedExt = [
   '.pdf', '.txt', '.md', '.csv', '.html', '.htm',
-  '.xlsx', '.xls', '.ppt', '.pptx',
+  '.xlsx', '.xls', '.ppt', '.pptx', '.docx', '.doc',
   '.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.tiff'
 ];
 

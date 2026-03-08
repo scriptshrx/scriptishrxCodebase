@@ -160,18 +160,28 @@ export default function KnowledgeResourcesView({
     form.append('file', file);
     if (file.name) form.append('title', file.name);
     setUploading(true);
+    setUploadError(null);
     try {
-      await fetch(`${API_BASE}/knowledge-bases/${selectedBaseId}/documents`, {
+      const res = await fetch(`${API_BASE}/knowledge-bases/${selectedBaseId}/documents`, {
         method: 'POST',
         body: form,
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token') || ''}`
         }
       });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setUploadError(data.error || 'Upload failed. Please try again.');
+        return;
+      }
+
       setFile(null);
+      setUploadError(null);
       fetchDocuments(selectedBaseId);
     } catch (err: any) {
-      setUploadError(err.message);
+      setUploadError(err.message || 'Network error during upload');
     } finally {
       setUploading(false);
     }
@@ -219,7 +229,7 @@ export default function KnowledgeResourcesView({
         {selectedBaseId && (
           <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-sm font-semibold">Upload Document</label>
+              <label className="text-sm font-semibold mb-4">Upload Document</label>
               <input 
                 ref={(input) => {
                   if (input) (window as any).fileInput = input;
