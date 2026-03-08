@@ -709,9 +709,9 @@ export default function PhoneNumbersView({
               <Button
                 variant="outline"
                 onClick={() => addBinding('inbound')}
-                className="w-full"
+                className="w-full dark:text-gray-400 dark:hover:bg-gray-200/50"
               >
-                <Bot className="w-4 h-4 mr-2" />
+                <Bot className="w-4 h-4 mr-2 dark:text-gray-300" />
                 Add Inbound Agent
               </Button>
             </div>
@@ -765,9 +765,9 @@ export default function PhoneNumbersView({
               <Button
                 variant="outline"
                 onClick={() => addBinding('outbound')}
-                className="w-full"
+                className="w-full dark:text-gray-400 dark:hover:bg-gray-200/50"
               >
-                <Bot className="w-4 h-4 mr-2" />
+                <Bot className="w-4 h-4 mr-2 dark:text-gray-300" />
                 Add Outbound Agent
               </Button>
             </div>
