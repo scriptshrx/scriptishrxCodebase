@@ -523,7 +523,7 @@ model KnowledgeBase {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
-  documents   KnowledgeDocument[]
+  documents   KnowledgeDocuments[]
 
   @@index([tenantId])
   @@map("knowledge_base")
@@ -566,7 +566,7 @@ model KnowledgeChunks {
   embedding   Unsupported("vector")? @map("embedding")
   createdAt   DateTime @default(now()) @map("created_at")
 
-  document    KnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  document    KnowledgeDocuments @relation(fields: [documentId], references: [id], onDelete: Cascade)
 
   @@index([tenantId])
   @@index([documentId])
