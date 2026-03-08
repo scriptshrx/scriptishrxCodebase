@@ -95,17 +95,17 @@ const NumberRow = ({
     onClick={onClick}
     className={`p-4 border-l-4 cursor-pointer transition ${
       selected
-        ? 'border-l-blue-600 bg-blue-50 dark:bg-blue-800'
+        ? 'border-l-blue-600 bg-blue-50 dark:bg-blue-800/50'
         : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
-    <div className="font-semibold text-sm text-gray-900">
+    <div className="font-semibold text-md text-gray-900">
       {number.nickname || 'Unnamed Number'}
     </div>
-    <div className="text-xs text-gray-600 mt-1">{number.phoneNumber}</div>
+    <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">{number.phoneNumber}</div>
     <div className="flex gap-2 mt-2">
       {number.provider && (
-        <span className="px-2 py-0.5 bg-gray-200 text-xs rounded text-gray-700">
+        <span className="px-2 py-0.5 bg-gray-200 text-xs rounded text-gray-700 dark:text-gray-200">
           {number.provider}
         </span>
       )}
@@ -556,8 +556,8 @@ export default function PhoneNumbersView({
           <h2 className="text-md font-bold mb-4 my-auto">{formData?.phoneNumber || 'Add New Number'}</h2>
            <button onClick={()=>setShowAddNumber(true)}
            type='button' 
-           className="px-2 py-[8px] cursor-pointer bg-gray-800 hover:bg-gray-900 text-white rounded-lg flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
+           className="px-2 py-[8px] cursor-pointer bg-gray-800 dark:bg-gray-300 hover:bg-gray-900 text-white rounded-lg flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-gray-200 dark:text-gray-900" />
                   Add
                 </button>
           </div>

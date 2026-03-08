@@ -258,12 +258,12 @@ export default function KnowledgeResourcesView({
                     setFile(e.dataTransfer.files[0]);
                   }
                 }}
-                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition hover:border-blue-400 hover:bg-blue-50"
+                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-gray-100"
               >
                 <div className="flex flex-col items-center gap-3">
                   <SearchIcon className="w-8 h-8 text-gray-400" />
                   <div>
-                    <p className="text-sm font-semibold text-gray-900">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-400">
                       Drop files here or click to select
                     </p>
                     <p className="text-xs text-gray-600 mt-1">
