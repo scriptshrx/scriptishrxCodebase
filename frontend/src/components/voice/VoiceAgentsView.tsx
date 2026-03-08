@@ -126,9 +126,9 @@ export default function VoiceAgentsView({
         </div>
 
         {/* list */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto dark:bg-gray-800 dark:border-gray-700">
           <table className="w-full text-left">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 dark:bg-gray-700">
               <tr>
                 <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Name</th>
                 <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Type</th>
@@ -162,7 +162,7 @@ export default function VoiceAgentsView({
               {filteredAgents.map(agent => (
                 <tr
                   key={agent.id}
-                  className="hover:bg-gray-50 cursor-pointer relative"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer relative"
                 >
                   <td className="px-6 py-4 text-blue-900 font-bold flex items-center gap-2">
                     <Bot className="text-blue-700 w-4 h-4" />
@@ -183,12 +183,12 @@ export default function VoiceAgentsView({
                         e.stopPropagation();
                         setRowMenuOpenId(rowMenuOpenId === agent.id ? null : agent.id);
                       }}
-                      className="p-1 hover:bg-gray-100 rounded-full"
+                      className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
                     >
                       <MoreVertical className="w-4 h-4 text-blue-800" />
                     </button>
                     {rowMenuOpenId === agent.id && (
-                      <div className="absolute right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                      <div className="absolute right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10 dark:bg-gray-800 dark:border-gray-700">
                         <button
                           onClick={() => {
                             onEdit(agent);
@@ -212,7 +212,7 @@ export default function VoiceAgentsView({
                             handleDelete(agent);
                             setRowMenuOpenId(null);
                           }}
-                          className="w-full text-left px-4 py-2 hover:bg-red-100 text-sm text-red-600"
+                          className="w-full text-left px-4 py-2 hover:bg-red-100 dark:hover:bg-red-800 text-sm text-red-600"
                         >
                           Delete
                         </button>

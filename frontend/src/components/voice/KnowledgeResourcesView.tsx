@@ -67,11 +67,11 @@ const BaseRow = ({ base, selected, onClick }: { base: KnowledgeBase; selected: b
   <div
     onClick={onClick}
     className={`p-4 border-l-4 cursor-pointer transition ${
-      selected ? 'border-l-blue-600 bg-blue-50' : 'border-l-transparent hover:bg-gray-50'
+      selected ? 'border-l-blue-600 bg-blue-50 dark:bg-blue-800' : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
-    <div className="font-semibold text-sm text-gray-900">{base.name}</div>
-    {base.description && <div className="text-xs text-gray-600 mt-1 truncate">{base.description}</div>}
+    <div className="font-semibold text-sm text-gray-900 dark:text-gray-100">{base.name}</div>
+    {base.description && <div className="text-xs text-gray-600 dark:text-gray-300 mt-1 truncate">{base.description}</div>}
   </div>
 );
 
@@ -198,14 +198,14 @@ export default function KnowledgeResourcesView({
   }, [selectedBaseId]);
 
   return (
-    <div className="flex h-full">
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col">
+    <div className="flex h-full bg-white dark:bg-gray-900 dark:text-gray-100">
+      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 flex justify-between items-center">
             <h3 className="font-semibold">Knowledge Bases</h3>
             <button
               onClick={() => onCreateModalOpenChange(true)}
-              className="p-1 hover:bg-gray-100 rounded"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
             >
               <Plus className="w-4 h-4" />
             </button>
@@ -222,7 +222,7 @@ export default function KnowledgeResourcesView({
           ))}
         </div>
       </aside>
-      <main className="flex-1 p-6 overflow-y-auto">
+      <main className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         {!selectedBaseId && (
           <div className="text-gray-600">Select or create a knowledge base.</div>
         )}

@@ -95,8 +95,8 @@ const NumberRow = ({
     onClick={onClick}
     className={`p-4 border-l-4 cursor-pointer transition ${
       selected
-        ? 'border-l-blue-600 bg-blue-50'
-        : 'border-l-transparent hover:bg-gray-50'
+        ? 'border-l-blue-600 bg-blue-50 dark:bg-blue-800'
+        : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
     <div className="font-semibold text-sm text-gray-900">
@@ -112,8 +112,8 @@ const NumberRow = ({
       {number.status && (
         <span className={`px-2 py-0.5 text-xs rounded ${
           number.status === 'active'
-            ? 'bg-green-100 text-green-700'
-            : 'bg-yellow-100 text-yellow-700'
+            ? 'bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-200'
+            : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-800 dark:text-yellow-200'
         }`}>
           {number.status}
         </span>
@@ -168,7 +168,7 @@ const BindingRow = ({
       </div>
       <button
         onClick={onRemove}
-        className="p-2 hover:bg-red-50 rounded-md text-red-600"
+        className="p-2 hover:bg-red-50 dark:hover:bg-red-800 rounded-md text-red-600"
       >
         <Trash2 className="w-4 h-4" />
       </button>
@@ -205,7 +205,7 @@ const CountryTagInput = ({
         {countries.map(code => (
           <div
             key={code}
-            className="bg-gray-200 text-gray-900 px-3 py-1 rounded text-sm flex items-center gap-2"
+            className="bg-gray-200 text-gray-900 px-3 py-1 rounded text-sm flex items-center gap-2 dark:bg-gray-700 dark:text-gray-200"
           >
             {code}
             <button
@@ -271,12 +271,12 @@ const ConnectPhoneProviderModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 dark:bg-gray-800">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-bold">Add Phone Number</h2>
           <button
             onClick={() => onOpenChange(false)}
-            className="p-1 hover:bg-gray-100 rounded-full"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
           >
             <X className="w-5 h-5" />
           </button>
@@ -547,9 +547,9 @@ export default function PhoneNumbersView({
   };
 
   return (
-    <main className="flex-1 flex bg-gray-50">
+    <main className="flex-1 flex bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
       {/* Left Column */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+      <div className="w-80 bg-white border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
         <div>
         <div className="p-4 mb-2 border-b justify-between gap-2 items-center flex border-gray-200">
 

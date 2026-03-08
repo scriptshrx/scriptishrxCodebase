@@ -103,6 +103,27 @@ async function apiFetch(path: string, opts: any = {}, router?: any) {
 export default function VoicePage() {
   const router = useRouter();
 
+  // dark mode state based on system preferences
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+
+  const applyDark = (enabled: boolean) => {
+    const html = document.documentElement;
+    if (enabled) html.classList.add('dark');
+    else html.classList.remove('dark');
+  };
+
+  useEffect(() => {
+    const m = window.matchMedia('(prefers-color-scheme: dark)');
+    setDarkMode(m.matches);
+    applyDark(m.matches);
+    const listener = (e: MediaQueryListEvent) => {
+      setDarkMode(e.matches);
+      applyDark(e.matches);
+    };
+    m.addEventListener('change', listener);
+    return () => m.removeEventListener('change', listener);
+  }, []);
+
   const [agents, setAgents] = useState<Agent[]>([]);
   const [selectedSideBar, setSelectSideBar] = useState('Voice Agents');
   const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
@@ -224,9 +245,9 @@ export default function VoicePage() {
 
     </div>
     :
-    <div className="flex min-h-screen bg-gray-50 text-gray-800">
+    <div className="flex min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
       {/* sidebar (same as befoe) */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between">
+      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between dark:bg-gray-800 dark:border-gray-700">
         <div>
           <div className="p-6 flex items-center gap-2 text-xl font-bold">
             <Stethoscope className="w-6 h-6 text-blue-600" />
@@ -257,7 +278,7 @@ export default function VoicePage() {
                   onClick={() => setSelectSideBar(item.name)}
                   key={item.name}
                   className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
-                    isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-blue-100'
+                    isActive ? 'bg-blue-100 font-semibold dark:bg-blue-800' : 'hover:bg-blue-100 dark:hover:bg-blue-800'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
