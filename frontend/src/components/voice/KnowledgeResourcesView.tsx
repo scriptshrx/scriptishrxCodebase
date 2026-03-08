@@ -220,7 +220,62 @@ export default function KnowledgeResourcesView({
           <div className="space-y-6">
             <div className="space-y-2">
               <label className="text-sm font-semibold">Upload Document</label>
-              <input type="file" onChange={handleFileChange} />
+              <input 
+                ref={(input) => {
+                  if (input) (window as any).fileInput = input;
+                }}
+                type="file" 
+                onChange={handleFileChange}
+                className="hidden"
+                id="file-input"
+              />
+              <div
+                onClick={() => {
+                  const input = document.getElementById('file-input') as HTMLInputElement;
+                  if (input) input.click();
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.add('bg-blue-50', 'border-blue-400');
+                }}
+                onDragLeave={(e) => {
+                  e.currentTarget.classList.remove('bg-blue-50', 'border-blue-400');
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove('bg-blue-50', 'border-blue-400');
+                  if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    setFile(e.dataTransfer.files[0]);
+                  }
+                }}
+                className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition hover:border-blue-400 hover:bg-blue-50"
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <SearchIcon className="w-8 h-8 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">
+                      Drop files here or click to select
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">
+                      PDF, TXT, MD, CSV, HTML, XLSX, PPT supported
+                    </p>
+                  </div>
+                  {file && (
+                    <div className="flex items-center gap-2 mt-2 px-3 py-2 bg-blue-100 rounded">
+                      <span className="text-xs text-blue-900">{file.name}</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setFile(null);
+                        }}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
               {uploadError && <p className="text-red-600 text-xs">{uploadError}</p>}
               <Button onClick={handleUpload} disabled={uploading || !file}>
                 {uploading ? 'Uploading...' : 'Upload'}
