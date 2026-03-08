@@ -109,7 +109,7 @@ export default function VoiceAgentsView({
               placeholder="Search agents by name"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 text-gray-800 placeholder:text-gray-800 border border-gray-400 shadow-md"
+              className="pl-10 text-gray-800 dark:text-gray-500 placeholder:text-gray-800 dark:placeholder:text-gray-500 border border-gray-400 shadow-md"
             />
             <SearchIcon className="absolute text-blue-900 left-3 top-3 w-4 h-4 text-gray-400" />
           </div>
@@ -164,17 +164,17 @@ export default function VoiceAgentsView({
                   key={agent.id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer relative"
                 >
-                  <td className="px-6 py-4 text-blue-900 font-bold flex items-center gap-2">
+                  <td className="px-6 py-4 text-blue-900 dark:text-blue-500 font-bold flex items-center gap-2">
                     <Bot className="text-blue-700 w-4 h-4" />
                     {agent.name}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-gray-700 dark:text-gray-400">
                     {agent.agentType}
                   </td>
-                  <td className={`px-6 ${agent.status=='active'?'text-green-500':'text-gray-600'} py-4`}>
+                  <td className={`px-6 ${agent.status=='active'?'text-green-500':'text-gray-600'} dark:text-gray-400 py-4`}>
                     {agent.status}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600">
+                  <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-400">
                     {new Date(agent.createdAt).toLocaleString()}
                   </td>
                   <td className="px-6 py-4 text-right relative">
