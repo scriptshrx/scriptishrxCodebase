@@ -185,7 +185,7 @@ export default function VoiceAgentsView({
                       }}
                       className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full"
                     >
-                      <MoreVertical className="w-4 h-4 text-blue-800" />
+                      <MoreVertical className="w-4 h-4 cursor-pointer text-blue-800" />
                     </button>
                     {rowMenuOpenId === agent.id && (
                       <div className="absolute right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10 dark:bg-gray-800 dark:border-gray-700">
