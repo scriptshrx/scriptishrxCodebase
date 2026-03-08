@@ -38,7 +38,7 @@ async function uploadDocument(req, res) {
         }
 
         // create document record
-        const doc = await prisma.knowledgeDocuments.create({
+        const doc = await prisma.knowledgeDocument.create({
             data: {
                 tenantId,
                 knowledgeBaseId,
@@ -103,7 +103,7 @@ async function listDocuments(req, res) {
     if (!kb || kb.tenantId !== tenantId) {
         return res.status(403).json({ error: 'Access denied' });
     }
-    const docs = await prisma.knowledgeDocument.findMany({
+    const docs = await prisma.knowledgeDocuments.findMany({
         where: { knowledgeBaseId, tenantId }
     });
     res.json({ documents: docs });
