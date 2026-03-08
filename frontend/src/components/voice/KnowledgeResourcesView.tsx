@@ -267,7 +267,7 @@ export default function KnowledgeResourcesView({
                       Drop files here or click to select
                     </p>
                     <p className="text-xs text-gray-600 mt-1">
-                      PDF, TXT, MD, CSV, HTML, XLSX, PPT supported
+                      PDF, DOCX, DOC, TXT, MD, CSV, HTML, XLSX, PPT supported
                     </p>
                   </div>
                   {file && (
