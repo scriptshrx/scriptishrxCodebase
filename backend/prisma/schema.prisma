@@ -529,7 +529,7 @@ model KnowledgeBase {
   @@map("knowledge_base")
 }
 
-model KnowledgeDocument {
+model KnowledgeDocuments {
   id              String   @id @default(uuid()) @map("id")
   tenantId        String   @map("tenant_id")
   knowledgeBaseId String   @map("knowledge_base_id")
@@ -552,10 +552,10 @@ model KnowledgeDocument {
 
   @@index([tenantId])
   @@index([knowledgeBaseId])
-  @@map("knowledge_document")
+  @@map("knowledge_documents")
 }
 
-model KnowledgeChunk {
+model KnowledgeChunks {
   id          String   @id @default(uuid()) @map("id")
   tenantId    String   @map("tenant_id")
   documentId  String   @map("document_id")
@@ -570,5 +570,5 @@ model KnowledgeChunk {
 
   @@index([tenantId])
   @@index([documentId])
-  @@map("knowledge_chunk")
+  @@map("knowledge_chunks")
 }
