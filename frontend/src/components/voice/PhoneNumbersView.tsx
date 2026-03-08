@@ -717,9 +717,9 @@ export default function PhoneNumbersView({
             </div>
 
             {/* Outbound Agents Section */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-              <h3 className="text-lg font-bold mb-2">Outbound Voice Agents</h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6 dark:bg-gray-800 dark:border-gray-700">
+              <h3 className="text-lg font-bold mb-2 dark:text-gray-100">Outbound Voice Agents</h3>
+              <p className="text-sm text-gray-600 mb-4 dark:text-gray-300">
                 Outbound agents are used when this number places calls.
               </p>
 
@@ -773,11 +773,11 @@ export default function PhoneNumbersView({
             </div>
 
             {/* Advanced Section */}
-            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
-              <h3 className="text-lg font-bold mb-4">Advanced</h3>
+            <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6 dark:bg-gray-800 dark:border-gray-700">
+              <h3 className="text-lg font-bold mb-4 dark:text-gray-100">Advanced</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-semibold text-gray-800 block mb-2">
+                  <label className="text-sm font-semibold text-gray-800 dark:text-gray-200 block mb-2">
                     Inbound Webhook URL
                   </label>
                   <Input
@@ -789,7 +789,7 @@ export default function PhoneNumbersView({
                       setDirty(true);
                     }}
                     placeholder="https://scriptishrx.net/incomimg"
-                    className="text-gray-900 border-gray-700 placeholder:text-gray-500"
+                    className="text-gray-900 dark:text-gray-100 border-gray-700 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                   />
                 </div>
               
