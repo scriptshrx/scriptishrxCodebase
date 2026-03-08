@@ -33,7 +33,7 @@ async function uploadDocument(req, res) {
 
         // create document record
         const ext = file.originalname.split('.').pop().toLowerCase();
-        const doc = await prisma.knowledgeDocument.create({
+        const doc = await prisma.knowledgeDocuments.create({
             data: {
                 tenantId,
                 knowledgeBaseId,
@@ -51,7 +51,7 @@ async function uploadDocument(req, res) {
             .ingestDocument({
                 document: doc,
                 buffer: file.buffer,
-                fileType,
+                fileType: ext,
                 mimeType: file.mimetype
             })
             .catch(err => {
