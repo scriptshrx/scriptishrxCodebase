@@ -75,7 +75,7 @@ const BaseRow = ({ base, selected, onClick }: { base: KnowledgeBase; selected: b
   </div>
 );
 
-// main views
+// main view
 
 type KnowledgeResourcesViewProps = {
   createModalOpen: boolean;
