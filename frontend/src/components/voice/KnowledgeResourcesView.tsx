@@ -199,7 +199,7 @@ export default function KnowledgeResourcesView({
 
   return (
     <div className="flex h-full bg-white dark:bg-gray-900 dark:text-gray-100">
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
+      <aside className="w-64 bg-white h-full border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 flex justify-between items-center">
             <h3 className="font-semibold">Knowledge Bases</h3>
