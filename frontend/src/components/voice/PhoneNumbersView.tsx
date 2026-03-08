@@ -99,13 +99,13 @@ const NumberRow = ({
         : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
-    <div className="font-semibold text-md text-gray-900">
+    <div className="font-semibold text-md text-gray-900 dark:text-gray-200">
       {number.nickname || 'Unnamed Number'}
     </div>
     <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">{number.phoneNumber}</div>
     <div className="flex gap-2 mt-2">
       {number.provider && (
-        <span className="px-2 py-0.5 bg-gray-200 text-xs rounded text-gray-700 dark:text-gray-200">
+        <span className="px-2 py-0.5 bg-gray-200 text-xs rounded text-gray-700 dark:text-gray-800">
           {number.provider}
         </span>
       )}
