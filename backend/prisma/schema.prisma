@@ -548,7 +548,7 @@ model KnowledgeDocuments {
   updatedAt       DateTime @updatedAt @map("updated_at")
 
   knowledgeBase   KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
-  chunks          KnowledgeChunk[]
+  chunks          KnowledgeChunks[]
 
   @@index([tenantId])
   @@index([knowledgeBaseId])
