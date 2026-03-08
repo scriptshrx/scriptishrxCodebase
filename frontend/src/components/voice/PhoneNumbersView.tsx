@@ -144,7 +144,7 @@ const BindingRow = ({
       <select
         value={binding.agentId}
         onChange={e => onAgentChange(e.target.value)}
-        className={`flex-1 h-10 px-3 rounded-md border text-sm bg-white text-gray-900 ${
+        className={`flex-1 h-10 px-3 rounded-md border text-sm bg-white dark:bg-gray-200 text-gray-900 ${
           showError ? 'border-red-300' : 'border-gray-300'
         }`}
       >
@@ -160,7 +160,7 @@ const BindingRow = ({
           type="number"
           value={binding.weight}
           onChange={e => onWeightChange(Math.max(1, parseInt(e.target.value) || 0))}
-          className={`w-full h-10 px-3 rounded-md border text-sm text-gray-900 ${
+          className={`w-full h-10 px-3 rounded-md border text-sm text-gray-900 dark:text-gray-300 ${
             showError ? 'border-red-300' : 'border-gray-300'
           }`}
           min="1"
@@ -688,8 +688,8 @@ export default function PhoneNumbersView({
                       />
                     ))}
                     <div className="flex justify-between text-sm mt-2">
-                      <span className="text-gray-600">Total weight:</span>
-                      <span className="font-semibold text-gray-900">
+                      <span className="text-gray-600 dark:text-gray-300">Total weight:</span>
+                      <span className="font-semibold text-gray-900 dark:text-gray-300">
                         {formData.inboundAgents.reduce((sum, b) => sum + b.weight, 0)}
                       </span>
                     </div>
@@ -744,8 +744,8 @@ export default function PhoneNumbersView({
                       />
                     ))}
                     <div className="flex justify-between text-sm mt-2">
-                      <span className="text-gray-600">Total weight:</span>
-                      <span className="font-semibold text-gray-900">
+                      <span className="text-gray-600 dark:text-gray-300">Total weight:</span>
+                      <span className="font-semibold text-gray-900 dark:text-gray-300">
                         {formData.outboundAgents.reduce((sum, b) => sum + b.weight, 0)}
                       </span>
                     </div>
