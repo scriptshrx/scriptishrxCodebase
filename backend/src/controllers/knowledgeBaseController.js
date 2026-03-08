@@ -1,7 +1,7 @@
 const prisma = require('../lib/prisma');
 const knowledgeIngestionService = require('../services/knowledgeIngestionService');
 
-// tenant validation helper
+// tenant validation helpers
 function getTenantId(req) {
     return req.user?.tenantId || req.headers['x-tenant-id'];
 }
