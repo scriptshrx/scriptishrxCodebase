@@ -300,7 +300,7 @@ export default function KnowledgeResourcesView({
               )}
               <ul className="space-y-2">
                 {documents.map(doc => (
-                  <li key={doc.id} className="flex justify-between items-center p-2 border rounded">
+                  <li key={doc.id} className="flex justify-between items-center p-2 border border-gray-400 shadow-md rounded">
                     <span className="truncate">{doc.fileName || doc.title}</span>
                     <span className="text-xs text-gray-500">{doc.status=='processing'&&<div className='h-4 w-4 border border-t-[6px] border-green-500 animate-spin'></div>}{doc.status}</span>
                   </li>
