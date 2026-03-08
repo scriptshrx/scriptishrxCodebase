@@ -289,7 +289,7 @@ export default function VoicePage() {
           </nav>
         </div>
         <div className="p-6 space-y-4 border-t border-gray-200">
-          <div className="bg-green-100/70 p-3 rounded-lg text-xs">
+          <div className="bg-green-100/70 p-3 dark:bg-green-400/50 rounded-lg text-xs">
             <div className="font-semibold text-green-600">Pay As You Go</div>
             <div className="text-green-600/80">No upcoming bill</div>
           </div>
