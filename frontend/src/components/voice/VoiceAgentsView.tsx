@@ -117,7 +117,7 @@ export default function VoiceAgentsView({
             <select
               value={sortOrder}
               onChange={e => setSortOrder(e.target.value as any)}
-              className="h-10 px-3 rounded-md border border-gray-300 bg-white text-gray-700 text-sm"
+              className="h-10 px-3 rounded-md border border-gray-300 bg-white dark:bg-gray-300 text-gray-700 text-sm"
             >
               <option>Newest</option>
               <option>Oldest</option>
@@ -188,7 +188,7 @@ export default function VoiceAgentsView({
                       <MoreVertical className="w-4 h-4 cursor-pointer text-blue-800" />
                     </button>
                     {rowMenuOpenId === agent.id && (
-                      <div className="absolute right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10 dark:bg-gray-800 dark:border-gray-700">
+                      <div className="absolute cursor-pointer right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10 dark:bg-gray-800 dark:border-gray-700">
                         <button
                           onClick={() => {
                             onEdit(agent);
