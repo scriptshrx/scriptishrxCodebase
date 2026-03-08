@@ -566,7 +566,7 @@ export default function PhoneNumbersView({
               placeholder="Search numbers"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 text-gray-800 mx-auto placeholder:text-gray-800 border w-[90%] border-gray-400 shadow-md"
+              className="pl-10 text-gray-800 mx-auto placeholder:text-gray-800 dark:placeholder:text-gray-400 dark:text-gray-300 border w-[90%] border-gray-400 shadow-md"
             />
            
           
