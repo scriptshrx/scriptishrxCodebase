@@ -4,7 +4,7 @@
     "scripts": {
         "install": "npm install --prefix frontend && npm install --prefix backend",
         "postinstall": "npm install --prefix frontend && npm install --prefix backend",
-        "build": "export NODE_OPTIONS='--max-old-space-size=4096' && npm run build --prefix frontend && rm -rf backend/public && mkdir -p backend/public && cp -R frontend/out/* backend/public/",
+        "build": "cd frontend && node --max-old-space-size=8192 ./node_modules/.bin/next build && cd .. && rm -rf backend/public && mkdir -p backend/public && cp -R frontend/out/* backend/public/",
         "build:render": "chmod +x ./render-build.sh && ./render-build.sh",
         "start": "node backend/src/server.js",
         "start:dev": "npm-run-all --parallel start:backend start:frontend",

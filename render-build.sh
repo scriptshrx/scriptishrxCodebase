@@ -24,8 +24,10 @@ npm install
 echo "🏗️ Building Frontend..."
 rm -rf .next out
 # increase heap limit for heavy Next.js builds to avoid OOM on Render
-export NODE_OPTIONS="--max-old-space-size=4096"
-npm run build
+# npm clears NODE_OPTIONS for script security, so invoke node directly
+cd frontend
+node --max-old-space-size=8192 ./node_modules/.bin/next build
+cd ..
 cd ..
 
 # 5. Prepare Production Assets
