@@ -98,7 +98,7 @@ async function listDocuments(req, res) {
     if (!kb || kb.tenantId !== tenantId) {
         return res.status(403).json({ error: 'Access denied' });
     }
-    const docs = await prisma.knowledgeDocument.findMany({
+    const docs = await prisma.knowledgeDocuments.findMany({
         where: { knowledgeBaseId, tenantId }
     });
     res.json({ documents: docs });
