@@ -1,56 +1,47 @@
 const prisma = require('../lib/prisma');
-const textExtractionService = require('./textExtractionService');
-const chunkingService = require('./chunkingService');
-const embeddingService = require('./embeddingService');
 const crypto = require('crypto');
 
-async function ingestDocument({ document, buffer, fileType, mimeType }) {
-  try {
-    // 1. Extract text
-    const extractedText = await textExtractionService.extractText({ buffer, fileType, mimeType });
+// the ingestion work is delegated to a separate process to avoid blowing the
+// heap of the main server.  Render / other small containers frequently have
+// <1GB RAM and libraries like pdf-parse, tesseract, etc. can consume several
+// hundred megabytes; running them in-process makes even a tiny upload trigger an
+// out‑of‑memory crash.
 
-    // 2. Chunk the text
-    const chunks = chunkingService.chunkText(extractedText);
+const { fork } = require('child_process');
+const path = require('path');
 
-    // 3. Generate embeddings in batches
-    const texts = chunks.map(c => c.content);
-    const embeddings = await embeddingService.getEmbeddings(texts);
+function ingestDocument({ document, buffer, fileType, mimeType }) {
+  return new Promise((resolve, reject) => {
+    const workerPath = path.resolve(__dirname, './knowledgeIngestionWorker.js');
 
-    // 4. Insert chunks using raw SQL to support vector type
-    for (let i = 0; i < chunks.length; i++) {
-      const chunk = chunks[i];
-      const emb = embeddings[i];
-      const chunkId = crypto.randomUUID();
-      await prisma.$executeRaw`
-        INSERT INTO knowledge_chunks
-          (id, tenant_id, document_id, chunk_index, content, embedding)
-        VALUES
-          (${chunkId}, ${document.tenantId}, ${document.id}, ${chunk.chunkIndex}, ${chunk.content}, ${emb}::vector)
-      `;
-    }
+    // fork a new node process with a slightly larger heap so the worker can
+    // comfortably handle extraction/embedding.  You can tweak the size or move
+    // the flag to NODE_OPTIONS in your Render environment.
+    // memory for the worker can be raised with NODE_HEAP_SIZE env var (MB)
+    const memSize = process.env.NODE_HEAP_SIZE || '512';
+    const child = fork(workerPath, [], {
+      execArgv: [`--max-old-space-size=${memSize}`],
+      env: { ...process.env, NODE_HEAP_SIZE: memSize }
+    });
 
-    // 5. Update document record
-    await prisma.knowledgeDocuments.update({
-      where: { id: document.id },
-      data: {
-        status: 'ready',
-        extractedText,
-        chunkCount: chunks.length
+    child.on('message', (msg) => {
+      if (msg && msg.error) {
+        reject(new Error(msg.error));
+      } else {
+        resolve(msg);
       }
     });
-    return { success: true };
-  } catch (err) {
-    console.error('[KnowledgeIngestion] error', err.message);
-    try {
-      await prisma.knowledgeDocuments.update({
-        where: { id: document.id },
-        data: { status: 'failed', errorMessage: err.message }
-      });
-    } catch (e) {
-      console.error('[KnowledgeIngestion] failed to update document status', e.message);
-    }
-    throw err;
-  }
+
+    child.on('error', (err) => reject(err));
+    child.on('exit', (code) => {
+      if (code !== 0) {
+        reject(new Error(`ingestion worker exited with code ${code}`));
+      }
+    });
+
+    // send payload and let the worker do the heavy lifting
+    child.send({ document, buffer, fileType, mimeType });
+  });
 }
 
 module.exports = {
