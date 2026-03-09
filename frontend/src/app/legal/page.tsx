@@ -39,7 +39,7 @@ export default function LegalPage() {
                         <div className="space-y-8 text-slate-600 leading-relaxed">
                             <div className="prose prose-slate max-w-none">
                                 <p>
-                                    ScriptishRx Wellness Guide (“ScriptishRx,” “we,” “our,” or “us”) is committed to safeguarding your privacy and protecting your personal information. This Privacy Policy describes how we collect, use, and protect information obtained through our AI-powered subscription platform.
+                                    Scriptish Wellness Guide (“Scriptish,” “we,” “our,” or “us”) is committed to safeguarding your privacy and protecting your personal information. This Privacy Policy describes how we collect, use, and protect information obtained through our AI-powered subscription platform.
                                 </p>
                             </div>
 
@@ -95,7 +95,7 @@ export default function LegalPage() {
                                     <span className="w-2 h-2 rounded-full bg-purple-500"></span> Ownership
                                 </h3>
                                 <p>
-                                    All content, features, and functionality of the ScriptishRx Wellness Guide platform—including but not limited to text, graphics, logos, icons, images, audio or video materials, data compilations, digital downloads, and software—are the sole and exclusive property of ScriptishRx or its licensors. These materials are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
+                                    All content, features, and functionality of the Scriptish Wellness Guide platform—including but not limited to text, graphics, logos, icons, images, audio or video materials, data compilations, digital downloads, and software—are the sole and exclusive property of Scriptish or its licensors. These materials are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
                                 </p>
                             </div>
 
@@ -104,7 +104,7 @@ export default function LegalPage() {
                                     <span className="w-2 h-2 rounded-full bg-purple-500"></span> Trademarks
                                 </h3>
                                 <p>
-                                    The ScriptishRx name, logo, and all related names, designs, service names, and slogans are trademarks owned or licensed by ScriptishRx. Any unauthorized use, reproduction, or imitation of these trademarks is strictly prohibited without prior written consent from ScriptishRx.
+                                    The Scriptish name, logo, and all related names, designs, service names, and slogans are trademarks owned or licensed by Scriptish. Any unauthorized use, reproduction, or imitation of these trademarks is strictly prohibited without prior written consent from Scriptish.
                                 </p>
                             </div>
 

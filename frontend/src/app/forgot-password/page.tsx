@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
                             {/* Header */}
                             <div className="text-center mb-8">
                                 <div className="flex justify-center mb-4">
-                                    <img src="/logo.jpg" alt="ScriptishRx" className="h-20 w-auto" />
+                                    <img src="/logo.jpg" alt="Scriptish" className="h-20 w-auto" />
                                 </div>
                                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Forgot Password?</h1>
                                 <p className="text-gray-600 text-sm">

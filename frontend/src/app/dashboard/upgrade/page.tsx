@@ -91,7 +91,7 @@ export default function UpgradePage() {
             <div className="text-center mb-12">
                 <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">Upgrade your Plan</h1>
                 <p className="mt-4 text-xl text-gray-500">
-                    Unlock the full potential of ScriptishRx with advanced AI and CRM features.
+                    Unlock the full potential of Scriptish with advanced AI and CRM features.
                 </p>
             </div>
 

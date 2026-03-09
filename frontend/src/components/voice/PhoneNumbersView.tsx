@@ -788,7 +788,7 @@ export default function PhoneNumbersView({
                       setFormData({ ...formData, inboundWebhookUrl: e.target.value });
                       setDirty(true);
                     }}
-                    placeholder="https://scriptishrx.net/incomimg"
+                    placeholder="https://scriptish.net/incomimg"
                     className="text-gray-900 dark:text-gray-100 border-gray-700 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                   />
                 </div>

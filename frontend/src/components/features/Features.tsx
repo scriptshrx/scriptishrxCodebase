@@ -43,7 +43,7 @@ export const Features = () => {
             <div className="text-center mb-16 space-y-4">
                 <h2 className="text-4xl font-bold text-white">Advanced Capabilities</h2>
                 <p className="text-white/60 max-w-2xl mx-auto">
-                    ScriptishRx isn't just a chatbot. It's an intelligent agent designed to streamline your wellness operations.
+                    Scriptish isn't just a chatbot. It's an intelligent agent designed to streamline your wellness operations.
                 </p>
             </div>
 

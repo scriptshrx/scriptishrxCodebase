@@ -59,7 +59,7 @@ export default function ChatPage() {
                 if (data.success && data.organization) {
                     const org = data.organization;
                     setAiConfig({
-                        aiName: org.aiConfig?.aiName || org.aiName || 'ScriptishRx Assistant',
+                        aiName: org.aiConfig?.aiName || org.aiName || 'Scriptish Assistant',
                         welcomeMessage: org.aiConfig?.welcomeMessage || org.aiWelcomeMessage || 'Hello, how can I help you today?',
                         customSystemPrompt: org.aiConfig?.systemPrompt || org.customSystemPrompt || 'You are a helpful assistant.',
                         model: org.aiConfig?.model || 'gpt-4',
@@ -203,7 +203,7 @@ export default function ChatPage() {
                                         <Input
                                             value={aiConfig.aiName}
                                             onChange={(e) => setAiConfig({ ...aiConfig, aiName: e.target.value })}
-                                            placeholder="e.g. ScriptishRx Support"
+                                            placeholder="e.g. Scriptish Support"
                                             className="pl-10 bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500"
                                         />
                                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />

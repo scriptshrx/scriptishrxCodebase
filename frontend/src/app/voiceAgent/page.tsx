@@ -251,7 +251,7 @@ export default function VoicePage() {
         <div>
           <div className="p-6 flex items-center gap-2 text-xl font-bold">
             <Stethoscope className="w-6 h-6 text-blue-600" />
-            <span>ScriptishRx</span>
+            <span>Scriptish</span>
           </div>
           <div className="px-6 mb-6 flex items-center gap-3">
             <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium">
