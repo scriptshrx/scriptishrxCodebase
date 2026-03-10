@@ -202,7 +202,7 @@ export default function KnowledgeResourcesView({
       <aside className="w-64 bg-white h-full border-r border-gray-500 flex flex-col dark:bg-gray-800 dark:border-gray-200">
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 flex justify-between items-center">
-            <h3 className="font-semibold">Knowledge Bases</h3>
+            <h3 className="font-semibold">Knowledge Resources</h3>
             <button
               onClick={() => onCreateModalOpenChange(true)}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
