@@ -728,7 +728,7 @@ RESTRICTIONS
                     const args = JSON.parse(msg.arguments);
                     let result = { success: false, message: "Action failed" };
                     
-                    // Using session.tenant.id to ensure we have the correct tenant from the inbound call
+                    // Use session.tenant.id to ensure we have the correct tenant from the inbound call
                     const tenantIdForTool = session?.tenant?.id || tenant?.id;
                     
                     if (msg.name === 'bookAppointment') {
