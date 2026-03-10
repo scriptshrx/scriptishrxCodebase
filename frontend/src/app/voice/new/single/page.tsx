@@ -109,17 +109,17 @@ function SinglePromptAgentContent() {
   const item = localStorage.getItem('template');
   if(item){
     const template = JSON.parse(item)
-    if(item.title){
-      setName(item.id);
-      setWelcomeMessage(item.subtitle);
-      setPrompt(item.description);
+    if(template.title){
+      setName(template.id);
+      setWelcomeMessage(template.subtitle);
+      setPrompt(template.description);
       setLoading(false)
       return
     }
     
   setName(`${template.name}-Edit`);
-  //setCallSettings(template.agentConfig.call_settings);
-  setLanguage(template.agentConfig.speech.language);
+  setCallSettings(template.agentConfig.call_settings);
+  setLanguage(template.agentConfig.speech.language || 'English');
   setLlmModel(template.agentConfig.llm.model);
   setPrompt(template.agentConfig.prompt.system_prompt);
   setWelcomeMessage(template.agentConfig.prompt.welcome_message);
