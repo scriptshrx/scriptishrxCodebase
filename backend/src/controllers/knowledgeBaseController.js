@@ -8,26 +8,32 @@ function getTenantId(req) {
 
 async function uploadDocument(req, res) {
     const tenantId = getTenantId(req);
+    console.log('\x1b[1m[KB Controller]\x1b[0m uploadDocument called');
     if (!tenantId) {
+        console.warn('[KB Controller] missing tenant context');
         return res.status(400).json({ error: 'Missing tenant context' });
     }
 
     const knowledgeBaseId = req.params.knowledgeBaseId;
     if (!knowledgeBaseId) {
+        console.warn('[KB Controller] missing knowledgeBaseId');
         return res.status(400).json({ error: 'Missing knowledge base id' });
     }
 
     // check file presence
     if (!req.file) {
+        console.warn('[KB Controller] no file uploaded');
         return res.status(400).json({ error: 'No file uploaded' });
     }
 
     const file = req.file;
+    console.log(`\x1b[1m[KB Controller]\x1b[0m received file ${file.originalname} (${file.mimetype}, ${file.size} bytes) bufferIsBuffer=${Buffer.isBuffer(file.buffer)} length=${file.buffer?.length}`);
 
     try {
         // verify KB exists and belongs to tenant
         const kb = await prisma.knowledgeBase.findUnique({ where: { id: knowledgeBaseId } });
         if (!kb || kb.tenantId !== tenantId) {
+            console.warn('[KB Controller] knowledge base not found or wrong tenant');
             return res.status(403).json({ error: 'Knowledge base not found or access denied' });
         }
 
@@ -45,6 +51,7 @@ async function uploadDocument(req, res) {
                 status: 'processing'
             }
         });
+console.log(`\x1b[1m[KB Controller]\x1b[0m document record created ${doc.id}`);
 
         // trigger ingestion asynchronously
         knowledgeIngestionService
@@ -54,8 +61,11 @@ async function uploadDocument(req, res) {
                 fileType: ext,
                 mimeType: file.mimetype
             })
+            .then(() => {
+                console.log(`\x1b[1m[KB Controller]\x1b[0m ingestion promise resolved for ${doc.id}`);
+            })
             .catch(err => {
-                console.error('[KB Controller] ingestion failed', err.message);
+                console.error('\x1b[1m[KB Controller]\x1b[0m ingestion failed', err.stack || err.message);
             });
 
         // respond early
@@ -64,7 +74,7 @@ async function uploadDocument(req, res) {
             documentId: doc.id
         });
     } catch (err) {
-        console.error('[KB Controller] uploadDocument error', err);
+        console.error('[KB Controller] uploadDocument error', err.stack || err);
         res.status(500).json({ error: 'Server error', details: err.message });
     }
 }

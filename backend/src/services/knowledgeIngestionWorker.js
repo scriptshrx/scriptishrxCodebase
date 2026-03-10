@@ -13,6 +13,7 @@ const crypto = require('crypto');
 
 // When the parent sends a message we assume it's the ingestion payload
 process.on('message', async (msg) => {
+  console.log('[KnowledgeIngestionWorker] received message', msg && msg.document && msg.document.id);
   if (!msg || !msg.document) {
     process.send({ error: 'Invalid ingestion message' });
     process.exit(1);
@@ -39,9 +40,12 @@ process.on('message', async (msg) => {
     }
   }
 
+  console.log('[KnowledgeIngestionWorker] starting text extraction', { fileType, mimeType, length: buffer && buffer.length });
+
   try {
     // perform the same steps that used to live in knowledgeIngestionService
     const extractedText = await textExtractionService.extractText({ buffer, fileType, mimeType });
+    console.log('[KnowledgeIngestionWorker] extraction complete, length', extractedText.length);
     const chunks = chunkingService.chunkText(extractedText);
     const texts = chunks.map(c => c.content);
     const embeddings = await embeddingService.getEmbeddings(texts);
@@ -68,6 +72,7 @@ process.on('message', async (msg) => {
     });
 
     process.send({ success: true });
+    console.log('[KnowledgeIngestionWorker] done');
     process.exit(0);
   } catch (err) {
     console.error('[KnowledgeIngestionWorker] error', err.message);

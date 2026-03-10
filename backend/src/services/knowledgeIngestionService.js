@@ -11,6 +11,13 @@ const { fork } = require('child_process');
 const path = require('path');
 
 function ingestDocument({ document, buffer, fileType, mimeType }) {
+  console.log('[IngestionService] ingestDocument called', {
+    documentId: document.id,
+    fileType,
+    mimeType,
+    size: buffer?.length,
+    isBuffer: Buffer.isBuffer(buffer)
+  });
   return new Promise((resolve, reject) => {
     const workerPath = path.resolve(__dirname, './knowledgeIngestionWorker.js');
 
@@ -25,6 +32,7 @@ function ingestDocument({ document, buffer, fileType, mimeType }) {
     });
 
     child.on('message', (msg) => {
+      console.log('[IngestionService] worker message', msg);
       if (msg && msg.error) {
         reject(new Error(msg.error));
       } else {
@@ -32,8 +40,12 @@ function ingestDocument({ document, buffer, fileType, mimeType }) {
       }
     });
 
-    child.on('error', (err) => reject(err));
+    child.on('error', (err) => {
+      console.error('[IngestionService] worker error', err);
+      reject(err);
+    });
     child.on('exit', (code) => {
+      console.log(`[IngestionService] worker exited with code ${code}`);
       if (code !== 0) {
         reject(new Error(`ingestion worker exited with code ${code}`));
       }
@@ -41,6 +53,7 @@ function ingestDocument({ document, buffer, fileType, mimeType }) {
 
     // send payload and let the worker do the heavy lifting
     child.send({ document, buffer, fileType, mimeType });
+    console.log('[IngestionService] payload sent to worker');
   });
 }
 
