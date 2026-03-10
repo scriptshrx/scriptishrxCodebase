@@ -144,7 +144,7 @@ export default function CreateAgentModal({
       onClick={(e)=>e.stopPropagation()}>
         {/* Header */}
         <div className="flex items-center justify-between shadow-xs px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-blue-700">Create or Use Template</h2>
+          <h2 className="text-xl font-bold text-blue-700">Create Agent or Use Template</h2>
           <button
             onClick={() => onOpenChange(false)}
             className="p-1 hover:bg-gray-100 rounded-full transition-colors"
