@@ -13,7 +13,7 @@ interface CreateAgentModalProps {
 }
 
 type PromptMode = "single" | "multi";
-type TemplateType = "blank" | "healthcare_checkin" | "notification";
+type TemplateType = "blank" | "healthcare_checkin" | "notification" |'appointment';
 
 interface Template {
   id: TemplateType;

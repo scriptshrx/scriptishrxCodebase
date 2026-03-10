@@ -12,6 +12,7 @@ class TwilioService {
     async getClientForTenant(tenantId) {
         const tenant = await prisma.tenant.findUnique({
             where: { id: tenantId },
+          
             select: { twilioConfig: true }
         });
 
