@@ -188,13 +188,13 @@ export default function VoiceAgentsView({
                       <MoreVertical className="w-4 h-4 text-blue-800" />
                     </button>
                     {rowMenuOpenId === agent.id && (
-                      <div className="absolute cursor-pointer right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-10 dark:bg-gray-800 dark:border-gray-700">
+                      <div className="absolute cursor-pointer right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-[50] dark:bg-gray-800 dark:border-gray-700">
                         <button
                           onClick={() => {
                             onEdit(agent);
                             setRowMenuOpenId(null);
                           }}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                          className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100/50 text-sm"
                         >
                           Edit
                         </button>
@@ -203,7 +203,7 @@ export default function VoiceAgentsView({
                             handleDuplicate(agent);
                             setRowMenuOpenId(null);
                           }}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                          className="w-full text-left px-4 py-2 hover:bg-gray-100 bg:hover:bg-gray-100/50 text-sm"
                         >
                           Duplicate
                         </button>
@@ -212,7 +212,7 @@ export default function VoiceAgentsView({
                             handleDelete(agent);
                             setRowMenuOpenId(null);
                           }}
-                          className="w-full text-left px-4 py-2 hover:bg-red-100 dark:hover:bg-red-800 text-sm text-red-600"
+                          className="w-full text-left px-4 py-2 hover:bg-red-100 dark:hover:bg-red-800/60 text-sm text-red-600"
                         >
                           Delete
                         </button>
