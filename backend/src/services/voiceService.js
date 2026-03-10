@@ -668,7 +668,7 @@ RESTRICTIONS
                         }
                     }));
                 }
-            }, 400);
+            }, 200);
         });
 
         // ----- Message handling -----

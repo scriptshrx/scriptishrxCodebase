@@ -88,7 +88,23 @@ function SinglePromptAgentContent() {
 
   // settings panel
   const [activePanel, setActivePanel] = useState<string | null>(null);
+  // each function has at least a `type` and optional `name`
   const [functionsList, setFunctionsList] = useState<any[]>([]);
+  // modal open state for editing functions
+  const [functionModalOpen, setFunctionModalOpen] = useState(false);
+
+  // available built-in types (from screenshot)
+  const functionOptions = [
+    { value: 'end_call', label: 'End Call' },
+    { value: 'call_transfer', label: 'Call Transfer' },
+    { value: 'agent_transfer', label: 'Agent Transfer' },
+    { value: 'check_calendar', label: 'Check Calendar Availability (Cal.com)' },
+    { value: 'book_calendar', label: 'Book on the Calendar (Cal.com)' },
+    { value: 'press_digit', label: 'Press Digit (IVR Navigation)' },
+    { value: 'send_sms', label: 'Send SMS' },
+    { value: 'extract_variable', label: 'Extract Dynamic Variable' },
+    { value: 'custom', label: 'Custom Function' },
+  ];
   const [speechSettings, setSpeechSettings] = useState({ speed: 50, sensitivity: 50 });
   const [callSettings, setCallSettings] = useState({ silenceTimeout: 5, maxDuration: 10 });
   const [postCall, setPostCall] = useState({ enableSummaries: false });
@@ -124,7 +140,12 @@ function SinglePromptAgentContent() {
   setPrompt(template.agentConfig.prompt.system_prompt);
   setWelcomeMessage(template.agentConfig.prompt.welcome_message);
   setDynamicVariables(template.agentConfig.dynamic_variables);
-  setFunctionsList(template.agentConfig.functions);
+  setFunctionsList(
+    template.agentConfig.functions?.map((f: any) => ({
+      type: f.type || f.name || '',
+      name: f.name || ''
+    })) || []
+  );
   setSpeechSettings(template.agentConfig.speech);
   setVoiceId(template.agentConfig.voice.voice_id);
   setLoading(false)
@@ -399,9 +420,15 @@ function SinglePromptAgentContent() {
               <div key={item.key}>
                 <button
                   className="w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-100 dark:hover:bg-blue-800 rounded"
-                  onClick={() =>
-                    setActivePanel((s) => (s === item.key ? null : item.key))
-                  }
+                  onClick={() => {
+                    if (item.key === 'functions') {
+                      // open modal instead of inline panel
+                      setFunctionModalOpen(true);
+                      setActivePanel(null);
+                    } else {
+                      setActivePanel((s) => (s === item.key ? null : item.key));
+                    }
+                  }}
                 >
                   <item.icon className="w-5 h-5 text-blue-800 dark:text-blue-300" />
                   <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">
@@ -446,6 +473,67 @@ function SinglePromptAgentContent() {
           </div>
         </div>
       </div>
+
+      {/* functions modal */}
+      {functionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
+            <h2 className="text-xl font-bold mb-4">Edit Functions</h2>
+            <div className="space-y-2">
+              {functionsList.map((f, i) => (
+                <div key={i} className="flex items-center justify-between gap-2">
+                  <Select
+                    className="flex-1"
+                    value={f.type || ''}
+                    onChange={(e) => {
+                      const type = e.target.value;
+                      setFunctionsList((prev) => {
+                        const next = [...prev];
+                        next[i] = { ...next[i], type };
+                        return next;
+                      });
+                    }}
+                    options={functionOptions}
+                  />
+                  <Input
+                    className="flex-1"
+                    value={f.name || ''}
+                    onChange={(e) => {
+                      const name = e.target.value;
+                      setFunctionsList((prev) => {
+                        const next = [...prev];
+                        next[i] = { ...next[i], name };
+                        return next;
+                      });
+                    }}
+                    placeholder="Label (optional)"
+                  />
+                  <button
+                    className="ml-2 text-red-600"
+                    onClick={() =>
+                      setFunctionsList((prev) => prev.filter((_, idx) => idx !== i))
+                    }
+                  >
+x</button>
+                </div>
+              ))}
+              <Button
+                size="sm"
+                onClick={() =>
+                  setFunctionsList((prev) => [...prev, { type: functionOptions[0].value, name: "" }])
+                }
+              >
+                Add Function
+              </Button>
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <Button variant="outline" onClick={() => setFunctionModalOpen(false)}>
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {error && (
         <div className="fixed top-20 left-20 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">{error}</div>
