@@ -259,12 +259,12 @@ function SinglePromptAgentContent() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
       {/* header */}
-      <header className="sticky top-0 right-0 bg-white z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200">
+      <header className="sticky top-0 right-0 bg-white dark:bg-gray-800 z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <button
           onClick={() => router.back()}
-          className="p-2 rounded hover:bg-gray-100"
+          className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -279,19 +279,19 @@ function SinglePromptAgentContent() {
               
                 }}
                 onBlur={() => setShowTitleInput(false)}
-                className="w-full p-0 border-0 text-[24px] text-gray-900"
+                className="w-full p-0 border-0 text-[24px] text-gray-900 dark:text-gray-100"
               />
             ) : (
               <h1 className="text-xl font-bold truncate">{name}</h1>
             )}
             <button
               onClick={() => setShowTitleInput((s) => !s)}
-              className="p-1 hover:bg-gray-100 rounded"
+              className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
             >
               <Pencil className="w-4 h-4" />
             </button>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-500 dark:text-gray-400">
             Single prompt • Agent ID: {agentId || "Not created yet"}
           </div>
         </div>
@@ -352,18 +352,18 @@ function SinglePromptAgentContent() {
                 setDynamicVariables(Array.from(new Set(matches)));
               }}
               placeholder="Type in a universal prompt for your agent, such as its role, conversational style, objective, etc."
-              className="w-full h-64 p-4 border border-gray-300 rounded shadow-sm font-mono resize-none focus:outline-none"
+              className="w-full h-64 p-4 border border-gray-300 dark:border-gray-600 rounded shadow-sm font-mono resize-none focus:outline-none bg-white dark:bg-gray-800 dark:text-gray-100"
             />
             {dynamicVariables.length > 0 && (
-              <div className="mt-2 text-xs text-gray-500">
+              <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
                 Detected variables: {dynamicVariables.join(", ")}
               </div>
             )}
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               {'Use {{}} to add variables. (Learn more)'}
             </p>
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700">
+              <label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                 Welcome Message
               </label>
               <Select
@@ -377,14 +377,14 @@ function SinglePromptAgentContent() {
               <textarea
                 value={welcomeMessage}
                 onChange={(e) => setWelcomeMessage(e.target.value)}
-                className="w-full h-24 p-3 border border-gray-300 rounded resize-none focus:outline-none"
+                className="w-full h-24 p-3 border border-gray-300 dark:border-gray-600 rounded resize-none focus:outline-none bg-white dark:bg-gray-800 dark:text-gray-100"
               />
             </div>
           </div>
         </div>
 
         {/* middle column settings list */}
-        <div className="w-full md:w-80 border-l border-r rounded-md shadow-md border-gray-200 overflow-y-auto">
+        <div className="w-full md:w-80 border-l border-r rounded-md shadow-md border-gray-200 dark:border-gray-700 dark:bg-gray-800 overflow-y-auto">
           <nav className="space-y-1 p-4">
             {[
               { name: "Functions", icon: Code, key: "functions" },
@@ -398,18 +398,18 @@ function SinglePromptAgentContent() {
             ].map((item) => (
               <div key={item.key}>
                 <button
-                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-100 rounded"
+                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-100 dark:hover:bg-blue-800 rounded"
                   onClick={() =>
                     setActivePanel((s) => (s === item.key ? null : item.key))
                   }
                 >
-                  <item.icon className="w-5 h-5 text-blue-800" />
-                  <span className="flex-1 text-sm text-gray-800">
+                  <item.icon className="w-5 h-5 text-blue-800 dark:text-blue-300" />
+                  <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">
                     {item.name}
                   </span>
                 </button>
                 {activePanel === item.key && (
-                  <div className="p-3 bg-gray-50">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800">
                     {renderPanel(item.key)}
                   </div>
                 )}
@@ -420,22 +420,22 @@ function SinglePromptAgentContent() {
 
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
-          <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center">
-            <div className="flex gap-2 p-[2px] bg-gray-100 rounded-lg">
-              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] rounded-lg ${buttonChoice=='test-call'?'bg-slate-600 text-white':'bg-white text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
+          <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center dark:border-gray-600">
+            <div className="flex gap-2 p-[2px] bg-gray-100 dark:bg-gray-700 rounded-lg">
+              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] rounded-lg ${buttonChoice=='test-call'?'bg-slate-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
                 <PhoneOutgoing className="w-3 h-3" />
                 Test Call
               </button>
-               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] rounded-lg ${buttonChoice=='test-chat'?'bg-slate-600 text-white':'bg-white text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
+               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] rounded-lg ${buttonChoice=='test-chat'?'bg-slate-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
                 <MessageCircle className="w-3 h-3" />
                 Test Chat
               </button>
-              <button className="p-[4px] flex items-center justify-center rounded-lg bg-white text-gray-700">
+              <button className="p-[4px] flex items-center justify-center rounded-lg bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700">
                 <Codepen className="w-4 h-4" />
               </button>
             </div>
-            <Mic className="w-12 h-12 text-gray-400" />
-            <div className="text-gray-600">Test your agent</div>
+            <Mic className="w-12 h-12 text-gray-400 dark:text-gray-500" />
+            <div className="text-gray-600 dark:text-gray-300">Test your agent</div>
             <Button
               onClick={handleTest}
               disabled={!agentId}
@@ -448,7 +448,7 @@ function SinglePromptAgentContent() {
       </div>
 
       {error && (
-        <div className="fixed top-20 left-20 p-4 bg-red-100 text-red-800">{error}</div>
+        <div className="fixed top-20 left-20 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">{error}</div>
       )}
     </div>
   );
