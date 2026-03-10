@@ -19,7 +19,25 @@ process.on('message', async (msg) => {
     return;
   }
 
-  const { document, buffer, fileType, mimeType } = msg;
+  const { document, buffer: incomingBuffer, fileType, mimeType } = msg;
+
+  // IPC serialization can convert Buffers into plain objects, so do a quick
+  // coercion here as well before handing it off to the extraction service.
+  let buffer = incomingBuffer;
+  if (buffer && !Buffer.isBuffer(buffer)) {
+    try {
+      if (buffer.type === 'Buffer' && Array.isArray(buffer.data)) {
+        buffer = Buffer.from(buffer.data);
+      } else if (ArrayBuffer.isView(buffer) || buffer instanceof ArrayBuffer) {
+        buffer = Buffer.from(buffer);
+      } else {
+        buffer = Buffer.from(buffer);
+      }
+    } catch (e) {
+      console.error('[KnowledgeIngestionWorker] failed to normalize buffer', e.message);
+      buffer = null;
+    }
+  }
 
   try {
     // perform the same steps that used to live in knowledgeIngestionService

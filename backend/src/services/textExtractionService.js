@@ -21,6 +21,26 @@ function lazyLoadPptx() {
 }
 
 async function extractText({ buffer, fileType, mimeType }) {
+  // Buffers may be serialized over the child process IPC channel and arrive
+  // as plain objects like `{ type: 'Buffer', data: [...] }`.  We also want to
+  // support callers accidentally passing an ArrayBuffer/Uint8Array.  Convert
+  // whatever we received into a proper Node Buffer so downstream libraries
+  // (mammoth, pdf-parse, etc.) have a consistent input.  The error seen in the
+  // logs (`Can't read the data of 'the loaded zip file'`) was caused by
+  // mammoth getting something it didn't understand.
+  if (buffer) {
+    if (!Buffer.isBuffer(buffer)) {
+      if (buffer.type === 'Buffer' && Array.isArray(buffer.data)) {
+        buffer = Buffer.from(buffer.data);
+      } else if (ArrayBuffer.isView(buffer) || buffer instanceof ArrayBuffer) {
+        buffer = Buffer.from(buffer);
+      } else {
+        // last-ditch attempt; this may throw if the value is truly invalid
+        buffer = Buffer.from(buffer);
+      }
+    }
+  }
+
   let text = '';
 
   fileType = (fileType || '').toLowerCase();
