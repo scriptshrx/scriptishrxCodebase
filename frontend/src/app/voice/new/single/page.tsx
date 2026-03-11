@@ -118,7 +118,9 @@ function SinglePromptAgentContent() {
   //functions state for all default functions:
 
   const[endCallFunction,setEndCallFunction]=useState({});
+  const[checkScheduleFunction,setCheckScheduleFunction]=useState({})
   const [bookAppointmentFunction,setBookAppointmentFunction]=useState({})
+
 
   // modal state for function editor
   const [selectedFunction, setSelectedFunction] = useState<any>({});
@@ -352,6 +354,93 @@ function SinglePromptAgentContent() {
 </div>
 </div>
         );
+
+        case 'check_schedule':
+          return(
+            <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+            onClick={()=>setOpenSelectedFunction(false)}>
+          
+        <div className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+        onClick={(e)=>e.stopPropagation()}>
+          <label htmlFor="name">Name</label>
+          <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
+          placeholder={selectedFunction.value}/>
+
+    
+          <label htmlFor="description">Description</label>
+              <input id="description" 
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setCheckScheduleFunction((prev)=>(
+                {...prev,name:selectedFunction.value,
+                  description:e.target.value,
+                  type:'object'
+
+
+              }))}
+          placeholder='Checks availability on your calender'/>
+
+          <label htmlFor="provider">Provider</label>
+              <input id="provider" 
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+            readOnly
+          placeholder='Calendar provider (cal.com)'/>
+
+
+          <label htmlFor="eventId">Event Type ID</label>
+              <input id="eventId" 
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setCheckScheduleFunction((prev)=>(
+                {...prev,eventTypeId:e.target.value
+
+
+              }))}
+          placeholder='Event type ID from cal.com'/>
+
+          <label htmlFor="tz">Time Zone</label>
+              <input id="tz" 
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setCheckScheduleFunction((prev)=>(
+                {...prev,name:selectedFunction.value,
+                  timezone:e.target.value,
+                  
+                  type:'object'
+
+
+              }))}
+          placeholder='Your location tz'/>
+
+            <label htmlFor="daysSpan">Days Span</label>
+              <input id="daysSpan" 
+              type="number"
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setCheckScheduleFunction((prev)=>(
+                {...prev,name:selectedFunction.value,
+                  daysSpan:e.target.value,
+                  
+                  type:'object'
+
+
+              }))}
+          placeholder='Allowed search days span'/>
+
+            <label htmlFor="maxSlots">Description</label>
+              <input id="maxSlots" 
+              type="number"
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setCheckScheduleFunction((prev)=>(
+                {...prev,maxSlots:e.target.value,
+                  
+              }))}
+          placeholder='Max slots to return'/>
+
+
+          <Button 
+          variant='primary'
+          onClick={()=>{setOpenSelectedFunction(false);console.log(checkScheduleFunction)}}>Done</Button>
+</div>
+</div>
+
+          )
 
         case 'book_appointment':
           return(
