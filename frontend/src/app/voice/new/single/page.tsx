@@ -285,7 +285,7 @@ function SinglePromptAgentContent() {
   const[openSelectedFunctioin,setOpenSelectedFunction]=useState(false)
 
   const renderSelectedFunctionModal = (selectedFunction)=>{
-    switch(selectedFunction.label){
+    switch(selectedFunction.label || 'end_call'){
       case 'end_call':
         return(
           openSelectedFunctioin&&
