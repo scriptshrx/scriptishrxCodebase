@@ -100,9 +100,9 @@ function SinglePromptAgentContent() {
     { value: 'agent_transfer', label: 'Agent Transfer' },
     { value: 'check_calendar', label: 'Check Calendar Availability (Cal.com)' },
     { value: 'book_calendar', label: 'Book on the Calendar (Cal.com)' },
-    { value: 'press_digit', label: 'Press Digit (IVR Navigation)' },
+    
     { value: 'send_sms', label: 'Send SMS' },
-    { value: 'extract_variable', label: 'Extract Dynamic Variable' },
+
     { value: 'custom', label: 'Custom Function' },
   ];
   const [speechSettings, setSpeechSettings] = useState({ speed: 50, sensitivity: 50 });
@@ -291,23 +291,25 @@ function SinglePromptAgentContent() {
       case 'end_call':
         return(
           openSelectedFunction&&
-            <div className="flex min-h-screen w-full p-8 bg-white/50 backdrop-filter-md items-center z-[500] justify-center"
+            <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
             onClick={()=>setOpenSelectedFunction(false)}>
-              <div onClick={(e)=>e.stopPropagation()}>
-        <div className="z-200 fixed mx-auto top-20 bg-white">
+          
+        <div className="z-200 flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900">
           <label htmlFor="name">Name</label>
-          <input readOnly className="border bg-gray-300 rounded-md p-2 px-4"
+          <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
           placeholder={selectedFunction.value}/>
 
     
           <label htmlFor="description"></label>
               <input id="description" 
-              className="border bg-gray-300 rounded-md p-2 text-gray-800 px-4"
-          placeholder='Ends the call when no more task from the caller'/>
-          <Button onClick={()=>setOpenSelectedFunction(false)}/>
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+          placeholder='Ends the call when done'/>
+          <Button 
+          variant='primary'
+          onClick={()=>setOpenSelectedFunction(false)}>Done</Button>
 </div>
 </div>
-        </div>)
+        )
     }
     
   }
