@@ -363,14 +363,14 @@ function SinglePromptAgentContent() {
           
         <div className="flex flex-col grid grid-cols-2 gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
         onClick={(e)=>e.stopPropagation()}>
-          <div>
+          <div className="flex flex-col">
           <label htmlFor="name">Name</label>
           <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
           placeholder={selectedFunction.value}/>
           </div>
 
     
-    <div>
+    <div className="flex flex-col">
                 <label htmlFor="description">Description</label>
               <input id="description" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -385,7 +385,7 @@ function SinglePromptAgentContent() {
           </div>
 
 
-<div>
+<div className="flex flex-col">
           <label htmlFor="provider">Provider</label>
               <input id="provider" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -394,7 +394,7 @@ function SinglePromptAgentContent() {
           </div>
 
 
-<div>
+<div className="flex flex-col">
           <label htmlFor="eventId">Event Type ID</label>
               <input id="eventId" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -407,7 +407,7 @@ function SinglePromptAgentContent() {
           </div>
 
 
-<div>
+<div className="flex flex-col">
           <label htmlFor="tz">Time Zone</label>
               <input id="tz" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -422,7 +422,7 @@ function SinglePromptAgentContent() {
           placeholder='Your location tz'/>
           </div>
 
-<div>
+<div className="flex flex-col">
             <label htmlFor="daysSpan">Days Span</label>
               <input id="daysSpan" 
               type="number"
@@ -439,9 +439,9 @@ function SinglePromptAgentContent() {
 
           </div>
 
-<div>
+<div className="flex flex-col">
 
-            <label htmlFor="maxSlots">Description</label>
+            <label htmlFor="maxSlots">Max Slots</label>
               <input id="maxSlots" 
               type="number"
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
