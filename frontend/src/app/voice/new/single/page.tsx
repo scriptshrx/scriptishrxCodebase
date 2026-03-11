@@ -100,11 +100,11 @@ function SinglePromptAgentContent() {
 
   // available built-in types (from screenshot)
   const functionOptions = [
-     { value: 'check_calendar', label: 'Check Calendar Availability (Cal.com)', icon: CalendarCheck },
-    { value: 'book_calendar', label: 'Book on the Calendar (Cal.com)', icon: Calendar },
+     { value: 'check_schedule', label: 'Check Schedule *cal.com*', icon: CalendarCheck },
+    { value: 'book_appointment', label: 'Book Appointment *cal.com*)', icon: Calendar },
     { value: 'send_sms', label: 'Send SMS', icon: MessageCircle },
    
-    { value: 'call_transfer', label: 'Call Transfer', icon: PhoneOutgoing },
+    { value: 'transfer_call', label: 'Transfer Call', icon: PhoneOutgoing },
     { value: 'agent_transfer', label: 'Agent Transfer', icon: User },
      { value: 'end_call', label: 'End Call', icon: PhoneOff },
    
