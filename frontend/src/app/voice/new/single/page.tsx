@@ -317,12 +317,12 @@ function SinglePromptAgentContent() {
       <div className="flex inset-0 w-full fixed p-8 bg-white/20 dark:bg-black/20 backdrop-blur-md items-center z-[100] justify-center"
       onClick={()=>setFunctionsModalOpen(false)}>
 
-        <div className="h-full w-full shadow-md rounded-lg flex flex-col gap-4 bg-gray-200 dark:bg-gray-900">
+        <div className="h-full shadow-md rounded-lg flex flex-col gap-2 bg-gray-200 dark:bg-gray-900">
           {functionOptions.map((f,i)=>
           <button type="button"
           key={i}
           onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
-          className="p-4 px-4 rounded-md flex border bg-gray-400 dark:bg-gray-800 border-gray-700 dark:border-gray-700">{f.label}</button>)}
+          className="p-2 px-2 rounded-md flex border bg-gray-400 dark:bg-gray-800 border-gray-700 dark:border-gray-700">{f.label}</button>)}
         </div>
 
         
