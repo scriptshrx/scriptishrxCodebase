@@ -492,6 +492,8 @@ function SinglePromptAgentContent() {
           </nav>
         </div>
 
+          {/* functions modal */}
+
         {functionModalOpen&&
         <FunctionsModal/>}
         {renderSelectedFunctionModal(selectedFunction)}
@@ -525,9 +527,8 @@ function SinglePromptAgentContent() {
         </div>
       </div>
 
-      {/* functions modal */}
-      {functionModalOpen && (
-        )}
+    
+   
 
       {error && (
         <div className="fixed top-20 left-20 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">{error}</div>
