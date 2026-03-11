@@ -317,7 +317,7 @@ function SinglePromptAgentContent() {
       <div className="flex inset-0 w-full fixed p-8 bg-white/20 dark:bg-black/20 backdrop-blur-md items-center z-[100] justify-center"
       onClick={()=>setFunctionsModalOpen(false)}>
 
-        <div className="h-full shadow-md p-4 overflow-hidden overflow-y-auto rounded-lg flex flex-col gap-2 bg-gray-200 dark:bg-gray-900">
+        <div className="shadow-md p-4 overflow-hidden overflow-y-auto rounded-lg flex flex-col gap-2 bg-gray-200 dark:bg-gray-900">
           {functionOptions.map((f,i)=>
           <button type="button"
           key={i}
