@@ -299,8 +299,8 @@ function SinglePromptAgentContent() {
           <button type="button"
           key={i}
           onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
-          className="p-2 px-2 rounded-md flex border bg-gray-400 dark:bg-gray-800 border-gray-700 dark:border-gray-700">
-            {f.icon&&<Icon heigh={20} width={20}/>} {f.label}</button>
+          className="p-2 px-2 rounded-md cursor-pointer flex border bg-gray-300 dark:bg-gray-800 border-gray-100 hover:text-blue-500 dark:border-gray-700 hover:bg-blue-100/50 dark:border-gray-700">
+            {f.icon&&<Icon heigh={20} width={20} className='text-blue-600 mr-2'/>} {f.label}</button>
           )})}
         </div>
 
