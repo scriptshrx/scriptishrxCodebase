@@ -465,7 +465,7 @@ function SinglePromptAgentContent() {
         </div>
 
         {/* middle column settings list */}
-        <div className="w-full md:w-80 border-l border-r rounded-md shadow-md border-gray-200 dark:border-gray-700 dark:bg-gray-800 overflow-y-auto">
+        <div className="w-full md:w-80 border-l border-r rounded-md shadow-md border-gray-200 dark:border-gray-700 dark:bg-gray-800 mt-4 mb-4 overflow-y-auto">
           <nav className="space-y-1 p-4">
             {[
               { name: "Functions", icon: Code, key: "functions" },
