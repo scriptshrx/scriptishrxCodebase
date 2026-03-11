@@ -294,13 +294,14 @@ function SinglePromptAgentContent() {
             <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
             onClick={()=>setOpenSelectedFunction(false)}>
           
-        <div className="z-200 flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900">
+        <div className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+        onClick={(e)=>e.stopPropagation()}>
           <label htmlFor="name">Name</label>
           <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
           placeholder={selectedFunction.value}/>
 
     
-          <label htmlFor="description"></label>
+          <label htmlFor="description">Description</label>
               <input id="description" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
           placeholder='Ends the call when done'/>
