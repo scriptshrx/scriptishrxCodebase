@@ -110,6 +110,10 @@ function SinglePromptAgentContent() {
   const [postCall, setPostCall] = useState({ enableSummaries: false });
   const [security, setSecurity] = useState({ piiRedaction: false });
   const[buttonChoice, setButtonChoice]=useState('test-call')
+
+  // modal state for function editor
+  const [selectedFunction, setSelectedFunction] = useState<any>({});
+  const [openSelectedFunction, setOpenSelectedFunction] = useState(false);
  
 
 
@@ -281,14 +285,13 @@ function SinglePromptAgentContent() {
 
   //functionsList Modal
 
-  const[selectedFunction,setSelectedFunction]=useState({});
-  const[openSelectedFunctioin,setOpenSelectedFunction]=useState(false)
+  // (hook declarations were moved above to avoid conditional rendering)
 
   const renderSelectedFunctionModal = (selectedFunction)=>{
     switch(selectedFunction.label || 'end_call'){
       case 'end_call':
         return(
-          openSelectedFunctioin&&
+          openSelectedFunction&&
             <div className="flex min-h-screen w-full p-8 bg-white/50 backdrop-filter-md items-center z-[500] justify-center"
             onClick={()=>setOpenSelectedFunction(false)}>
               <div onClick={(e)=>e.stopPropagation()}>
