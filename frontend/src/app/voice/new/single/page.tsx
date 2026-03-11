@@ -338,7 +338,7 @@ function SinglePromptAgentContent() {
         <FunctionsModal/>}
         {renderSelectedFunctionModal(selectedFunction)}
 
-      {/* header */}
+      {/* headers */}
       <header className="sticky top-0 right-0 bg-white dark:bg-gray-800 z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <button
           onClick={() => router.back()}
