@@ -100,8 +100,8 @@ function SinglePromptAgentContent() {
 
   // available built-in types
   const functionOptions = [
-     { value: 'check_schedule', label: 'Check Schedule *cal.com*', icon: CalendarCheck },
-    { value: 'book_appointment', label: 'Book Appointment *cal.com*)', icon: Calendar },
+     { value: 'check_schedule', label: 'Check Schedule [cal.com]', icon: CalendarCheck },
+    { value: 'book_appointment', label: 'Book Appointment [cal.com])', icon: Calendar },
     { value: 'send_sms', label: 'Send SMS', icon: MessageCircle },
    
     { value: 'transfer_call', label: 'Transfer Call', icon: PhoneOutgoing },
