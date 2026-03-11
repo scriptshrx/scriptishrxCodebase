@@ -300,7 +300,7 @@ function SinglePromptAgentContent() {
           key={i}
           onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
           className="p-2 px-2 rounded-md flex border bg-gray-400 dark:bg-gray-800 border-gray-700 dark:border-gray-700">
-            <Icon heigh={20} width={20}/> {f.label}</button>
+            {f.icon&&<Icon heigh={20} width={20}/>} {f.label}</button>
           )})}
         </div>
 
