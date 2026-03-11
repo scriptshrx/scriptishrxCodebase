@@ -357,17 +357,21 @@ function SinglePromptAgentContent() {
 
         case 'check_schedule':
           return(
+              openSelectedFunction&&
             <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
             onClick={()=>setOpenSelectedFunction(false)}>
           
-        <div className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+        <div className="flex flex-col grid grid-cols-2 gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
         onClick={(e)=>e.stopPropagation()}>
+          <div>
           <label htmlFor="name">Name</label>
           <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
           placeholder={selectedFunction.value}/>
+          </div>
 
     
-          <label htmlFor="description">Description</label>
+    <div>
+                <label htmlFor="description">Description</label>
               <input id="description" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
               onChange={(e)=>setCheckScheduleFunction((prev)=>(
@@ -378,14 +382,19 @@ function SinglePromptAgentContent() {
 
               }))}
           placeholder='Checks availability on your calender'/>
+          </div>
 
+
+<div>
           <label htmlFor="provider">Provider</label>
               <input id="provider" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
             readOnly
           placeholder='Calendar provider (cal.com)'/>
+          </div>
 
 
+<div>
           <label htmlFor="eventId">Event Type ID</label>
               <input id="eventId" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -395,7 +404,10 @@ function SinglePromptAgentContent() {
 
               }))}
           placeholder='Event type ID from cal.com'/>
+          </div>
 
+
+<div>
           <label htmlFor="tz">Time Zone</label>
               <input id="tz" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -408,7 +420,9 @@ function SinglePromptAgentContent() {
 
               }))}
           placeholder='Your location tz'/>
+          </div>
 
+<div>
             <label htmlFor="daysSpan">Days Span</label>
               <input id="daysSpan" 
               type="number"
@@ -423,6 +437,10 @@ function SinglePromptAgentContent() {
               }))}
           placeholder='Allowed search days span'/>
 
+          </div>
+
+<div>
+
             <label htmlFor="maxSlots">Description</label>
               <input id="maxSlots" 
               type="number"
@@ -432,6 +450,8 @@ function SinglePromptAgentContent() {
                   
               }))}
           placeholder='Max slots to return'/>
+          </div>
+
 
 
           <Button 
