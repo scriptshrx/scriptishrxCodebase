@@ -279,6 +279,53 @@ function SinglePromptAgentContent() {
     return <div className="p-10 text-center">Loading...</div>;
   }
 
+  //functionsList Modal
+
+  const[selectedFunction,setSelectedFunction]=useState({});
+  const[openSelectedFunctioin,setOpenSelectedFunction]=useState(false)
+
+  const renderSelectedFunctionModal = (selectedFunction)=>{
+    switch(selectedFunction.label){
+      case 'end_call':
+        return(
+          openSelectedFunctioin&&
+            <div className="flex min-h-screen w-full p-8 bg-white/50 backdrop-filter-md items-center z-[500] justify-center"
+            onClick={()=>setOpenSelectedFunction(false)}>
+              <div onClick={(e)=>e.stopPropagation()}>
+        <div className="z-200 fixed mx-auto top-20 bg-white">
+          <label htmlFor="name">Name</label>
+          <input readOnly className="border bg-gray-300 rounded-md p-2 px-4"
+          placeholder={selectedFunction.value}/>
+
+    
+          <label htmlFor="description"></label>
+              <input id="description" 
+              className="border bg-gray-300 rounded-md p-2 text-gray-800 px-4"
+          placeholder='Ends the call when no more task from the caller'/>
+          <Button onClick={()=>setOpenSelectedFunction(false)}/>
+</div>
+</div>
+        </div>)
+    }
+    
+  }
+
+  function FunctionsModal(){
+    return(
+      <div className="flex min-h-screen w-full p-8 bg-white/50 backdrop-filter-md items-center justify-center"
+      onClick={()=>setFunctionModalOpen(false)}>
+
+        <div className="h-full w-full max-w-[600px] shadow-md rounded-lg flex flex-col gap-4 bg-gray-200 dark:bg-gray-800">
+          {functionOptions.map((f,i)=>
+          <button type="button"
+          key={i}
+          onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true)}}
+          className="p-2 px-4 rounded-md flex border border-gray-700 dark:border-gray-200">{f.label}</button>)}
+        </div>
+
+      </div>
+    )
+  }
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
       {/* header */}
@@ -445,6 +492,10 @@ function SinglePromptAgentContent() {
           </nav>
         </div>
 
+        {functionModalOpen&&
+        <FunctionsModal/>}
+        {renderSelectedFunctionModal(selectedFunction)}
+
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
           <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center dark:border-gray-600">
@@ -476,64 +527,7 @@ function SinglePromptAgentContent() {
 
       {/* functions modal */}
       {functionModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
-            <h2 className="text-xl font-bold mb-4">Edit Functions</h2>
-            <div className="space-y-2">
-              {functionsList.map((f, i) => (
-                <div key={i} className="flex items-center justify-between gap-2">
-                  <Select
-                    className="flex-1"
-                    value={f.type || ''}
-                    onChange={(e) => {
-                      const type = e.target.value;
-                      setFunctionsList((prev) => {
-                        const next = [...prev];
-                        next[i] = { ...next[i], type };
-                        return next;
-                      });
-                    }}
-                    options={functionOptions}
-                  />
-                  <Input
-                    className="flex-1"
-                    value={f.name || ''}
-                    onChange={(e) => {
-                      const name = e.target.value;
-                      setFunctionsList((prev) => {
-                        const next = [...prev];
-                        next[i] = { ...next[i], name };
-                        return next;
-                      });
-                    }}
-                    placeholder="Label (optional)"
-                  />
-                  <button
-                    className="ml-2 text-red-600"
-                    onClick={() =>
-                      setFunctionsList((prev) => prev.filter((_, idx) => idx !== i))
-                    }
-                  >
-x</button>
-                </div>
-              ))}
-              <Button
-                size="sm"
-                onClick={() =>
-                  setFunctionsList((prev) => [...prev, { type: functionOptions[0].value, name: "" }])
-                }
-              >
-                Add Function
-              </Button>
-            </div>
-            <div className="flex justify-end gap-2 mt-6">
-              <Button variant="outline" onClick={() => setFunctionModalOpen(false)}>
-                Close
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
 
       {error && (
         <div className="fixed top-20 left-20 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">{error}</div>

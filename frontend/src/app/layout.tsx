@@ -6,8 +6,8 @@ import Providers from './providers';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: 'ScriptishRx | Modern Business CRM & Enterprise Management',
-    description: 'Transform your business operations with ScriptishRx.',
+    title: 'Scriptish | Wellness Practice Hub for Smarter Care Delivery',
+    description: 'Transform your Wellness Practice operations with Scriptish.',
 };
 
 export default function RootLayout({
