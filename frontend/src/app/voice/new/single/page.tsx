@@ -98,7 +98,7 @@ function SinglePromptAgentContent() {
   // modal open state for editing functions
   const [functionsModalOpen, setFunctionsModalOpen] = useState(false);
 
-  // available built-in types (from screenshot)
+  // available built-in types
   const functionOptions = [
      { value: 'check_schedule', label: 'Check Schedule *cal.com*', icon: CalendarCheck },
     { value: 'book_appointment', label: 'Book Appointment *cal.com*)', icon: Calendar },
@@ -114,7 +114,11 @@ function SinglePromptAgentContent() {
   const [callSettings, setCallSettings] = useState({ silenceTimeout: 5, maxDuration: 10 });
   const [postCall, setPostCall] = useState({ enableSummaries: false });
   const [security, setSecurity] = useState({ piiRedaction: false });
-  const[buttonChoice, setButtonChoice]=useState('test-call')
+  const[buttonChoice, setButtonChoice]=useState('test-call');
+  //functions state for all default functions:
+
+  const[endCallFunction,setEndCallFunction]=useState({});
+  const [bookAppointmentFunction,setBookAppointmentFunction]=useState({})
 
   // modal state for function editor
   const [selectedFunction, setSelectedFunction] = useState<any>({});
@@ -334,13 +338,67 @@ function SinglePromptAgentContent() {
           <label htmlFor="description">Description</label>
               <input id="description" 
               className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setEndCallFunction(
+                {name:'end_call',
+                  description:e.target.value,
+                  type:'object'
+
+
+              })}
           placeholder='Ends the call when done'/>
           <Button 
           variant='primary'
           onClick={()=>setOpenSelectedFunction(false)}>Done</Button>
 </div>
 </div>
-        )
+        );
+
+        case 'book_appointment':
+          return(
+             openSelectedFunction&&
+            <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+            onClick={()=>setOpenSelectedFunction(false)}>
+          
+        <div className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+        onClick={(e)=>e.stopPropagation()}>
+         
+          <label htmlFor="name">Name</label>
+          <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
+          placeholder={selectedFunction.value}/>
+
+    
+          <label htmlFor="description">Description</label>
+              <input id="description" 
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setBookAppointmentFunction(
+                (prev)=>
+                ({...prev, 
+                  name:'book_appointment',
+                  description:e.target.value,
+                  type:'object'
+                }))}
+          placeholder='Books appointment for the caller'/>
+
+          {/**Parameters */}
+          <label>Parameters</label>
+
+          <label htmlFor="description"></label>
+              <input id="description" 
+              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+              onChange={(e)=>setBookAppointmentFunction(
+                (prev)=>
+                ({...prev, 
+                  name:'book_appointment',
+                  description:e.target.value,
+                  type:'object'
+                }))}
+          placeholder='Ends the call when done'/>
+          <Button 
+          variant='primary'
+          onClick={()=>setOpenSelectedFunction(false)}>Done</Button>
+</div>
+</div>
+          )
     }
     
   }
