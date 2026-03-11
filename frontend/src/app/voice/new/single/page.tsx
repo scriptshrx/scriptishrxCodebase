@@ -91,7 +91,7 @@ function SinglePromptAgentContent() {
   // each function has at least a `type` and optional `name`
   const [functionsList, setFunctionsList] = useState<any[]>([]);
   // modal open state for editing functions
-  const [functionModalOpen, setFunctionModalOpen] = useState(false);
+  const [functionsModalOpen, setFunctionsModalOpen] = useState(false);
 
   // available built-in types (from screenshot)
   const functionOptions = [
@@ -123,7 +123,6 @@ function SinglePromptAgentContent() {
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-
     useEffect(() => {
  if(window && typeof window !== undefined){
   const item = localStorage.getItem('template');
@@ -138,7 +137,7 @@ function SinglePromptAgentContent() {
     }
     
   setName(`${template.name}-Edit`);
-  //setCallSettings(template.agentConfig.call_settings);
+  setCallSettings(template.agentConfig.call_settings);
   setLanguage(template.agentConfig.speech.language || 'English');
   setLlmModel(template.agentConfig.llm.model);
   setPrompt(template.agentConfig.prompt.system_prompt);
@@ -288,7 +287,7 @@ function SinglePromptAgentContent() {
   // (hook declarations were moved above to avoid conditional rendering)
 
   const renderSelectedFunctionModal = (selectedFunction)=>{
-    switch(selectedFunction.label || 'end_call'){
+    switch(selectedFunction.value || 'end_call'){
       case 'end_call':
         return(
           openSelectedFunction&&
@@ -315,22 +314,30 @@ function SinglePromptAgentContent() {
 
   function FunctionsModal(){
     return(
-      <div className="flex min-h-screen w-full p-8 bg-white/50 backdrop-filter-md items-center justify-center"
-      onClick={()=>setFunctionModalOpen(false)}>
+      <div className="flex inset-0 w-full fixed p-8 bg-white/20 dark:bg-black/20 backdrop-blur-md items-center justify-center"
+      onClick={()=>setFunctionsModalOpen(false)}>
 
         <div className="h-full w-full max-w-[600px] shadow-md rounded-lg flex flex-col gap-4 bg-gray-200 dark:bg-gray-800">
           {functionOptions.map((f,i)=>
           <button type="button"
           key={i}
-          onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true)}}
+          onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
           className="p-2 px-4 rounded-md flex border border-gray-700 dark:border-gray-200">{f.label}</button>)}
         </div>
+
+        
 
       </div>
     )
   }
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+       {/* functions modal */}
+
+        {functionsModalOpen&&
+        <FunctionsModal/>}
+        {renderSelectedFunctionModal(selectedFunction)}
+
       {/* header */}
       <header className="sticky top-0 right-0 bg-white dark:bg-gray-800 z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <button
@@ -473,7 +480,7 @@ function SinglePromptAgentContent() {
                   onClick={() => {
                     if (item.key === 'functions') {
                       // open modal instead of inline panel
-                      setFunctionModalOpen(true);
+                      setFunctionsModalOpen(true);
                       setActivePanel(null);
                     } else {
                       setActivePanel((s) => (s === item.key ? null : item.key));
@@ -495,12 +502,7 @@ function SinglePromptAgentContent() {
           </nav>
         </div>
 
-          {/* functions modal */}
-
-        {functionModalOpen&&
-        <FunctionsModal/>}
-        {renderSelectedFunctionModal(selectedFunction)}
-
+         
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
           <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center dark:border-gray-600">
