@@ -18,7 +18,10 @@ import {
   MessageCircle,
   AudioWaveform,
   BrainCircuit,
-  Bot
+  Bot,
+  CalendarCheck,
+  Calendar,
+  User
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -96,15 +99,13 @@ function SinglePromptAgentContent() {
 
   // available built-in types (from screenshot)
   const functionOptions = [
-    { value: 'end_call', label: 'End Call', icon:Bot },
-    { value: 'call_transfer', label: 'Call Transfer' },
-    { value: 'agent_transfer', label: 'Agent Transfer' },
-    { value: 'check_calendar', label: 'Check Calendar Availability (Cal.com)' },
-    { value: 'book_calendar', label: 'Book on the Calendar (Cal.com)' },
-    
-    { value: 'send_sms', label: 'Send SMS' },
-
-    { value: 'custom', label: 'Custom Function' },
+    { value: 'end_call', label: 'End Call', icon: Bot },
+    { value: 'call_transfer', label: 'Call Transfer', icon: PhoneCall },
+    { value: 'agent_transfer', label: 'Agent Transfer', icon: User },
+    { value: 'check_calendar', label: 'Check Calendar Availability (Cal.com)', icon: CalendarCheck },
+    { value: 'book_calendar', label: 'Book on the Calendar (Cal.com)', icon: Calendar },
+    { value: 'send_sms', label: 'Send SMS', icon: MessageCircle },
+    { value: 'custom', label: 'Custom Function', icon: Code },
   ];
   const [speechSettings, setSpeechSettings] = useState({ speed: 50, sensitivity: 50 });
   const [callSettings, setCallSettings] = useState({ silenceTimeout: 5, maxDuration: 10 });
@@ -299,8 +300,8 @@ function SinglePromptAgentContent() {
           <button type="button"
           key={i}
           onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
-          className="p-2 px-2 rounded-md cursor-pointer flex border bg-gray-300 dark:bg-gray-800 border-gray-100 hover:text-blue-500 dark:border-gray-700 hover:bg-blue-100/50 dark:border-gray-700">
-            {f.icon&&<Icon heigh={20} width={20} className='text-blue-600 mr-2'/>} {f.label}</button>
+          className="p-2 px-2 rounded-md cursor-pointer flex border bg-gray-300 dark:bg-gray-800 border-gray-100 hover:text-blue-500 dark:border-gray-700 hover:bg-blue-100/50 dark:hover:bg-blue-100/20 dark:border-gray-700">
+            {f.icon&&<Icon height={20} width={20} className='text-blue-600 mr-2'/>} {f.label}</button>
           )})}
         </div>
 
