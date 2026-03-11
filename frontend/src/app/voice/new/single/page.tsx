@@ -17,7 +17,8 @@ import {
   PhoneOutgoing,
   MessageCircle,
   AudioWaveform,
-  BrainCircuit
+  BrainCircuit,
+  Bot
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -95,7 +96,7 @@ function SinglePromptAgentContent() {
 
   // available built-in types (from screenshot)
   const functionOptions = [
-    { value: 'end_call', label: 'End Call' },
+    { value: 'end_call', label: 'End Call', icon:Bot },
     { value: 'call_transfer', label: 'Call Transfer' },
     { value: 'agent_transfer', label: 'Agent Transfer' },
     { value: 'check_calendar', label: 'Check Calendar Availability (Cal.com)' },
@@ -284,6 +285,31 @@ function SinglePromptAgentContent() {
 
   //functionsList Modal
 
+  function FunctionsModal(){
+    return(
+      <div className="flex inset-0 w-full fixed p-8 bg-white/20 dark:bg-black/20 backdrop-blur-md items-center z-[100] justify-center"
+      onClick={()=>setFunctionsModalOpen(false)}>
+
+        <div className="shadow-md p-4 overflow-hidden overflow-y-auto rounded-lg flex flex-col gap-2 bg-gray-200 dark:bg-gray-900">
+          {functionOptions.map((f,i)=>{
+            const Icon = f.icon;
+
+
+          return(
+          <button type="button"
+          key={i}
+          onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
+          className="p-2 px-2 rounded-md flex border bg-gray-400 dark:bg-gray-800 border-gray-700 dark:border-gray-700">
+            <Icon heigh={20} width={20}/> {f.label}</button>
+          )})}
+        </div>
+
+        
+
+      </div>
+    )
+  }
+
   // (hook declarations were moved above to avoid conditional rendering)
 
   const renderSelectedFunctionModal = (selectedFunction)=>{
@@ -315,24 +341,7 @@ function SinglePromptAgentContent() {
     
   }
 
-  function FunctionsModal(){
-    return(
-      <div className="flex inset-0 w-full fixed p-8 bg-white/20 dark:bg-black/20 backdrop-blur-md items-center z-[100] justify-center"
-      onClick={()=>setFunctionsModalOpen(false)}>
-
-        <div className="shadow-md p-4 overflow-hidden overflow-y-auto rounded-lg flex flex-col gap-2 bg-gray-200 dark:bg-gray-900">
-          {functionOptions.map((f,i)=>
-          <button type="button"
-          key={i}
-          onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
-          className="p-2 px-2 rounded-md flex border bg-gray-400 dark:bg-gray-800 border-gray-700 dark:border-gray-700">{f.label}</button>)}
-        </div>
-
-        
-
-      </div>
-    )
-  }
+  
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
        {/* functions modal */}
