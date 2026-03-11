@@ -507,11 +507,11 @@ function SinglePromptAgentContent() {
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
           <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center dark:border-gray-600">
             <div className="flex gap-2 p-[2px] bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] rounded-lg ${buttonChoice=='test-call'?'bg-slate-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
+              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] rounded-lg ${buttonChoice=='test-call'?'bg-blue-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
                 <PhoneOutgoing className="w-3 h-3" />
                 Test Call
               </button>
-               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] rounded-lg ${buttonChoice=='test-chat'?'bg-slate-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
+               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] rounded-lg ${buttonChoice=='test-chat'?'bg-blue-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
                 <MessageCircle className="w-3 h-3" />
                 Test Chat
               </button>
