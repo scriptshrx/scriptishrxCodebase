@@ -21,7 +21,8 @@ import {
   Bot,
   CalendarCheck,
   Calendar,
-  User
+  User,
+  PhoneOff
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -99,8 +100,8 @@ function SinglePromptAgentContent() {
 
   // available built-in types (from screenshot)
   const functionOptions = [
-    { value: 'end_call', label: 'End Call', icon: Bot },
-    { value: 'call_transfer', label: 'Call Transfer', icon: PhoneCall },
+    { value: 'end_call', label: 'End Call', icon: PhoneOff },
+    { value: 'call_transfer', label: 'Call Transfer', icon: PhoneOutgoing },
     { value: 'agent_transfer', label: 'Agent Transfer', icon: User },
     { value: 'check_calendar', label: 'Check Calendar Availability (Cal.com)', icon: CalendarCheck },
     { value: 'book_calendar', label: 'Book on the Calendar (Cal.com)', icon: Calendar },
