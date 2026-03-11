@@ -166,14 +166,13 @@ export default function CreateAgentModal({
           {/* Main Panel - Cards Grid */}
           <div className="flex-1 p-6 overflow-y-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {agents.length>0&&
-              <TemplateCard
-                 
+              {agents.length>0 && (
+                <TemplateCard
                   index={0}
                   template={templates[0]}
-                 
-                  onClick={() => handleTemplateSelect([])}
-                />}
+                  onClick={() => handleTemplateSelect(templates[0])}
+                />
+              )}
               {agents.length<1?
               templates.map((template,i) => (
                 <TemplateCard
