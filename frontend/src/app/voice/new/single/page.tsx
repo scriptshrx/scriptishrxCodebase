@@ -973,7 +973,7 @@ function SinglePromptAgentContent() {
                   onClick={() => {
                     if (item.key === "functions") {
                       // open modal instead of inline panel
-                      setFunctionsModalOpen(true);
+                     // setFunctionsModalOpen(true);
                       setActivePanel(null);
                     } else {
                       setActivePanel((s) => (s === item.key ? null : item.key));
@@ -1040,6 +1040,7 @@ function SinglePromptAgentContent() {
     switch (key) {
       case "functions":
         return (
+          
           <div className="space-y-2">
             {functionsList.map((f, i) => (
               <div key={i} className="flex items-center justify-between">
@@ -1054,11 +1055,12 @@ function SinglePromptAgentContent() {
                   x
                 </button>
               </div>
+              
             ))}
             <Button
               size="sm"
               onClick={() =>
-                setFunctionsList((prev) => [...prev, { name: "" }])
+                setFunctionsModalOpen(true)
               }
             >
               Add Function
