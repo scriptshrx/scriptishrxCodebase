@@ -1042,7 +1042,7 @@ function SinglePromptAgentContent() {
                 <Bot height={20} width={20} className="text-blue-600 mr-2"/>
                 <span>{Object.keys(f)[0] || "Unnamed"}</span>
                 <X height={20} width={20}
-                className="bg-red-500/30 rounded-full  items-center justify-center cursor-pointer text-red-500"
+                className="bg-red-500/30 rounded-full  p-[2px] items-center justify-center cursor-pointer text-red-500"
                   onClick={() =>
                     setFunctionsList((prev) =>
                       prev.filter((_, idx) => idx !== i),
