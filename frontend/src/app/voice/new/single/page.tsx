@@ -148,6 +148,7 @@ function SinglePromptAgentContent() {
       const item = localStorage.getItem("template");
       if (item) {
         const template = JSON.parse(item);
+        console.log('Template:',template)
         if (template.id == "blank") {
           setName(template.id);
           setWelcomeMessage(template.subtitle);
