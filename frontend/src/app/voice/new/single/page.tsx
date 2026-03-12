@@ -233,7 +233,7 @@ function SinglePromptAgentContent() {
         body: JSON.stringify(body),
       });
       setAgentId(res.agent.id);
-      router.push(`/voiceAgents`);
+      router.push(`/voiceAgent`);
     } catch (e: any) {
       setError(e.message);
     } finally {
