@@ -10,7 +10,7 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import CreateAgentModal from '@/components/voice/CreateAgentModal';
-import { routerServerGlobal } from 'next/dist/server/lib/router-utils/router-server-context';
+
 import { useRouter } from 'next/router';
 
 type AgentType = 'Single Prompt' | 'Multi Prompt' | 'Custom LLM';
@@ -196,9 +196,9 @@ export default function VoiceAgentsView({
                         <button
                           onClick={() => {
                             localStorage.setItem('template',agent);
-                            router.push(`/voice/new/${agent.mode}?editing=true`);
+                            router?.push(`/voice/new/${agent.mode}?editing=true`);
                             
-                            //onEdit(agent);
+                            // onEdit(agent);
                             //setRowMenuOpenId(null);
                           }}
                           className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-100/50 text-sm"
