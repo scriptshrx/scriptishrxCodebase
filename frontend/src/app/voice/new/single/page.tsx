@@ -974,7 +974,7 @@ function SinglePromptAgentContent() {
                     if (item.key === "functions") {
                       // open modal instead of inline panel
                      // setFunctionsModalOpen(true);
-                      setActivePanel(null);
+                      setActivePanel('functions');
                     } else {
                       setActivePanel((s) => (s === item.key ? null : item.key));
                     }
