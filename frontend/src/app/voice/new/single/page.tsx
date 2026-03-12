@@ -941,7 +941,7 @@ function SinglePromptAgentContent() {
         </div>
 
         {/* middle column settings list */}
-        <div className="w-full md:w-80 border-l border-r rounded-md shadow-md border-gray-200 dark:border-gray-700 dark:bg-gray-800 mt-4 mb-4 overflow-y-auto">
+        <div className="w-full md:w-80 border-l border rounded-md shadow-md border-gray-400 dark:border-gray-700 dark:bg-gray-800 mt-4 mb-4 overflow-y-auto">
           <nav className="space-y-1 p-4">
             {[
               { name: "Functions", icon: Code, key: "functions" },
@@ -983,7 +983,7 @@ function SinglePromptAgentContent() {
 
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
-          <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center dark:border-gray-600">
+          <div className="border h-80 rounded-lg border-gray-400 dark:border-gray-300 p-4 flex justify-between flex-col items-center dark:border-gray-600">
             <div className="flex gap-2 p-[2px] bg-gray-100 dark:bg-gray-700 rounded-lg">
               <button
                 onClick={() => setButtonChoice("test-call")}
