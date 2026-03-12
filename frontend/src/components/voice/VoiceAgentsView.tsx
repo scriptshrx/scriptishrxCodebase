@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import CreateAgentModal from '@/components/voice/CreateAgentModal';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 type AgentType = 'Single Prompt' | 'Multi Prompt' | 'Custom LLM';
 
