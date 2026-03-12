@@ -1038,10 +1038,11 @@ function SinglePromptAgentContent() {
           
           <div className="space-y-2">
             {functionsList.map((f, i) => (
-              <div key={i} className="flex items-center rounded-lg bg-gray-500 dark:bg-gray-900 shadow-md justify-between p-2">
+              <div key={i} className="flex items-center text-gray-800 dark:text-gray-300 rounded-lg bg-gray-500 dark:bg-gray-900 shadow-md justify-between p-2">
+                <Bot height={20} width={20} className="text-blue-600 mr-2"/>
                 <span>{Object.keys(f)[0] || "Unnamed"}</span>
                 <X height={20} width={20}
-                className="bg-red-500/30 h-2 w-2 rounded-full  items-center justify-center cursor-pointer text-red-500"
+                className="bg-red-500/30 rounded-full  items-center justify-center cursor-pointer text-red-500"
                   onClick={() =>
                     setFunctionsList((prev) =>
                       prev.filter((_, idx) => idx !== i),
