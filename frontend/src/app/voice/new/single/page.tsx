@@ -133,6 +133,7 @@ function SinglePromptAgentContent() {
   const [endCallFunction, setEndCallFunction] = useState({});
   const [checkScheduleFunction, setCheckScheduleFunction] = useState({});
   const [bookAppointmentFunction, setBookAppointmentFunction] = useState({});
+  const[sendSmsFunction,setSendSmsFunction]=useState({})
 
   // modal state for function editor
   const [selectedFunction, setSelectedFunction] = useState<any>({});
@@ -181,12 +182,17 @@ function SinglePromptAgentContent() {
     }
   }, [showTitleInput]);
 
+
+  //Creating the agent
+
+  let agentConfig = {functions:[]}
   const handleCreate = async () => {
     setSaving(true);
     setError("");
     try {
       // construct agentConfig object according to spec
-      const agentConfig: any = {
+      agentConfig = { 
+        ...agentConfig,
         prompt: {
           system_prompt: prompt,
           welcome_message: welcomeMessage,
@@ -211,7 +217,7 @@ function SinglePromptAgentContent() {
           silence_timeout_seconds: callSettings.silenceTimeout,
           interruption_sensitivity: speechSettings.sensitivity / 100,
         },
-        functions: functionsList,
+        
         webhooks: { url: webhookUrl },
         dynamic_variables: dynamicVariables,
       };
@@ -318,7 +324,7 @@ function SinglePromptAgentContent() {
                   e.stopPropagation();
                   setSelectedFunction(f);
                   setOpenSelectedFunction(true);
-                  setFunctionsModalOpen(false);
+                  //setFunctionsModalOpen(false);
                 }}
                 className="p-2 px-2 rounded-md cursor-pointer flex border bg-gray-300 dark:bg-gray-800 border-gray-100 hover:text-blue-500 dark:border-gray-700 hover:bg-blue-100/50 dark:hover:bg-blue-100/20 dark:border-gray-700"
               >
@@ -333,6 +339,10 @@ function SinglePromptAgentContent() {
       </div>
     );
   }
+
+  //handler for setting each function into the agentConfig
+
+
 
   // (hook declarations were moved above to avoid conditional rendering)
 
@@ -371,7 +381,7 @@ function SinglePromptAgentContent() {
                 />
                 <Button
                   variant="primary"
-                  onClick={() => setOpenSelectedFunction(false)}
+                  onClick={() => {setOpenSelectedFunction(false);agentConfig={...agentConfig,functions:[...agentConfig.functions,{endCallFunction:endCallFunction}]};console.log(endCallFunction)}}
                 >
                   Done
                 </Button>
@@ -503,6 +513,8 @@ function SinglePromptAgentContent() {
                       onClick={() => {
                         setOpenSelectedFunction(false);
                         console.log(checkScheduleFunction);
+                        agentConfig={...agentConfig,functions:[...agentConfig.functions,{checkScheduleFunction:checkScheduleFunction}]
+                      }
                       }}
                     >
                       Done
@@ -522,9 +534,9 @@ function SinglePromptAgentContent() {
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
-                className="flex flex-col gap-2 p-6 max-h-screen my-8 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                className="flex flex-col gap-2 p-6 h-full my-8 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
                 onClick={(e) => e.stopPropagation()}
-              >
+                >
                 <label htmlFor="name">Name</label>
                 <input
                   readOnly
@@ -593,58 +605,58 @@ function SinglePromptAgentContent() {
                 {/**Parameters */}
                 <label className="text-blue-600 font-bold">Parameters</label>
 
-                <label htmlFor="customerName">Caller Name</label>
+                <label htmlFor="callerName">Caller Name</label>
                 <input
-                  id="customerName"
+                  id="callerName"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
                       name: selectedFunction.value,
-                      customerName: e.target.checked,
+                      callerName: e.target.checked,
                     }))
                   }
                 />
-                <label htmlFor="customerPhone">Caller Phone</label>
+                <label htmlFor="callerPhone">Caller Phone</label>
 
                 <input
-                  id="customerPhone"
+                  id="callerPhone"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
                       name: selectedFunction.value,
-                      customerPhone: e.target.checked,
+                      callerPhone: e.target.checked,
                     }))
                   }
                 />
 
-                <label htmlFor="customerEmail">Caller E-mail</label>
+                <label htmlFor="callerEmail">Caller E-mail</label>
                 <input
-                  id="customerEmail"
+                  id="callerEmail"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
                       name: selectedFunction.value,
-                      customerEmail: e.target.checked,
+                      callerEmail: e.target.checked,
                     }))
                   }
                 />
 
-                <label htmlFor="customerRequest">Caller Request</label>
+                <label htmlFor="callerRequest">Caller Request</label>
                 <input
-                  id="customerRequest"
+                  id="callerRequest"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
 
-                      customerRequest: e.target.checked,
+                      callerRequest: e.target.checked,
                     }))
                   }
                 />
@@ -653,6 +665,8 @@ function SinglePromptAgentContent() {
                   onClick={() => {
                     setOpenSelectedFunction(false);
                     console.log(bookAppointmentFunction);
+                    agentConfig={...agentConfig,functions:[...agentConfig.functions,{bookAppointmentFunction:bookAppointmentFunction}]}
+                    console.log('agentConfig:',agentConfig)
                   }}
                 >
                   Done
@@ -661,6 +675,115 @@ function SinglePromptAgentContent() {
             </div>
           )
         );
+        case 'send_sms':
+          return(
+               openSelectedFunction && (
+            <div
+              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              onClick={() => setOpenSelectedFunction(false)}
+            >
+              <div
+                className="flex flex-col gap-2 p-6 h-full my-8 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                onClick={(e) => e.stopPropagation()}
+                >
+                <label htmlFor="name">Name</label>
+
+                   <input
+                   id="name"
+                  readOnly
+                  className="border bg-gray-300 dark:bg-gray-600/80 placeholder:text-blue-600 border-gray-700 rounded-md text-blue-600 p-2 px-4"
+                  placeholder={selectedFunction.value}
+                />
+
+
+                 <label htmlFor="name">Description</label>
+
+
+
+                 <input
+                  id="description"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setSendSmsFunction((prev) => ({
+                      ...prev,
+                      name: selectedFunction.value,
+                      description: e.target.value,
+                      phone:true,
+                      type: "object",
+                    }))
+                  }
+                  placeholder="Send SMS to the caller's phone"
+                />
+
+                {/**Parameters */}
+
+                
+                <label htmlFor="callerPhone">Caller Phone</label>
+                <input
+                  id="callerPhone"
+                  type="checkbox"
+                  checked
+                  readOnly
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setSendSmsFunction((prev) => ({
+                      ...prev,
+                      phone: true
+                    }))
+                  }
+                />
+
+
+                 <label htmlFor="callerName">Caller Name</label>
+                <input
+                  id="callerName"
+                  type="checkbox"
+                
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setSendSmsFunction((prev) => ({
+                      ...prev,
+                      callerName: e.target.checked
+                    }))
+                  }
+                />
+
+
+                 <label htmlFor="callerRequest">Caller Request</label>
+                <input
+                  id="callerRequest"
+                  type="checkbox"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setSendSmsFunction((prev) => ({
+                      ...prev,
+
+                      callerRequest: e.target.checked,
+                    }))
+                  }
+                />
+
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setOpenSelectedFunction(false);
+                    console.log(sendSmsFunction);
+                    agentConfig={...agentConfig,functions:[...agentConfig.functions,{sendSmsFunction:sendSmsFunction}]}
+                    console.log('agentConfig:',agentConfig)
+                  }}
+                >
+                  Done
+                </Button>
+
+
+
+
+
+
+                </div>
+                </div>
+               )
+          )
     }
   };
 
