@@ -55,6 +55,7 @@ export default function VoiceAgentsView({
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
   const [rowMenuOpenId, setRowMenuOpenId] = useState<string | null>(null);
+ const router = useRouter();
 
   const filteredAgents = useMemo(() => {
     let arr = [...agents];
@@ -87,8 +88,7 @@ export default function VoiceAgentsView({
     }
   };
 
-  const router = useRouter();
-
+ 
   return (
     <>
       <main className="flex-1 p-8">
