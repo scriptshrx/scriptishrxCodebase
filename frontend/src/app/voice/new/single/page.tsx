@@ -145,6 +145,12 @@ function SinglePromptAgentContent() {
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+   const params = useSearchParams();
+  useEffect(()=>{
+    console.log('Params:',params);
+
+  },[])
+
   useEffect(() => {
     if (window && typeof window !== undefined) {
       const item = localStorage.getItem("template");
@@ -163,6 +169,7 @@ function SinglePromptAgentContent() {
         
 
         setName(`${template.name}-Edit`);
+        setAgentId(params?.editing?template.id:null)
         setCallSettings(template.agentConfig.call_settings);
         setLanguage(template.agentConfig.speech.language || "English");
         setLlmModel(template.agentConfig.llm.model);
@@ -311,7 +318,7 @@ function SinglePromptAgentContent() {
     }
   },[])
 
-
+ 
   if (loading) {
     return <div className="p-10 text-center">Loading...</div>;
   }
@@ -858,7 +865,7 @@ function SinglePromptAgentContent() {
             </button>
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            Single prompt • Agent ID: {agentId || "Not created yet"}
+            Single prompt • Agent ID: {params.editing?agentId || "Not created yet"}
           </div>
         </div>
         <div className="flex-col flex md:flex-row items-center gap-2">
