@@ -22,7 +22,7 @@ import {
   CalendarCheck,
   Calendar,
   User,
-  PhoneOff
+  PhoneOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -48,7 +48,8 @@ function getTenantId(): string {
 
 async function apiFetch(path: string, opts: any = {}) {
   const tenantId = getTenantId();
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const headers: any = {
     "Content-Type": "application/json",
     "x-tenant-id": tenantId,
@@ -66,14 +67,12 @@ async function apiFetch(path: string, opts: any = {}) {
   }
   return res.json();
 }
- //const[template,setTemplate]=useState({})
+//const[template,setTemplate]=useState({})
 
 function SinglePromptAgentContent() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-
-  
 
   // core fields
   const [agentId, setAgentId] = useState<string | null>(null);
@@ -100,73 +99,80 @@ function SinglePromptAgentContent() {
 
   // available built-in types
   const functionOptions = [
-     { value: 'check_schedule', label: 'Check Schedule [cal.com]', icon: CalendarCheck },
-    { value: 'book_appointment', label: 'Book Appointment [cal.com])', icon: Calendar },
-    { value: 'send_sms', label: 'Send SMS', icon: MessageCircle },
-   
-    { value: 'transfer_call', label: 'Transfer Call', icon: PhoneOutgoing },
-    { value: 'agent_transfer', label: 'Agent Transfer', icon: User },
-     { value: 'end_call', label: 'End Call', icon: PhoneOff },
-   
-    { value: 'custom', label: 'Custom Function', icon: Code },
+    {
+      value: "check_schedule",
+      label: "Check Schedule [cal.com]",
+      icon: CalendarCheck,
+    },
+    {
+      value: "book_appointment",
+      label: "Book Appointment [cal.com])",
+      icon: Calendar,
+    },
+    { value: "send_sms", label: "Send SMS", icon: MessageCircle },
+
+    { value: "transfer_call", label: "Transfer Call", icon: PhoneOutgoing },
+    { value: "agent_transfer", label: "Agent Transfer", icon: User },
+    { value: "end_call", label: "End Call", icon: PhoneOff },
+
+    { value: "custom", label: "Custom Function", icon: Code },
   ];
-  const [speechSettings, setSpeechSettings] = useState({ speed: 50, sensitivity: 50 });
-  const [callSettings, setCallSettings] = useState({ silenceTimeout: 5, maxDuration: 10 });
+  const [speechSettings, setSpeechSettings] = useState({
+    speed: 50,
+    sensitivity: 50,
+  });
+  const [callSettings, setCallSettings] = useState({
+    silenceTimeout: 5,
+    maxDuration: 10,
+  });
   const [postCall, setPostCall] = useState({ enableSummaries: false });
   const [security, setSecurity] = useState({ piiRedaction: false });
-  const[buttonChoice, setButtonChoice]=useState('test-call');
+  const [buttonChoice, setButtonChoice] = useState("test-call");
   //functions state for all default functions:
 
-  const[endCallFunction,setEndCallFunction]=useState({});
-  const[checkScheduleFunction,setCheckScheduleFunction]=useState({})
-  const [bookAppointmentFunction,setBookAppointmentFunction]=useState({})
-
+  const [endCallFunction, setEndCallFunction] = useState({});
+  const [checkScheduleFunction, setCheckScheduleFunction] = useState({});
+  const [bookAppointmentFunction, setBookAppointmentFunction] = useState({});
 
   // modal state for function editor
   const [selectedFunction, setSelectedFunction] = useState<any>({});
   const [openSelectedFunction, setOpenSelectedFunction] = useState(false);
- 
-
-
-
 
   const [webhookUrl, setWebhookUrl] = useState("");
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-    useEffect(() => {
- if(window && typeof window !== undefined){
-  const item = localStorage.getItem('template');
-  if(item){
-    const template = JSON.parse(item)
-    if(template.id=='blank'){
-      setName(template.id);
-      setWelcomeMessage(template.subtitle);
-      setPrompt(template.description);
-      setLoading(false)
-      return
-    }
-    
-  setName(`${template.name}-Edit`);
-  setCallSettings(template.agentConfig.call_settings);
-  setLanguage(template.agentConfig.speech.language || 'English');
-  setLlmModel(template.agentConfig.llm.model);
-  setPrompt(template.agentConfig.prompt.system_prompt);
-  setWelcomeMessage(template.agentConfig.prompt.welcome_message);
-  setDynamicVariables(template.agentConfig.dynamic_variables);
-  setFunctionsList(
-    template.agentConfig.functions?.map((f: any) => ({
-      type: f.type || f.name || '',
-      name: f.name || ''
-    })) || []
-  );
-  setSpeechSettings(template.agentConfig.speech);
-  setVoiceId(template.agentConfig.voice.voice_id);
-  setLoading(false)
- 
+  useEffect(() => {
+    if (window && typeof window !== undefined) {
+      const item = localStorage.getItem("template");
+      if (item) {
+        const template = JSON.parse(item);
+        if (template.id == "blank") {
+          setName(template.id);
+          setWelcomeMessage(template.subtitle);
+          setPrompt(template.description);
+          setLoading(false);
+          return;
+        }
 
-  }
- }
+        setName(`${template.name}-Edit`);
+        setCallSettings(template.agentConfig.call_settings);
+        setLanguage(template.agentConfig.speech.language || "English");
+        setLlmModel(template.agentConfig.llm.model);
+        setPrompt(template.agentConfig.prompt.system_prompt);
+        setWelcomeMessage(template.agentConfig.prompt.welcome_message);
+        setDynamicVariables(template.agentConfig.dynamic_variables);
+        setFunctionsList(
+          template.agentConfig.functions?.map((f: any) => ({
+            type: f.type || f.name || "",
+            name: f.name || "",
+          })) || [],
+        );
+        setSpeechSettings(template.agentConfig.speech);
+        setVoiceId(template.agentConfig.voice.voice_id);
+        setLoading(false);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -174,7 +180,6 @@ function SinglePromptAgentContent() {
       titleInputRef.current.focus();
     }
   }, [showTitleInput]);
-
 
   const handleCreate = async () => {
     setSaving(true);
@@ -215,7 +220,7 @@ function SinglePromptAgentContent() {
         agentType: "Single Prompt",
         mode: "single",
         name,
-        
+
         agentConfig,
       };
       const res = await apiFetch(`/api/voice-agents`, {
@@ -295,231 +300,333 @@ function SinglePromptAgentContent() {
 
   //functionsList Modal
 
-  function FunctionsModal(){
-    return(
-      <div className="flex inset-0 w-full fixed p-8 bg-white/20 dark:bg-black/20 backdrop-blur-md items-center z-[100] justify-center"
-      onClick={()=>setFunctionsModalOpen(false)}>
-
+  function FunctionsModal() {
+    return (
+      <div
+        className="flex inset-0 w-full fixed p-8 bg-white/20 dark:bg-black/20 backdrop-blur-md items-center z-[100] justify-center"
+        onClick={() => setFunctionsModalOpen(false)}
+      >
         <div className="shadow-md p-4 overflow-hidden overflow-y-auto rounded-lg flex flex-col gap-2 bg-gray-200 dark:bg-gray-900">
-          {functionOptions.map((f,i)=>{
+          {functionOptions.map((f, i) => {
             const Icon = f.icon;
 
-
-          return(
-          <button type="button"
-          key={i}
-          onClick={(e)=>{e.stopPropagation();setSelectedFunction(f);setOpenSelectedFunction(true);setFunctionsModalOpen(false)}}
-          className="p-2 px-2 rounded-md cursor-pointer flex border bg-gray-300 dark:bg-gray-800 border-gray-100 hover:text-blue-500 dark:border-gray-700 hover:bg-blue-100/50 dark:hover:bg-blue-100/20 dark:border-gray-700">
-            {f.icon&&<Icon height={20} width={20} className='text-blue-600 mr-2'/>} {f.label}</button>
-          )})}
+            return (
+              <button
+                type="button"
+                key={i}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedFunction(f);
+                  setOpenSelectedFunction(true);
+                  setFunctionsModalOpen(false);
+                }}
+                className="p-2 px-2 rounded-md cursor-pointer flex border bg-gray-300 dark:bg-gray-800 border-gray-100 hover:text-blue-500 dark:border-gray-700 hover:bg-blue-100/50 dark:hover:bg-blue-100/20 dark:border-gray-700"
+              >
+                {f.icon && (
+                  <Icon height={20} width={20} className="text-blue-600 mr-2" />
+                )}{" "}
+                {f.label}
+              </button>
+            );
+          })}
         </div>
-
-        
-
       </div>
-    )
+    );
   }
 
   // (hook declarations were moved above to avoid conditional rendering)
 
-  const renderSelectedFunctionModal = (selectedFunction)=>{
-    switch(selectedFunction.value || 'end_call'){
-      case 'end_call':
-        return(
-          openSelectedFunction&&
-            <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
-            onClick={()=>setOpenSelectedFunction(false)}>
-          
-        <div className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
-        onClick={(e)=>e.stopPropagation()}>
-          <label htmlFor="name">Name</label>
-          <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
-          placeholder={selectedFunction.value}/>
+  const renderSelectedFunctionModal = (selectedFunction) => {
+    switch (selectedFunction.value || "end_call") {
+      case "end_call":
+        return (
+          openSelectedFunction && (
+            <div
+              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              onClick={() => setOpenSelectedFunction(false)}
+            >
+              <div
+                className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <label htmlFor="name">Name</label>
+                <input
+                  readOnly
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
+                  placeholder={selectedFunction.value}
+                />
 
-    
-          <label htmlFor="description">Description</label>
-              <input id="description" 
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setEndCallFunction(
-                {name:'end_call',
-                  description:e.target.value,
-                  type:'object'
-
-
-              })}
-          placeholder='Ends the call when done'/>
-          <Button 
-          variant='primary'
-          onClick={()=>setOpenSelectedFunction(false)}>Done</Button>
-</div>
-</div>
+                <label htmlFor="description">Description</label>
+                <input
+                  id="description"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setEndCallFunction({
+                      name: "end_call",
+                      description: e.target.value,
+                      type: "object",
+                    })
+                  }
+                  placeholder="Ends the call when done"
+                />
+                <Button
+                  variant="primary"
+                  onClick={() => setOpenSelectedFunction(false)}
+                >
+                  Done
+                </Button>
+              </div>
+            </div>
+          )
         );
 
-        case 'check_schedule':
-          return(
-              openSelectedFunction&&
-            <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
-            onClick={()=>setOpenSelectedFunction(false)}>
-          
-        <div className="flex flex-col grid grid-cols-2 gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
-        onClick={(e)=>e.stopPropagation()}>
-          <div className="flex flex-col">
-          <label htmlFor="name">Name</label>
-          <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
-          placeholder={selectedFunction.value}/>
-          </div>
+      case "check_schedule":
+        return (
+          openSelectedFunction && (
+            <div
+              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              onClick={() => setOpenSelectedFunction(false)}
+            >
+              <div
+                className="flex flex-col grid grid-cols-2 gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex flex-col">
+                  <label htmlFor="name">Name</label>
+                  <input
+                    readOnly
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
+                    placeholder={selectedFunction.value}
+                  />
+                </div>
 
-    
-    <div className="flex flex-col">
+                <div className="flex flex-col">
+                  <label htmlFor="description">Description</label>
+                  <input
+                    id="description"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    onChange={(e) =>
+                      setCheckScheduleFunction((prev) => ({
+                        ...prev,
+                        name: selectedFunction.value,
+                        description: e.target.value,
+                        type: "object",
+                      }))
+                    }
+                    placeholder="Checks availability on your calender"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label htmlFor="provider">Provider</label>
+                  <input
+                    id="provider"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    readOnly
+                    placeholder="Calendar provider (cal.com)"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label htmlFor="eventId">Event Type ID</label>
+                  <input
+                    id="eventId"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    onChange={(e) =>
+                      setCheckScheduleFunction((prev) => ({
+                        ...prev,
+                        eventTypeId: e.target.value,
+                      }))
+                    }
+                    placeholder="Event type ID from cal.com"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label htmlFor="tz">Time Zone</label>
+                  <input
+                    id="tz"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    onChange={(e) =>
+                      setCheckScheduleFunction((prev) => ({
+                        ...prev,
+                        name: selectedFunction.value,
+                        timezone: e.target.value,
+
+                        type: "object",
+                      }))
+                    }
+                    placeholder='"eg. Africa/Lagos"'
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label htmlFor="daysSpan">Days Span</label>
+                  <input
+                    id="daysSpan"
+                    type="number"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    onChange={(e) =>
+                      setCheckScheduleFunction((prev) => ({
+                        ...prev,
+                        name: selectedFunction.value,
+                        daysSpan: e.target.value,
+
+                        type: "object",
+                      }))
+                    }
+                    placeholder="Allowed search days span"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label htmlFor="maxSlots">Max Slots</label>
+                  <input
+                    id="maxSlots"
+                    type="number"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    onChange={(e) =>
+                      setCheckScheduleFunction((prev) => ({
+                        ...prev,
+                        maxSlots: e.target.value,
+                      }))
+                    }
+                    placeholder="Max slots to return"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <div>
+                    {" "}
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        setOpenSelectedFunction(false);
+                        console.log(checkScheduleFunction);
+                      }}
+                    >
+                      Done
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        );
+
+      case "book_appointment":
+        return (
+          openSelectedFunction && (
+            <div
+              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              onClick={() => setOpenSelectedFunction(false)}
+            >
+              <div
+                className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <label htmlFor="name">Name</label>
+                <input
+                  readOnly
+                  className="border bg-gray-300 dark:bg-gray-600 placeholder:text-green-600 border-gray-700 rounded-md p-2 px-4"
+                  placeholder={selectedFunction.value}
+                />
+
                 <label htmlFor="description">Description</label>
-              <input id="description" 
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setCheckScheduleFunction((prev)=>(
-                {...prev,name:selectedFunction.value,
-                  description:e.target.value,
-                  type:'object'
+                <input
+                  id="description"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setBookAppointmentFunction((prev) => ({
+                      ...prev,
+                      name: selectedFunction.value,
+                      description: e.target.value,
+                      type: "object",
+                    }))
+                  }
+                  placeholder="Books appointment for the caller"
+                />
 
+                {/**Parameters */}
+                <label className="text-blue-600 font-bold">Parameters</label>
 
-              }))}
-          placeholder='Checks availability on your calender'/>
-          </div>
+                <label htmlFor="customerName">Caller Name</label>
+                <input
+                  id="customerName"
+                  type="checkbox"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setBookAppointmentFunction((prev) => ({
+                      ...prev,
+                      name: selectedFunction.value,
+                      customerName: e.target.value,
+                    }))
+                  }
+                />
+                <label htmlFor="customerPhone">Caller Phone</label>
 
+                <input
+                  id="customerPhone"
+                  type="checkbox"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setBookAppointmentFunction((prev) => ({
+                      ...prev,
+                      name: selectedFunction.value,
+                      customerPhone: e.target.value,
+                    }))
+                  }
+                />
 
-<div className="flex flex-col">
-          <label htmlFor="provider">Provider</label>
-              <input id="provider" 
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-            readOnly
-          placeholder='Calendar provider (cal.com)'/>
-          </div>
+                <label htmlFor="customerEmail">Caller E-mail</label>
+                <input
+                  id="customerEmail"
+                  type="checkbox"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setBookAppointmentFunction((prev) => ({
+                      ...prev,
+                      name: selectedFunction.value,
+                      customerEmail: e.target.value,
+                    }))
+                  }
+                />
 
+                <label htmlFor="customerRequest">Caller Request</label>
+                <input
+                  id="customerRequest"
+                  type="checkbox"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setBookAppointmentFunction((prev) => ({
+                      ...prev,
 
-<div className="flex flex-col">
-          <label htmlFor="eventId">Event Type ID</label>
-              <input id="eventId" 
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setCheckScheduleFunction((prev)=>(
-                {...prev,eventTypeId:e.target.value
-
-
-              }))}
-          placeholder='Event type ID from cal.com'/>
-          </div>
-
-
-<div className="flex flex-col">
-          <label htmlFor="tz">Time Zone</label>
-              <input id="tz" 
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setCheckScheduleFunction((prev)=>(
-                {...prev,name:selectedFunction.value,
-                  timezone:e.target.value,
-                  
-                  type:'object'
-
-
-              }))}
-          placeholder='Your location tz'/>
-          </div>
-
-<div className="flex flex-col">
-            <label htmlFor="daysSpan">Days Span</label>
-              <input id="daysSpan" 
-              type="number"
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setCheckScheduleFunction((prev)=>(
-                {...prev,name:selectedFunction.value,
-                  daysSpan:e.target.value,
-                  
-                  type:'object'
-
-
-              }))}
-          placeholder='Allowed search days span'/>
-
-          </div>
-
-<div className="flex flex-col">
-
-            <label htmlFor="maxSlots">Max Slots</label>
-              <input id="maxSlots" 
-              type="number"
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setCheckScheduleFunction((prev)=>(
-                {...prev,maxSlots:e.target.value,
-                  
-              }))}
-          placeholder='Max slots to return'/>
-          </div>
-
-
-
-          <Button 
-          variant='primary'
-          onClick={()=>{setOpenSelectedFunction(false);console.log(checkScheduleFunction)}}>Done</Button>
-</div>
-</div>
-
+                      customerRequest: e.target.value,
+                    }))
+                  }
+                />
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setOpenSelectedFunction(false);
+                    console.log(bookAppointmentFunction);
+                  }}
+                >
+                  Done
+                </Button>
+              </div>
+            </div>
           )
-
-        case 'book_appointment':
-          return(
-             openSelectedFunction&&
-            <div className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
-            onClick={()=>setOpenSelectedFunction(false)}>
-          
-        <div className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
-        onClick={(e)=>e.stopPropagation()}>
-         
-          <label htmlFor="name">Name</label>
-          <input readOnly className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
-          placeholder={selectedFunction.value}/>
-
-    
-          <label htmlFor="description">Description</label>
-              <input id="description" 
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setBookAppointmentFunction(
-                (prev)=>
-                ({...prev, 
-                  name:'book_appointment',
-                  description:e.target.value,
-                  type:'object'
-                }))}
-          placeholder='Books appointment for the caller'/>
-
-          {/**Parameters */}
-          <label>Parameters</label>
-
-          <label htmlFor="description"></label>
-              <input id="description" 
-              className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-              onChange={(e)=>setBookAppointmentFunction(
-                (prev)=>
-                ({...prev, 
-                  name:'book_appointment',
-                  description:e.target.value,
-                  type:'object'
-                }))}
-          placeholder='Ends the call when done'/>
-          <Button 
-          variant='primary'
-          onClick={()=>setOpenSelectedFunction(false)}>Done</Button>
-</div>
-</div>
-          )
+        );
     }
-    
-  }
+  };
 
-  
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-       {/* functions modal */}
+      {/* functions modal */}
 
-        {functionsModalOpen&&
-        <FunctionsModal/>}
-        {renderSelectedFunctionModal(selectedFunction)}
+      {functionsModalOpen && <FunctionsModal />}
+      {renderSelectedFunctionModal(selectedFunction)}
 
       {/* headers */}
       <header className="sticky top-0 right-0 bg-white dark:bg-gray-800 z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -535,9 +642,11 @@ function SinglePromptAgentContent() {
               <Input
                 ref={titleInputRef}
                 value={name}
-                onKeyDown={(e)=>{if(e.key==='Enter')setShowTitleInput(false)}}
-                onChange={(e) => {setName(e.target.value);
-              
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") setShowTitleInput(false);
+                }}
+                onChange={(e) => {
+                  setName(e.target.value);
                 }}
                 onBlur={() => setShowTitleInput(false)}
                 className="w-full p-0 border-0 text-[24px] text-gray-900 dark:text-gray-100"
@@ -587,7 +696,7 @@ function SinglePromptAgentContent() {
             ]}
             className="h-8"
           />
-         
+
           <Button
             variant="primary"
             size="default"
@@ -609,7 +718,9 @@ function SinglePromptAgentContent() {
                 const val = e.target.value;
                 setPrompt(val);
                 // detect dynamic variables
-                const matches = Array.from(val.matchAll(/\{\{(.*?)\}\}/g)).map(m => m[1]);
+                const matches = Array.from(val.matchAll(/\{\{(.*?)\}\}/g)).map(
+                  (m) => m[1],
+                );
                 setDynamicVariables(Array.from(new Set(matches)));
               }}
               placeholder="Type in a universal prompt for your agent, such as its role, conversational style, objective, etc."
@@ -621,7 +732,7 @@ function SinglePromptAgentContent() {
               </div>
             )}
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              {'Use {{}} to add variables. (Learn more)'}
+              {"Use {{}} to add variables. (Learn more)"}
             </p>
             <div className="space-y-2">
               <label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
@@ -631,7 +742,11 @@ function SinglePromptAgentContent() {
                 value={welcomeMode}
                 onChange={(e) => setWelcomeMode(e.target.value)}
                 options={[
-                  { value: "ai", label: "AI Initiates: AI begins with your defined begin message." },
+                  {
+                    value: "ai",
+                    label:
+                      "AI Initiates: AI begins with your defined begin message.",
+                  },
                 ]}
                 className="w-full h-8"
               />
@@ -652,7 +767,7 @@ function SinglePromptAgentContent() {
 
               { name: "Speech Settings", icon: AudioWaveform, key: "speech" },
               { name: "Call Settings", icon: PhoneCall, key: "call" },
-              {name:'Knowledge Resources',icon :BrainCircuit, key:'brain'},
+              { name: "Knowledge Resources", icon: BrainCircuit, key: "brain" },
               { name: "Post-Call Analysis", icon: FileText, key: "post" },
               { name: "Security Settings", icon: Shield, key: "security" },
               { name: "Webhook Settings", icon: LinkIcon, key: "webhook" },
@@ -661,7 +776,7 @@ function SinglePromptAgentContent() {
                 <button
                   className="w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-100 dark:hover:bg-blue-800 rounded"
                   onClick={() => {
-                    if (item.key === 'functions') {
+                    if (item.key === "functions") {
                       // open modal instead of inline panel
                       setFunctionsModalOpen(true);
                       setActivePanel(null);
@@ -685,16 +800,21 @@ function SinglePromptAgentContent() {
           </nav>
         </div>
 
-         
         {/* right column testing panel */}
         <div className="w-full md:w-80 p-6 h-50 md:h-full overflow-y-auto">
           <div className="border h-80 rounded-lg p-4 flex justify-between flex-col items-center dark:border-gray-600">
             <div className="flex gap-2 p-[2px] bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <button onClick={()=>setButtonChoice('test-call')} className={`p-[4px] rounded-lg ${buttonChoice=='test-call'?'bg-blue-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
+              <button
+                onClick={() => setButtonChoice("test-call")}
+                className={`p-[4px] rounded-lg ${buttonChoice == "test-call" ? "bg-blue-600 text-white" : "bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700"} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}
+              >
                 <PhoneOutgoing className="w-3 h-3" />
                 Test Call
               </button>
-               <button onClick={()=>setButtonChoice('test-chat')} className={`p-[4px] rounded-lg ${buttonChoice=='test-chat'?'bg-blue-600 text-white':'bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700'} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}>
+              <button
+                onClick={() => setButtonChoice("test-chat")}
+                className={`p-[4px] rounded-lg ${buttonChoice == "test-chat" ? "bg-blue-600 text-white" : "bg-white dark:bg-gray-600 dark:text-gray-200 text-gray-700"} font-medium text-[12px] px-[8px] flex items-center gap-1 transition-colors`}
+              >
                 <MessageCircle className="w-3 h-3" />
                 Test Chat
               </button>
@@ -703,23 +823,20 @@ function SinglePromptAgentContent() {
               </button>
             </div>
             <Mic className="w-12 h-12 text-gray-400 dark:text-gray-500" />
-            <div className="text-gray-600 dark:text-gray-300">Test your agent</div>
-            <Button
-              onClick={handleTest}
-              disabled={!agentId}
-              className="w-full"
-            >
+            <div className="text-gray-600 dark:text-gray-300">
+              Test your agent
+            </div>
+            <Button onClick={handleTest} disabled={!agentId} className="w-full">
               Test
             </Button>
           </div>
         </div>
       </div>
 
-    
-   
-
       {error && (
-        <div className="fixed top-20 left-20 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">{error}</div>
+        <div className="fixed top-20 left-20 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+          {error}
+        </div>
       )}
     </div>
   );
@@ -734,7 +851,9 @@ function SinglePromptAgentContent() {
                 <span>{f.name || "Unnamed"}</span>
                 <button
                   onClick={() =>
-                    setFunctionsList((prev) => prev.filter((_, idx) => idx !== i))
+                    setFunctionsList((prev) =>
+                      prev.filter((_, idx) => idx !== i),
+                    )
                   }
                 >
                   x
@@ -756,19 +875,19 @@ function SinglePromptAgentContent() {
           <div className="space-y-4">
             <div>
               <label className="text-xs font-medium">Voice speed</label>
-            <input
-  type="range"
-  min={0}
-  max={100}
-  value={speechSettings.speed}
-  onChange={(e) =>
-    setSpeechSettings((s) => ({ ...s, speed: +e.target.value }))
-  }
-  style={{
-    background: `linear-gradient(to right, #6b7280 ${speechSettings.speed}%, #e5e7eb ${speechSettings.speed}%)`
-  }}
-  className="w-full h-2 rounded-lg appearance-none cursor-pointer"
-/>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={speechSettings.speed}
+                onChange={(e) =>
+                  setSpeechSettings((s) => ({ ...s, speed: +e.target.value }))
+                }
+                style={{
+                  background: `linear-gradient(to right, #6b7280 ${speechSettings.speed}%, #e5e7eb ${speechSettings.speed}%)`,
+                }}
+                className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+              />
             </div>
             <div>
               <label className="text-xs font-medium">
@@ -786,17 +905,21 @@ function SinglePromptAgentContent() {
                   }))
                 }
                 style={{
-                  background: `linear-gradient(to right, #6b7280 ${speechSettings.sensitivity}%, #e5e7eb ${speechSettings.sensitivity}%)`
+                  background: `linear-gradient(to right, #6b7280 ${speechSettings.sensitivity}%, #e5e7eb ${speechSettings.sensitivity}%)`,
                 }}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer"
               />
             </div>
           </div>
         );
-        case 'brain':
-          return(<div className="flex items-center justify-center p-4 px-2">
-        <Button variant="primary" size="default">Upload Files Here</Button>
-          </div>);
+      case "brain":
+        return (
+          <div className="flex items-center justify-center p-4 px-2">
+            <Button variant="primary" size="default">
+              Upload Files Here
+            </Button>
+          </div>
+        );
       case "call":
         return (
           <div className="space-y-4">
@@ -851,9 +974,7 @@ function SinglePromptAgentContent() {
             <input
               type="checkbox"
               checked={security.piiRedaction}
-              onChange={(e) =>
-                setSecurity({ piiRedaction: e.target.checked })
-              }
+              onChange={(e) => setSecurity({ piiRedaction: e.target.checked })}
             />
             <span className="text-sm">Allow PII redaction</span>
           </div>
@@ -877,9 +998,7 @@ function SinglePromptAgentContent() {
 }
 
 function SinglePromptAgentPageContent() {
-
-
-  return <SinglePromptAgentContent/>;
+  return <SinglePromptAgentContent />;
 }
 
 export default function SinglePromptAgentPage() {
