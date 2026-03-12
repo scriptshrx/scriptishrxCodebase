@@ -968,21 +968,15 @@ function SinglePromptAgentContent() {
             ].map((item) => (
               <div key={item.key}>
                 <button
-                  className="w-full flex items-center gap-2 px-3 py-2 hover:bg-blue-100 dark:hover:bg-blue-800 rounded"
+                  className="w-full flex items-center text-left gap-2 px-3 py-2 hover:bg-blue-100/60 dark:hover:bg-blue-800 rounded"
                   onClick={() => {
-                    if (item.key === "functions") {
-                      // open modal instead of inline panel
-                     // setFunctionsModalOpen(true);
-                      setActivePanel('functions');
-                    } else {
-                      setActivePanel((s) => (s === item.key ? null : item.key));
-                    }
+                    
+                      setActivePanel(item.key);
+                  
                   }}
                 >
-                  <item.icon className="w-5 h-5 text-blue-800 dark:text-blue-300" />
-                  <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">
-                    {item.name}
-                  </span>
+                  <item.icon className="w-5 h-5 text-blue-600 dark:text-blue-300" />
+                  <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">{item.name}</span>
                 </button>
                 {activePanel === item.key && (
                   <div className="p-3 bg-gray-50 dark:bg-gray-800">
