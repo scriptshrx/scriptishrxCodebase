@@ -298,11 +298,7 @@ function SinglePromptAgentContent() {
     }
   };
 
-  if (loading) {
-    return <div className="p-10 text-center">Loading...</div>;
-  }
-
-  useEffect(()=>{
+    useEffect(()=>{
     const token = localStorage.getItem('token');
     if(token){
     const payload = JSON.parse(atob(token.split('.')[1]));
@@ -313,6 +309,12 @@ function SinglePromptAgentContent() {
     }
     }
   },[])
+
+
+  if (loading) {
+    return <div className="p-10 text-center">Loading...</div>;
+  }
+
 
   //functionsList Modal
 
