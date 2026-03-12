@@ -522,7 +522,7 @@ function SinglePromptAgentContent() {
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
-                className="flex flex-col gap-2 p-6 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                className="flex flex-col gap-2 p-6 max-h-screen my-8 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
                 onClick={(e) => e.stopPropagation()}
               >
                 <label htmlFor="name">Name</label>
