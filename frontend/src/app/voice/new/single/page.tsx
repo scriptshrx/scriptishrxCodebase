@@ -1039,14 +1039,13 @@ function SinglePromptAgentContent() {
               <div key={i} className="flex items-center rounded-lg shadow-mg justify-between">
                 <span>{Object.keys(f)[0] || "Unnamed"}</span>
                 <button
-                className="p-2 bg-red-500/50 h-2 w-2 rounded-full items-center justify-center cursor-pointer text-red-500"
+                className="p-2 bg-red-500/30 h-2 w-2 rounded-full bg-gray-600 items-center justify-center cursor-pointer text-red-500"
                   onClick={() =>
                     setFunctionsList((prev) =>
                       prev.filter((_, idx) => idx !== i),
                     )
                   }
-                >
-                  x
+                >x
                 </button>
               </div>
               
