@@ -195,9 +195,9 @@ export default function VoiceAgentsView({
                       <div className="absolute cursor-pointer right-4 top-10 w-36 bg-white border border-gray-200 rounded-lg shadow-lg z-[50] dark:bg-gray-800 dark:border-gray-700">
                         <button
                           onClick={() => {
-                            localStorage.setItem('template',agent);
+                            localStorage.setItem('template',JSON.stringify(agent));
                             console.log(agent);
-                            // router?.push(`/voice/new/${agent.mode}?editing=true`);
+                            router?.push(`/voice/new/${agent.mode}?editing=true`);
                             
                             // onEdit(agent);
                             //setRowMenuOpenId(null);
