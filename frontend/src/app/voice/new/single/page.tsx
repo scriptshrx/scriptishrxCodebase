@@ -1044,7 +1044,7 @@ function SinglePromptAgentContent() {
           <div className="space-y-2">
             {functionsList.map((f, i) => (
               <div key={i} className="flex items-center justify-between">
-                <span>{f.name || "Unnamed"}</span>
+                <span>{Object.keys(f)[0] || "Unnamed"}</span>
                 <button
                   onClick={() =>
                     setFunctionsList((prev) =>
