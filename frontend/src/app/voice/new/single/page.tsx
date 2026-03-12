@@ -244,6 +244,11 @@ function SinglePromptAgentContent() {
     }
   };
 
+
+
+  
+
+
   const handleSave = async () => {
     if (!agentId) return;
     setSaving(true);
@@ -279,11 +284,20 @@ function SinglePromptAgentContent() {
         webhooks: { url: webhookUrl },
         dynamic_variables: dynamicVariables,
       };
-      const body: any = { agentConfig };
+
+       const body = {
+        agentType: "Single Prompt",
+        mode: "single",
+        name,
+        agentConfig,
+      };
+      // const body: any = { agentConfig };
       await apiFetch(`/api/voice-agents/${agentId}`, {
         method: "PATCH",
         body: JSON.stringify(body),
       });
+
+      setError('Saved successfully')
       // optionally toast success
     } catch (e: any) {
       setError(e.message);
