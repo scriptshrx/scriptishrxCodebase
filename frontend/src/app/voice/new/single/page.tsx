@@ -152,10 +152,13 @@ function SinglePromptAgentContent() {
         if (template.id == "blank") {
           setName(template.id);
           setWelcomeMessage(template.subtitle);
+
           setPrompt(template.description);
           setLoading(false);
           return;
         }
+
+        
 
         setName(`${template.name}-Edit`);
         setCallSettings(template.agentConfig.call_settings);
@@ -164,12 +167,7 @@ function SinglePromptAgentContent() {
         setPrompt(template.agentConfig.prompt.system_prompt);
         setWelcomeMessage(template.agentConfig.prompt.welcome_message);
         setDynamicVariables(template.agentConfig.dynamic_variables);
-        setFunctionsList(
-          template.agentConfig.functions?.map((f: any) => ({
-            type: f.type || f.name || "",
-            name: f.name || "",
-          })) || [],
-        );
+        setFunctionsList(template.agentConfig.functions);
         setSpeechSettings(template.agentConfig.speech);
         setVoiceId(template.agentConfig.voice.voice_id);
         setLoading(false);
