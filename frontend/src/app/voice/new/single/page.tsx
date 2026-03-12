@@ -381,9 +381,9 @@ function SinglePromptAgentContent() {
                   variant="primary"
                   onClick={() => {
                     setOpenSelectedFunction(false);
-                    // add the configured function to our stateful list so it persists across renders
+                    // add the configured functions to our stateful list so it persists across renders
                     setFunctionsList((prev) => {
-                      const updated = [...prev, endCallFunction];
+                      const updated = [...prev, {endCallFunction:endCallFunction}];
                       console.log("functionsList updated", updated);
                       return updated;
                     });
@@ -520,7 +520,7 @@ function SinglePromptAgentContent() {
                         setOpenSelectedFunction(false);
                         console.log(checkScheduleFunction);
                         setFunctionsList((prev) => {
-                          const updated = [...prev, checkScheduleFunction];
+                          const updated = [...prev, {checkScheduleFunction:checkScheduleFunction}];
                           console.log("functionsList updated", updated);
                           return updated;
                         });
@@ -675,7 +675,7 @@ function SinglePromptAgentContent() {
                     setOpenSelectedFunction(false);
                     console.log(bookAppointmentFunction);
                     setFunctionsList((prev) => {
-                      const updated = [...prev, bookAppointmentFunction];
+                      const updated = [...prev, {bookAppointmentFunction:bookAppointmentFunction}];
                       console.log('functionsList updated', updated);
                       return updated;
                     });
@@ -781,7 +781,7 @@ function SinglePromptAgentContent() {
                     setOpenSelectedFunction(false);
                     console.log(sendSmsFunction);
                     setFunctionsList((prev) => {
-                      const updated = [...prev, sendSmsFunction];
+                      const updated = [...prev, {sendSmsFunction:sendSmsFunction}];
                       console.log('functionsList updated', updated);
                       return updated;
                     });
