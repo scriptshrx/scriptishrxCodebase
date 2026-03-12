@@ -190,7 +190,7 @@ function SinglePromptAgentContent() {
     setSaving(true);
     setError("");
     try {
-      // construct agentConfig object according to spec
+      // construct agentConfig object according to specs
       agentConfig = { 
         ...agentConfig,
         prompt: {
