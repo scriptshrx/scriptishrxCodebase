@@ -166,7 +166,7 @@ function SinglePromptAgentContent() {
         }
 
         setName(`${template.name}-Edit`);
-        setAgentId(params?.editing ? template.id : null);
+        setAgentId(params.get('editing') ? template.id : null);
         setCallSettings(template.agentConfig.call_settings);
         setLanguage(template.agentConfig.speech.language || "English");
         setLlmModel(template.agentConfig.llm.model);
