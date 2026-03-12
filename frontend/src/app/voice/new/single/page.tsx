@@ -24,6 +24,7 @@ import {
   User,
   PhoneOff,
   ClosedCaption,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -1039,7 +1040,7 @@ function SinglePromptAgentContent() {
             {functionsList.map((f, i) => (
               <div key={i} className="flex items-center rounded-lg bg-gray-500 dark:bg-gray-900 shadow-md justify-between p-2">
                 <span>{Object.keys(f)[0] || "Unnamed"}</span>
-                <ClosedCaption height={20} width={20}
+                <X height={20} width={20}
                 className="bg-red-500/30 h-2 w-2 rounded-full  items-center justify-center cursor-pointer text-red-500"
                   onClick={() =>
                     setFunctionsList((prev) =>
