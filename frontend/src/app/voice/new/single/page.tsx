@@ -185,14 +185,13 @@ function SinglePromptAgentContent() {
 
   //Creating the agent
 
-  let agentConfig = {functions:[]}
+  // agentConfig is built at request time using state instead of attempting to mutate a local variable
   const handleCreate = async () => {
     setSaving(true);
     setError("");
     try {
       // construct agentConfig object according to specs
-      agentConfig = { 
-        ...agentConfig,
+      const agentConfig = { 
         prompt: {
           system_prompt: prompt,
           welcome_message: welcomeMessage,
@@ -217,7 +216,7 @@ function SinglePromptAgentContent() {
           silence_timeout_seconds: callSettings.silenceTimeout,
           interruption_sensitivity: speechSettings.sensitivity / 100,
         },
-        
+        functions: functionsList,
         webhooks: { url: webhookUrl },
         dynamic_variables: dynamicVariables,
       };
@@ -226,7 +225,6 @@ function SinglePromptAgentContent() {
         agentType: "Single Prompt",
         mode: "single",
         name,
-
         agentConfig,
       };
       const res = await apiFetch(`/api/voice-agents`, {
@@ -362,7 +360,7 @@ function SinglePromptAgentContent() {
                 <label htmlFor="name">Name</label>
                 <input
                   readOnly
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 placeholder:text-blue-600 rounded-md p-2 px-4"
                   placeholder={selectedFunction.value}
                 />
 
@@ -381,7 +379,15 @@ function SinglePromptAgentContent() {
                 />
                 <Button
                   variant="primary"
-                  onClick={() => {setOpenSelectedFunction(false);agentConfig={...agentConfig,functions:[...agentConfig.functions,{endCallFunction:endCallFunction}]};console.log(endCallFunction)}}
+                  onClick={() => {
+                    setOpenSelectedFunction(false);
+                    // add the configured function to our stateful list so it persists across renders
+                    setFunctionsList((prev) => {
+                      const updated = [...prev, endCallFunction];
+                      console.log("functionsList updated", updated);
+                      return updated;
+                    });
+                  }}
                 >
                   Done
                 </Button>
@@ -405,7 +411,7 @@ function SinglePromptAgentContent() {
                   <label htmlFor="name">Name</label>
                   <input
                     readOnly
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
+                    className="border bg-gray-300 placeholder:text-blue-600 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
                     placeholder={selectedFunction.value}
                   />
                 </div>
@@ -432,7 +438,7 @@ function SinglePromptAgentContent() {
                   <input
                     id="provider"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                    readOnly
+                    
                     placeholder="Calendar provider (cal.com)"
                   />
                 </div>
@@ -513,8 +519,11 @@ function SinglePromptAgentContent() {
                       onClick={() => {
                         setOpenSelectedFunction(false);
                         console.log(checkScheduleFunction);
-                        agentConfig={...agentConfig,functions:[...agentConfig.functions,{checkScheduleFunction:checkScheduleFunction}]
-                      }
+                        setFunctionsList((prev) => {
+                          const updated = [...prev, checkScheduleFunction];
+                          console.log("functionsList updated", updated);
+                          return updated;
+                        });
                       }}
                     >
                       Done
@@ -665,8 +674,11 @@ function SinglePromptAgentContent() {
                   onClick={() => {
                     setOpenSelectedFunction(false);
                     console.log(bookAppointmentFunction);
-                    agentConfig={...agentConfig,functions:[...agentConfig.functions,{bookAppointmentFunction:bookAppointmentFunction}]}
-                    console.log('agentConfig:',agentConfig)
+                    setFunctionsList((prev) => {
+                      const updated = [...prev, bookAppointmentFunction];
+                      console.log('functionsList updated', updated);
+                      return updated;
+                    });
                   }}
                 >
                   Done
@@ -768,8 +780,11 @@ function SinglePromptAgentContent() {
                   onClick={() => {
                     setOpenSelectedFunction(false);
                     console.log(sendSmsFunction);
-                    agentConfig={...agentConfig,functions:[...agentConfig.functions,{sendSmsFunction:sendSmsFunction}]}
-                    console.log('agentConfig:',agentConfig)
+                    setFunctionsList((prev) => {
+                      const updated = [...prev, sendSmsFunction];
+                      console.log('functionsList updated', updated);
+                      return updated;
+                    });
                   }}
                 >
                   Done
