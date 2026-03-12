@@ -196,7 +196,8 @@ export default function VoiceAgentsView({
                         <button
                           onClick={() => {
                             localStorage.setItem('template',agent);
-                            router?.push(`/voice/new/${agent.mode}?editing=true`);
+                            console.log(agent);
+                            // router?.push(`/voice/new/${agent.mode}?editing=true`);
                             
                             // onEdit(agent);
                             //setRowMenuOpenId(null);
