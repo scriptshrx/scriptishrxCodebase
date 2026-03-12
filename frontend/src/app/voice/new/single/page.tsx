@@ -522,13 +522,13 @@ function SinglePromptAgentContent() {
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
-                className="flex flex-col gap-2 p-4 rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                className="flex flex-col gap-2 p-6 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
                 onClick={(e) => e.stopPropagation()}
               >
                 <label htmlFor="name">Name</label>
                 <input
                   readOnly
-                  className="border bg-gray-300 dark:bg-gray-600 placeholder:text-green-600 border-gray-700 rounded-md p-2 px-4"
+                  className="border bg-gray-300 dark:bg-gray-600 placeholder:text-blue-600 border-gray-700 rounded-md text-blue-600 p-2 px-4"
                   placeholder={selectedFunction.value}
                 />
 
@@ -547,6 +547,49 @@ function SinglePromptAgentContent() {
                   placeholder="Books appointment for the caller"
                 />
 
+                  <div className="flex flex-col">
+                  <label htmlFor="provider">Provider</label>
+                  <input
+                    id="provider"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 placeholder:text-blue-600"
+                    readOnly
+                    placeholder="Calendar provider (cal.com)"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label htmlFor="eventId">Event Type ID</label>
+                  <input
+                    id="eventId"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    onChange={(e) =>
+                      setBookAppointmentFunction((prev) => ({
+                        ...prev,
+                        eventTypeId: e.target.value,
+                      }))
+                    }
+                    placeholder="Event type ID from cal.com"
+                  />
+                </div>
+
+                <div className="flex flex-col">
+                  <label htmlFor="tz">Time Zone</label>
+                  <input
+                    id="tz"
+                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                    onChange={(e) =>
+                      setBookAppointmentFunction((prev) => ({
+                        ...prev,
+                        name: selectedFunction.value,
+                        timezone: e.target.value,
+
+                        type: "object",
+                      }))
+                    }
+                    placeholder='"eg. Africa/Lagos"'
+                  />
+                </div>
+
                 {/**Parameters */}
                 <label className="text-blue-600 font-bold">Parameters</label>
 
@@ -559,7 +602,7 @@ function SinglePromptAgentContent() {
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
                       name: selectedFunction.value,
-                      customerName: e.target.value,
+                      customerName: e.target.checked,
                     }))
                   }
                 />
@@ -573,7 +616,7 @@ function SinglePromptAgentContent() {
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
                       name: selectedFunction.value,
-                      customerPhone: e.target.value,
+                      customerPhone: e.target.checked,
                     }))
                   }
                 />
@@ -587,7 +630,7 @@ function SinglePromptAgentContent() {
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
                       name: selectedFunction.value,
-                      customerEmail: e.target.value,
+                      customerEmail: e.target.checked,
                     }))
                   }
                 />
@@ -601,7 +644,7 @@ function SinglePromptAgentContent() {
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
 
-                      customerRequest: e.target.value,
+                      customerRequest: e.target.checked,
                     }))
                   }
                 />
