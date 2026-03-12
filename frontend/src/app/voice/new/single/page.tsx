@@ -135,7 +135,7 @@ function SinglePromptAgentContent() {
   const [endCallFunction, setEndCallFunction] = useState({});
   const [checkScheduleFunction, setCheckScheduleFunction] = useState({});
   const [bookAppointmentFunction, setBookAppointmentFunction] = useState({});
-  const[sendSmsFunction,setSendSmsFunction]=useState({})
+  const [sendSmsFunction, setSendSmsFunction] = useState({});
 
   // modal state for function editor
   const [selectedFunction, setSelectedFunction] = useState<any>({});
@@ -145,18 +145,17 @@ function SinglePromptAgentContent() {
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-   const params = useSearchParams();
-  useEffect(()=>{
-    console.log('Params:',params);
-
-  },[])
+  const params = useSearchParams();
+  useEffect(() => {
+    console.log("Params:", params);
+  }, []);
 
   useEffect(() => {
     if (window && typeof window !== undefined) {
       const item = localStorage.getItem("template");
       if (item) {
         const template = JSON.parse(item);
-        console.log('Template:',template)
+        console.log("Template:", template);
         if (template.id == "blank") {
           setName(template.id);
           setWelcomeMessage(template.subtitle);
@@ -166,10 +165,8 @@ function SinglePromptAgentContent() {
           return;
         }
 
-        
-
         setName(`${template.name}-Edit`);
-        setAgentId(params?.editing?template.id:null)
+        setAgentId(params?.editing ? template.id : null);
         setCallSettings(template.agentConfig.call_settings);
         setLanguage(template.agentConfig.speech.language || "English");
         setLlmModel(template.agentConfig.llm.model);
@@ -190,7 +187,6 @@ function SinglePromptAgentContent() {
     }
   }, [showTitleInput]);
 
-
   //Creating the agent
 
   // agentConfig is built at request time using state instead of attempting to mutate a local variable
@@ -199,7 +195,7 @@ function SinglePromptAgentContent() {
     setError("");
     try {
       // construct agentConfig object according to specs
-      const agentConfig = { 
+      const agentConfig = {
         prompt: {
           system_prompt: prompt,
           welcome_message: welcomeMessage,
@@ -306,23 +302,21 @@ function SinglePromptAgentContent() {
     }
   };
 
-    useEffect(()=>{
-    const token = localStorage.getItem('token');
-    if(token){
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const exp = payload.exp;
-    if(exp && exp < Date.now()/1000){
-      console.log('Token expired, routing to login:',exp);
-      router.push('/login')
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const exp = payload.exp;
+      if (exp && exp < Date.now() / 1000) {
+        console.log("Token expired, routing to login:", exp);
+        router.push("/login");
+      }
     }
-    }
-  },[])
+  }, []);
 
- 
   if (loading) {
     return <div className="p-10 text-center">Loading...</div>;
   }
-
 
   //functionsList Modal
 
@@ -361,8 +355,6 @@ function SinglePromptAgentContent() {
   }
 
   //handler for setting each function into the agentConfig
-
-
 
   // (hook declarations were moved above to avoid conditional rendering)
 
@@ -405,7 +397,10 @@ function SinglePromptAgentContent() {
                     setOpenSelectedFunction(false);
                     // add the configured functions to our stateful list so it persists across renders
                     setFunctionsList((prev) => {
-                      const updated = [...prev, {endCallFunction:endCallFunction}];
+                      const updated = [
+                        ...prev,
+                        { endCallFunction: endCallFunction },
+                      ];
                       console.log("functionsList updated", updated);
                       return updated;
                     });
@@ -460,7 +455,6 @@ function SinglePromptAgentContent() {
                   <input
                     id="provider"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                    
                     placeholder="Calendar provider (cal.com)"
                   />
                 </div>
@@ -542,7 +536,10 @@ function SinglePromptAgentContent() {
                         setOpenSelectedFunction(false);
                         console.log(checkScheduleFunction);
                         setFunctionsList((prev) => {
-                          const updated = [...prev, {checkScheduleFunction:checkScheduleFunction}];
+                          const updated = [
+                            ...prev,
+                            { checkScheduleFunction: checkScheduleFunction },
+                          ];
                           console.log("functionsList updated", updated);
                           return updated;
                         });
@@ -567,7 +564,7 @@ function SinglePromptAgentContent() {
               <div
                 className="flex flex-col gap-2 p-6 h-full my-8 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
                 onClick={(e) => e.stopPropagation()}
-                >
+              >
                 <label htmlFor="name">Name</label>
                 <input
                   readOnly
@@ -590,7 +587,7 @@ function SinglePromptAgentContent() {
                   placeholder="Books appointment for the caller"
                 />
 
-                  <div className="flex flex-col">
+                <div className="flex flex-col">
                   <label htmlFor="provider">Provider</label>
                   <input
                     id="provider"
@@ -697,8 +694,11 @@ function SinglePromptAgentContent() {
                     setOpenSelectedFunction(false);
                     console.log(bookAppointmentFunction);
                     setFunctionsList((prev) => {
-                      const updated = [...prev, {bookAppointmentFunction:bookAppointmentFunction}];
-                      console.log('functionsList updated', updated);
+                      const updated = [
+                        ...prev,
+                        { bookAppointmentFunction: bookAppointmentFunction },
+                      ];
+                      console.log("functionsList updated", updated);
                       return updated;
                     });
                   }}
@@ -709,9 +709,9 @@ function SinglePromptAgentContent() {
             </div>
           )
         );
-        case 'send_sms':
-          return(
-               openSelectedFunction && (
+      case "send_sms":
+        return (
+          openSelectedFunction && (
             <div
               className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
               onClick={() => setOpenSelectedFunction(false)}
@@ -719,22 +719,19 @@ function SinglePromptAgentContent() {
               <div
                 className="flex flex-col gap-2 p-6 h-full my-8 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
                 onClick={(e) => e.stopPropagation()}
-                >
+              >
                 <label htmlFor="name">Name</label>
 
-                   <input
-                   id="name"
+                <input
+                  id="name"
                   readOnly
                   className="border bg-gray-300 dark:bg-gray-600/80 placeholder:text-blue-600 border-gray-700 rounded-md text-blue-600 p-2 px-4"
                   placeholder={selectedFunction.value}
                 />
 
+                <label htmlFor="name">Description</label>
 
-                 <label htmlFor="name">Description</label>
-
-
-
-                 <input
+                <input
                   id="description"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
@@ -742,7 +739,7 @@ function SinglePromptAgentContent() {
                       ...prev,
                       name: selectedFunction.value,
                       description: e.target.value,
-                      phone:true,
+                      phone: true,
                       type: "object",
                     }))
                   }
@@ -751,7 +748,6 @@ function SinglePromptAgentContent() {
 
                 {/**Parameters */}
 
-                
                 <label htmlFor="callerPhone">Caller Phone</label>
                 <input
                   id="callerPhone"
@@ -762,28 +758,25 @@ function SinglePromptAgentContent() {
                   onChange={(e) =>
                     setSendSmsFunction((prev) => ({
                       ...prev,
-                      phone: true
+                      phone: true,
                     }))
                   }
                 />
 
-
-                 <label htmlFor="callerName">Caller Name</label>
+                <label htmlFor="callerName">Caller Name</label>
                 <input
                   id="callerName"
                   type="checkbox"
-                
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setSendSmsFunction((prev) => ({
                       ...prev,
-                      callerName: e.target.checked
+                      callerName: e.target.checked,
                     }))
                   }
                 />
 
-
-                 <label htmlFor="callerRequest">Caller Request</label>
+                <label htmlFor="callerRequest">Caller Request</label>
                 <input
                   id="callerRequest"
                   type="checkbox"
@@ -803,24 +796,21 @@ function SinglePromptAgentContent() {
                     setOpenSelectedFunction(false);
                     console.log(sendSmsFunction);
                     setFunctionsList((prev) => {
-                      const updated = [...prev, {sendSmsFunction:sendSmsFunction}];
-                      console.log('functionsList updated', updated);
+                      const updated = [
+                        ...prev,
+                        { sendSmsFunction: sendSmsFunction },
+                      ];
+                      console.log("functionsList updated", updated);
                       return updated;
                     });
                   }}
                 >
                   Done
                 </Button>
-
-
-
-
-
-
-                </div>
-                </div>
-               )
+              </div>
+            </div>
           )
+        );
     }
   };
 
@@ -865,7 +855,8 @@ function SinglePromptAgentContent() {
             </button>
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400">
-            Single prompt • Agent ID: {params.editing?agentId || "Not created yet"}
+            Single prompt • Agent ID:{" "}
+            {params.editing ? agentId : "Not created yet"}
           </div>
         </div>
         <div className="flex-col flex md:flex-row items-center gap-2">
@@ -979,13 +970,13 @@ function SinglePromptAgentContent() {
                 <button
                   className="w-full flex items-center text-left gap-2 px-3 py-2 hover:bg-blue-100/60 dark:hover:bg-blue-800 rounded"
                   onClick={() => {
-                    
-                      setActivePanel(item.key);
-                  
+                    setActivePanel(item.key);
                   }}
                 >
                   <item.icon className="w-5 h-5 text-blue-600 dark:text-blue-300" />
-                  <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">{item.name}</span>
+                  <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">
+                    {item.name}
+                  </span>
                 </button>
                 {activePanel === item.key && (
                   <div className="p-3 bg-gray-50 dark:bg-gray-800">
@@ -1042,30 +1033,27 @@ function SinglePromptAgentContent() {
     switch (key) {
       case "functions":
         return (
-          
           <div className="space-y-2">
             {functionsList.map((f, i) => (
-              <div key={i} className="flex items-center text-gray-800 dark:text-gray-300 rounded-lg bg-gray-500 dark:bg-gray-900 shadow-md justify-between p-2">
-                <Bot height={20} width={20} className="text-blue-600 mr-2"/>
+              <div
+                key={i}
+                className="flex items-center text-gray-800 dark:text-gray-300 rounded-lg bg-gray-500 dark:bg-gray-900 shadow-md justify-between p-2"
+              >
+                <Bot height={20} width={20} className="text-blue-600 mr-2" />
                 <span>{Object.keys(f)[0] || "Unnamed"}</span>
-                <X height={20} width={20}
-                className="bg-red-500/30 rounded-full  p-[2px] items-center justify-center cursor-pointer text-red-500"
+                <X
+                  height={20}
+                  width={20}
+                  className="bg-red-500/30 rounded-full  p-[2px] items-center justify-center cursor-pointer text-red-500"
                   onClick={() =>
                     setFunctionsList((prev) =>
                       prev.filter((_, idx) => idx !== i),
                     )
                   }
-                
                 />
               </div>
-              
             ))}
-            <Button
-              size="sm"
-              onClick={() =>
-                setFunctionsModalOpen(true)
-              }
-            >
+            <Button size="sm" onClick={() => setFunctionsModalOpen(true)}>
               Add Function
             </Button>
           </div>
