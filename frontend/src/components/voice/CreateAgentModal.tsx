@@ -13,7 +13,7 @@ interface CreateAgentModalProps {
 }
 
 type PromptMode = "single" | "multi";
-type TemplateType = "blank" | "healthcare_checkin" | "notification" |'appointment';
+type TemplateType = "blank" | "healthcare_checkin [template]" | "notification" |'appointment' | "appointment [template]";
 
 interface Template {
   id: TemplateType;
@@ -33,13 +33,13 @@ const templates: Template[] = [
     icon: <Plus className="w-8 h-8 bg-blue-100 text-blue-400" />
   },
   {
-    id: "healthcare_checkin",
+    id: "healthcare_checkin [template]",
     title: "Wellness Agent",
     subtitle: "Address wellness challlenges from patients",
     description: "Ask questions to gather information, can transfer call."
   },
   {
-    id: "appointment",
+    id: "appointment [template]",
     title: "Appointment Agent",
     subtitle: "Books callers, as per company schedules",
     description: "Check that schedules align with company calendar before booking."

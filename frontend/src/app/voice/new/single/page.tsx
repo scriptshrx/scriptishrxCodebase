@@ -165,6 +165,26 @@ function SinglePromptAgentContent() {
           return;
         }
 
+        if(template.id=="healthcare_checkin [template]"){
+           setName(template.id);
+          setWelcomeMessage(template.subtitle);
+
+          setPrompt(template.description);
+          setLoading(false);
+
+          return
+        }
+
+          if(template.id=="appointment [template]"){
+           setName(template.id);
+          setWelcomeMessage(template.subtitle);
+
+          setPrompt(template.description);
+          setLoading(false);
+
+          return
+        }
+
         setName(`${template.name}-Edit`);
         setAgentId(params.get('editing') ? template.id : null);
         setCallSettings(template.agentConfig.call_settings);
