@@ -85,7 +85,7 @@ function PromptModeSelector({
   onSelect: (mode: PromptMode) => void;
 }) {
   return (
-    <div className="space-y-3 bg-gray-200 dark:bg-gray-800 ">
+    <div className="space-y-3 bg-transparent">
       <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Select Prompt Mode</h3>
       <div className="space-y-2">
         <button
