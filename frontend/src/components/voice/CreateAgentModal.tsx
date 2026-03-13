@@ -156,7 +156,7 @@ export default function CreateAgentModal({
         {/* Body */}
         <div className="flex flex-1 overflow-hidden">
           {/* Left Panel */}
-          <div className="w-48 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 p-6 overflow-y-auto">
+          <div className="w-48 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-600 p-6 overflow-y-auto">
             <PromptModeSelector
               selected={promptMode}
               onSelect={setPromptMode}
