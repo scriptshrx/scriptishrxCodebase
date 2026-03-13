@@ -172,7 +172,7 @@ export default function CreateAgentModal({
                   index={0}
                   template={templates[0]}
                  
-                  onClick={() => handleTemplateSelect([0])}
+                  onClick={() => handleTemplateSelect(templates[0])}
                 />}
               {agents.length<1?
               templates.map((template,i) => (
