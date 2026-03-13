@@ -302,7 +302,7 @@ export default function VoicePage() {
         </div>
       </aside>
 
-      {/* main */}
+      {/* main section */}
       {selectedSideBar === 'Voice Agents' && (
         <VoiceAgentsView
           agents={agents}
