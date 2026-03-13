@@ -60,17 +60,17 @@ function TemplateCard({
   return (
     <div
       onClick={onClick}
-      className="p-6 bg-blue-50 relative border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
+      className="p-6 bg-blue-50 dark:bg-blue-50/70 relative border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
     >
       
         <Bot className="w-6 h-6 text-blue-600" />
   
       <div className="items-center flex justify-center text-sm text-blue-500 border border-blue-400 h-8 w-8 rounded-full absolute top-4 right-4">{index}</div>
       <div className="text-center">
-        <div className="font-semibold text-gray-600 text-sm">{agent?agent.name:template.title}</div>
+        <div className="font-semibold text-gray-600 dark:text-gray-200 text-sm">{agent?agent.name:template.title}</div>
         <div className="text-xs text-blue-600 mt-1">{agent?agent.id:template.subtitle}</div>
       </div>
-      <p className="text-xs text-gray-400 text-center leading-relaxed">
+      <p className="text-xs text-gray-400 text-center dark:text-gray-300 leading-relaxed">
         {agent?agent.agentConfig.prompt.welcome_message:template.description}
       </p>
     </div>
@@ -85,15 +85,15 @@ function PromptModeSelector({
   onSelect: (mode: PromptMode) => void;
 }) {
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-gray-700">Select Prompt Mode</h3>
+    <div className="space-y-3 bg-gray-200 dark:bg-gray-800 ">
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Select Prompt Mode</h3>
       <div className="space-y-2">
         <button
           onClick={() => onSelect("single")}
           className={`w-full px-4 py-2 cursor-pointer rounded-lg text-sm font-medium transition-all ${
             selected === "single"
               ? "bg-blue-900 text-white border border-gray-900"
-              : "bg-white text-gray-900 border border-gray-300 hover:border-gray-400"
+              : "bg-white dark:bg-gray-300 text-gray-900 border border-gray-300 hover:border-gray-400"
           }`}
         >
           Single Prompt
@@ -103,7 +103,7 @@ function PromptModeSelector({
           className={`w-full px-4 py-2 rounded-lg cursor-pointer text-sm font-medium transition-all ${
             selected === "multi"
               ? "bg-blue-900 text-white border border-gray-900"
-              : "bg-white text-gray-900 border border-gray-300 hover:border-gray-400"
+              : "bg-white dark:bg-gray-300 text-gray-900 border border-gray-300 hover:border-gray-400"
           }`}
         >
           Multi Prompt
@@ -140,10 +140,10 @@ export default function CreateAgentModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-md"
     onClick={()=>onOpenChange(false)}>
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
       onClick={(e)=>e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between shadow-xs px-6 py-4 border-b border-gray-200">
+        <div className="flex items-center justify-between shadow-xs px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-bold text-blue-700">Create Agent or Use Template</h2>
           <button
             onClick={() => onOpenChange(false)}
