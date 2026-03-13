@@ -60,7 +60,7 @@ function TemplateCard({
   return (
     <div
       onClick={onClick}
-      className="p-6 bg-blue-50 dark:bg-blue-50/70 relative border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
+      className="p-6 bg-blue-50 dark:bg-gray-800 relative border border-blue-200 rounded-lg hover:border-blue-600 hover:shadow-lg transition-all cursor-pointer flex flex-col items-center justify-center min-h-[180px] gap-3"
     >
       
         <Bot className="w-6 h-6 text-blue-600" />
@@ -156,7 +156,7 @@ export default function CreateAgentModal({
         {/* Body */}
         <div className="flex flex-1 overflow-hidden">
           {/* Left Panel */}
-          <div className="w-48 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto">
+          <div className="w-48 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 p-6 overflow-y-auto">
             <PromptModeSelector
               selected={promptMode}
               onSelect={setPromptMode}
