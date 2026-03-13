@@ -253,12 +253,7 @@ export default function VoicePage() {
             <img src={'/newLogo.png'} className="w-12 h-12 rounded-lg shadow-md text-blue-600" />
             <span>Scriptish</span>
           </div>
-          <div className="px-6 mb-6 flex items-center gap-3">
-            <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium">
-              {tenant ? tenant.name.charAt(0).toUpperCase() : 'T'}
-            </div>
-            <span className="truncate">{tenant ? `${tenant.name}'s${'\n'}Workspace` : "Tenant's Workspace"}</span>
-          </div>
+         
           <nav className="px-4 space-y-1">
             {[
               { name: 'Voice Agents', icon: LayoutList },
