@@ -250,7 +250,7 @@ export default function VoicePage() {
       <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between dark:bg-gray-800 dark:border-gray-700">
         <div>
           <div className="p-6 flex items-center gap-2 text-xl font-bold">
-            <img src={'/newLogo.png'} className="w-12 h-12 text-blue-600" />
+            <img src={'/newLogo.png'} className="w-12 h-12 rounded-lg shadow-md text-blue-600" />
             <span>Scriptish</span>
           </div>
           <div className="px-6 mb-6 flex items-center gap-3">
