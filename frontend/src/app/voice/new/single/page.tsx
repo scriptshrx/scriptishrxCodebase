@@ -137,7 +137,7 @@ function SinglePromptAgentContent() {
   const [bookAppointmentFunction, setBookAppointmentFunction] = useState({});
   const [sendSmsFunction, setSendSmsFunction] = useState({});
 
-  // modal state for function editor
+  // modal state for functions editor
   const [selectedFunction, setSelectedFunction] = useState<any>({});
   const [openSelectedFunction, setOpenSelectedFunction] = useState(false);
 
