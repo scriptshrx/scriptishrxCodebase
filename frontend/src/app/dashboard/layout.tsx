@@ -234,7 +234,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <div className="bg-white p-2 rounded-lg shadow-md">
                             <img src="/newLogo.png" alt="ScriptishRx" className="h-6 w-auto" />
                         </div>
-                        <span className="font-bold text-xl text-white tracking-tight">ScriptishRx</span>
+                        <span className="font-bold text-xl text-white tracking-tight">Scriptish</span>
                     </div>
 
                     <button
@@ -259,7 +259,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                     <Section title="AI CONCIERGE">
                         <NavItem href="/voiceAgent" label="Voice Agents" icon={<Phone />} active={pathname === '/src/app/voiceAgent'} />
-                        
+
                         <NavItem href="/dashboard/chat" label="Chatbot" icon={<MessageSquare />} active={pathname === '/dashboard/chat'} />
                         <NavItem href="/dashboard/workflows" label="Workflows" icon={<Zap />} active={pathname === '/dashboard/workflows'} />
                     </Section>
