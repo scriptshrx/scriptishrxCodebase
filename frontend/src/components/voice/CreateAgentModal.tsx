@@ -130,7 +130,7 @@ export default function CreateAgentModal({
  
     console.log('Current path is',path);
     // Route based on prompt mode and template
-    const route = `/voice/new/${promptMode}?template=${item.id}`;
+    const route = `/dashboard/createNewAgent?template=${item.id}`;
     localStorage.setItem('template',JSON.stringify(item))
     router.push(route);
   };

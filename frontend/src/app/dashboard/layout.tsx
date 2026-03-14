@@ -6,7 +6,13 @@ import { usePathname, useRouter } from 'next/navigation';
 import useTokenExpiration from '@/hooks/useTokenExpiration';
 import {
     LayoutDashboard, Users, Calendar, Settings, Phone, MessageSquare, Search,
-    Bell, Menu, FileText, LogOut, User, Zap, PieChart, X, ChevronRight
+    Bell, Menu, FileText, LogOut, User, Zap, PieChart, X, ChevronRight,
+    LayoutList,
+    Brain,
+    PhoneIncoming,
+    CreditCard,
+    Key,
+    Globe
 } from 'lucide-react';
 
 interface UserPayload {
@@ -213,6 +219,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         window.location.href = '/login';
     };
 
+    useEffect(()=>{
+
+    },[])
+    const[selectedSideBar,setSelectSideBar]=useState('')
+    const[selectedVoiceAgentNav,setSelectedVoiceAgentNav]=useState(false);
+
+    const toggleVoiceNav=()=>{
+        setSelectedVoiceAgentNav(sel=>!sel);
+    }
+
+
     return (
         <div className="flex h-screen bg-[#F3F4F6] overflow-hidden text-gray-900 font-sans">
 
@@ -232,7 +249,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <div className="h-24 flex items-center px-8 border-b border-blue-500/30">
                     <div className="flex items-center gap-3">
                         <div className="bg-white p-2 rounded-lg shadow-md">
-                            <img src="/newLogo.png" alt="ScriptishRx" className="h-6 w-auto" />
+                            <img src="/newLogo.png" alt="Scriptish" className="h-6 w-auto" />
                         </div>
                         <span className="font-bold text-xl text-white tracking-tight">Scriptish</span>
                     </div>
@@ -258,7 +275,36 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Section>
 
                     <Section title="AI CONCIERGE">
-                        <NavItem href="/voiceAgent" label="Voice Agents" icon={<Phone />} active={pathname === '/src/app/voiceAgent'} />
+                        <NavItem onClick={()=>setSelectSideBar('voiceAgents')} href="/voiceAgent" label="Voice Agents" icon={<Phone />} active={pathname === '/src/app/voiceAgent'} />
+                        {selectedVoiceAgentNav&&
+                         <nav className="px-4 space-y-1">
+            {[
+              { name: 'Voice Agents', icon: LayoutList, route:'/dashboard/voiceAgents' },
+              { name: 'Phone Numbers', icon: Phone, route:'/dashboard/phoneNumbers' },
+              { name: 'Knowledge Resources', icon: Brain, route:'/dashboard/knowledgeResources' },
+              { name: 'Call Logs', icon: PhoneIncoming, route:'/dashboard/callLogs' },
+              { name: 'Patients', icon: Users },
+              { name: 'Billing', icon: CreditCard },
+              { name: 'API Keys', icon: Key },
+              { name: 'Webhooks', icon: Globe }
+            ].map(item => {
+              const Icon = item.icon;
+              const isActive = selectedSideBar === item.name;
+              return (
+                <button
+                  type='button'
+                  onClick={() => {setSelectSideBar(item.name);router.push(item.route)}}
+                  key={item.name}
+                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
+                    isActive ? 'bg-blue-100 font-semibold dark:bg-blue-800' : 'hover:bg-blue-100 dark:hover:bg-blue-800'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="text-sm truncate">{item.name}</span>
+                </button>
+              );
+            })}
+          </nav>}
 
                         <NavItem href="/dashboard/chat" label="Chatbot" icon={<MessageSquare />} active={pathname === '/dashboard/chat'} />
                         <NavItem href="/dashboard/workflows" label="Workflows" icon={<Zap />} active={pathname === '/dashboard/workflows'} />
@@ -477,12 +523,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 function NavItem({
     href,
+    oncliCk,
     label,
     icon,
     active,
     badge
 }: {
     href: string;
+    onClick:()=>void;
     label: string;
     icon: React.ReactNode;
     active: boolean;
