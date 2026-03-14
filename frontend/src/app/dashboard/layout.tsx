@@ -275,7 +275,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Section>
 
                     <Section title="AI CONCIERGE">
-                        <NavItem onClick={()=>setSelectSideBar('voiceAgents')} href="/voiceAgent" label="Voice Agents" icon={<Phone />} active={pathname === '/src/app/voiceAgent'} />
+                        <NavItem onClick={()=>setSelectSideBar('voiceAgents')} label="Voice Agents" icon={<Phone />} active={pathname === '/src/app/voiceAgent'} />
                         {selectedVoiceAgentNav&&
                          <nav className="px-4 space-y-1">
             {[
