@@ -235,7 +235,7 @@ export default function VoicePage() {
 
   // render
   return (
-    user?.email==='ezehmark@gmail.com'?
+    user?.email!=='ezehmark@gmail.com'?
     <div className='h-full w-full items-center justify-center bg-gray-300 flex'>
       <div className='flex items-center justify-center flex-col gap-4'>
         <div className='h-10 w-10 rounded-full border border-2 border-t-transparent animate-spin'></div>
