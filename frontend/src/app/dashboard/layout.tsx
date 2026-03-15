@@ -227,7 +227,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* SIDEBAR */}
             <aside
                 ref={sidebarRef}
-                className={`fixed lg:static top-0 left-0 h-full lg:h-auto w-64 bg-gradient-to-b from-blue-100 to-blue-300 z-50
+                className={`fixed lg:static top-0 left-0 h-full lg:h-auto w-64 bg-gradient-to-t from-blue-100 to-blue-300 z-50
                 transition-transform duration-300 flex flex-col shadow-xl
                 ${showMobileMenu ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
@@ -320,7 +320,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                  user?.subscription?.plan !== 'Trial' &&
                  user?.subscription?.plan !== 'Basic' && (
                 
-                                <button className="w-1/2 cursor-pointer shadow-sm my-8 bg-white text-[#059669] py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all active:scale-95">
+                                <button className="w-1/2 mx-auto cursor-pointer shadow-sm my-8 bg-blue-600 text-[#059669] py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all active:scale-95">
                                     <Zap className="w-4 h-4 fill-current" />
                                     Upgrade
                                 </button>
