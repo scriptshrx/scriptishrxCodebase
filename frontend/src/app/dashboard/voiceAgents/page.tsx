@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   MoreVertical,
   Search as SearchIcon,
@@ -41,6 +41,175 @@ type VoiceAgentsViewProps = {
   createModalOpen: boolean;
   onCreateModalOpenChange: (open: boolean) => void;
 };
+
+
+// api helper (router is supplied by the caller)
+const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
+
+async function apiFetch(path: string, opts: any = {}, router?: any) {
+  const headers: any = {
+    'Content-Type': 'application/json',
+    ...opts.headers
+  };
+
+  // Get auth token from localStorage
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  if (token) {
+    // try to decode JWT and check exp claim
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.exp && Date.now() / 1000 > payload.exp) {
+        console.warn('[apiFetch] token expired, redirecting to login');
+        router?.push('/login');
+        throw new Error('token_expired');
+      }
+    } catch (err) {
+      // if parsing fails we still attempt request, but log
+      console.warn('[apiFetch] failed to parse token payload', err);
+    }
+
+    headers['Authorization'] = `Bearer ${token}`;
+    console.log('[apiFetch] Using token from localStorage');
+  } else {
+    console.warn('[apiFetch] No token found in localStorage');
+  }
+
+  const url = `${API_BASE}${path}`;
+  console.log('[apiFetch] Requesting:', { url, method: opts.method || 'GET', hasAuth: !!token });
+
+  const res = await fetch(url, {
+    credentials: 'include',
+    ...opts,
+    headers
+  });
+
+  console.log('[apiFetch] Response status:', res.status);
+
+  if (!res.ok) {
+    const errText = await res.text();
+    console.error('[apiFetch] Error response:', errText);
+    let err: any = {};
+    try {
+      err = JSON.parse(errText);
+    } catch {
+      if (errText.includes('expired')) {
+        router?.push('/login');
+      }
+      err = { error: errText || `HTTP ${res.status}` };
+    }
+    throw new Error(err.error || `Request failed with status ${res.status}`);
+  }
+
+  const data = await res.json();
+  console.log('[apiFetch] Success response:', data);
+  return data;
+}
+ const [agents, setAgents] = useState<Agent[]>([]);
+  const [selectedSideBar, setSelectSideBar] = useState('Voice Agents');
+  const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<any>({});
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<'edit' | 'assignPhone' | null>(null);
+  const [modalAgent, setModalAgent] = useState<Partial<Agent> | null>(null);
+
+  const fetchAgents = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log('[fetchAgents] Starting fetch from:', `${API_BASE}/voice-agents`);
+      const data = await apiFetch('/voice-agents', {}, router);
+      console.log('[fetchAgents] Raw response:', data);
+      const list = (data.agents || []).map((a: any) => ({
+        ...a,
+        // ensure agentConfig exists
+        agentConfig: a.agentConfig || {},
+      }));
+      console.log('[fetchAgents] Parsed agents:', list);
+      setAgents(list);
+      setLoading(false);
+    }
+    catch(e: any){
+      console.error('[fetchAgents] Error:', e);
+      const errorMsg = e?.message || String(e);
+      setLoading(false)
+      setError(errorMsg);
+    }
+  };
+
+  useEffect(() => {
+    const userString = localStorage.getItem('user');
+    if(userString){
+      const userData = JSON.parse(userString);
+      setUser(userData);
+      setTenant(userData);
+      console.log('User is', userString);
+    }
+    fetchAgents();
+  }, []);
+
+  // actions
+  const openEdit = (agent: Agent) => {
+    setModalMode('edit');
+    setModalAgent({
+      ...agent,
+      agentConfig: agent.agentConfig || {},
+    });
+    setModalOpen(true);
+  };
+
+  const openAssignPhone = (agent: Agent) => {
+    setModalMode('assignPhone');
+    setModalAgent(agent);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setModalAgent(null);
+    setModalMode(null);
+  };
+
+  const handleSave = async () => {
+    if (!modalAgent) return;
+    try {
+      if (modalMode === 'edit' && modalAgent.id) {
+        const patchBody: any = { agentConfig: modalAgent.agentConfig };
+        if (modalAgent.name) patchBody.name = modalAgent.name;
+        if (modalAgent.agentType) patchBody.agentType = modalAgent.agentType;
+        await apiFetch(`/voice-agents/${modalAgent.id}`, {
+          method: 'PATCH',
+          body: JSON.stringify(patchBody)
+        }, router);
+      }
+      await fetchAgents();
+      closeModal();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  const handleDelete = async (agent: Agent) => {
+    try {
+      await apiFetch(`/voice-agents/${agent.id}`, { method: 'DELETE' }, router);
+      await fetchAgents();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  const handleDuplicate = async (agent: Agent) => {
+    const { id, ...rest } = agent as any;
+    const copy = { ...rest, name: `${agent.name} (copy)` } as Partial<Agent>;
+    try {
+      await apiFetch('/voice-agents', { method: 'POST', body: JSON.stringify(copy) }, router);
+      await fetchAgents();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
 
 export default function VoiceAgentsView({
   agents,

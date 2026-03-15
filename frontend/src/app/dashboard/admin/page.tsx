@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-    Users, TrendingUp, Activity, Search, Filter,
-    Download, AlertCircle, ChevronLeft, ChevronRight,
-    Loader2, Shield, Calendar, CheckCircle, XCircle
+    Users, TrendingUp, Activity, Search,
+    Download, Loader2, Shield, Calendar, CheckCircle, XCircle
 } from 'lucide-react';
 import api from '@/lib/api';
+
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
 
 export default function AdminDashboard() {
     const router = useRouter();
@@ -15,6 +17,7 @@ export default function AdminDashboard() {
     const [subscribers, setSubscribers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [tableLoading, setTableLoading] = useState(false);
+    const [selectedSub, setSelectedSub] = useState<any>(null);
 
     // Filters & Pagination
     const [page, setPage] = useState(1);
@@ -24,20 +27,12 @@ export default function AdminDashboard() {
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
     const [typeFilter, setTypeFilter] = useState('ALL');
-
     const [error, setError] = useState('');
-
-    useEffect(() => {
-        fetchDashboardData();
-    }, []);
-
-    useEffect(() => {
-        fetchSubscribers();
-    }, [page, search, statusFilter, typeFilter]);
 
     async function fetchDashboardData() {
         try {
             const { data } = await api.get('/admin/subscribers/summary');
+            if (!data) throw new Error('No data received');
             if (data.success) {
                 setStats(data.data);
             }
@@ -63,6 +58,7 @@ export default function AdminDashboard() {
             });
 
             const { data } = await api.get(`/admin/subscribers?${query}`);
+            if (!data) throw new Error('No data received');
             if (data.success) {
                 setSubscribers(data.data);
                 setTotalPages(data.pagination.totalPages);
@@ -75,32 +71,13 @@ export default function AdminDashboard() {
         }
     }
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-full min-h-[400px]">
-                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-            </div>
-        );
-    }
+    useEffect(() => {
+        fetchDashboardData();
+    }, []);
 
-    if (error) {
-        return (
-            <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
-                <Shield className="w-16 h-16 text-red-200 mb-4" />
-                <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
-                <p className="text-gray-500 mb-6">{error}</p>
-                <button
-                    onClick={() => router.push('/dashboard')}
-                    className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
-                >
-                    Return to Dashboard
-                </button>
-            </div>
-        );
-    }
-
-    // Modal State
-    const [selectedSub, setSelectedSub] = useState<any>(null);
+    useEffect(() => {
+        fetchSubscribers();
+    }, [page, search, statusFilter, typeFilter]);
 
     const handleExport = () => {
         if (!subscribers.length) {
@@ -133,23 +110,58 @@ export default function AdminDashboard() {
         URL.revokeObjectURL(url);
     };
 
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-full min-h-[400px]">
+                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-center">
+                <Shield className="w-16 h-16 text-red-200 mb-4" />
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Access Denied</h2>
+                <p className="text-gray-500 mb-6">{error}</p>
+                <button
+                    onClick={() => router.push('/dashboard')}
+                    className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition"
+                >
+                    Return to Dashboard
+                </button>
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-7xl mx-auto space-y-8 pb-12 relative">
 
             {/* Subscriber Details Modal */}
             {selectedSub && (
-                <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={() => setSelectedSub(null)}>
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
+                <div
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+                    onClick={() => setSelectedSub(null)}
+                >
+                    <div
+                        className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <div className="bg-gray-50 border-b border-gray-100 p-6 flex justify-between items-center">
                             <h3 className="text-xl font-bold text-gray-900">Subscriber Details</h3>
-                            <button onClick={() => setSelectedSub(null)} className="p-2 hover:bg-gray-200 rounded-full transition">
+                            <button
+                                onClick={() => setSelectedSub(null)}
+                                className="p-2 hover:bg-gray-200 rounded-full transition"
+                            >
                                 <XCircle className="w-6 h-6 text-gray-400" />
                             </button>
                         </div>
+
                         <div className="p-6 space-y-6">
+                            {/* Avatar + Name */}
                             <div className="flex items-center gap-4">
                                 <div className="w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl">
-                                    {selectedSub.user?.name?.charAt(0).toUpperCase()}
+                                    {selectedSub.user?.name?.charAt(0).toUpperCase() || 'U'}
                                 </div>
                                 <div>
                                     <h4 className="text-lg font-bold text-gray-900">{selectedSub.user?.name}</h4>
@@ -158,19 +170,23 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
+                            {/* Plan + Billing */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Current Plan</p>
-                                    <p className="font-bold text-gray-900">{selectedSub.plan}</p>
+                                    <p className="font-bold text-gray-900 mb-2">{selectedSub.plan}</p>
                                     <StatusBadge status={selectedSub.status} />
                                 </div>
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Billing Cycle</p>
                                     <p className="font-bold text-gray-900 capitalize">{selectedSub.billingCycle}</p>
-                                    <p className="text-xs text-gray-500 mt-1">Next: {selectedSub.endDate ? new Date(selectedSub.endDate).toLocaleDateString() : 'N/A'}</p>
+                                    <p className="text-xs text-gray-500 mt-1">
+                                        Next: {selectedSub.endDate ? new Date(selectedSub.endDate).toLocaleDateString() : 'N/A'}
+                                    </p>
                                 </div>
                             </div>
 
+                            {/* Account Info */}
                             <div className="space-y-3">
                                 <h5 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2">Account Info</h5>
                                 <div className="flex justify-between text-sm">
@@ -187,11 +203,12 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
+                            {/* Actions */}
                             <div className="pt-4 flex gap-3">
-                                <button className="flex-1 py-2.5 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-50">
+                                <button className="flex-1 py-2.5 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition">
                                     Reset Password
                                 </button>
-                                <button className="flex-1 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200">
+                                <button className="flex-1 py-2.5 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
                                     Manage Subscription
                                 </button>
                             </div>
@@ -230,7 +247,7 @@ export default function AdminDashboard() {
                         title="Active Subscriptions"
                         value={stats.status?.active || stats.status?.Active || 0}
                         icon={<CheckCircle className="w-5 h-5 text-green-600" />}
-                        subtext={`${((stats.status?.Active || 0) / stats.totalSubscribers * 100).toFixed(1)}% conversion`}
+                        subtext={`${(((stats.status?.active || stats.status?.Active || 0) / stats.totalSubscribers) * 100).toFixed(1)}% conversion`}
                         color="bg-green-50"
                     />
                     <StatCard
@@ -258,7 +275,10 @@ export default function AdminDashboard() {
                         type="text"
                         placeholder="Search by name, email..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            setPage(1);
+                        }}
                         className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition"
                     />
                 </div>
@@ -266,7 +286,7 @@ export default function AdminDashboard() {
                 <div className="flex gap-3 w-full md:w-auto">
                     <select
                         value={typeFilter}
-                        onChange={(e) => setTypeFilter(e.target.value)}
+                        onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
                         className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-blue-500"
                     >
                         <option value="ALL">All Types</option>
@@ -276,7 +296,7 @@ export default function AdminDashboard() {
 
                     <select
                         value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
+                        onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
                         className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-blue-500"
                     >
                         <option value="ALL">All Status</option>
@@ -317,7 +337,11 @@ export default function AdminDashboard() {
                                 </tr>
                             ) : (
                                 subscribers.map((sub: any) => (
-                                    <tr key={sub.id} className="hover:bg-gray-50/50 transition-colors group cursor-pointer" onClick={() => setSelectedSub(sub)}>
+                                    <tr
+                                        key={sub.id}
+                                        className="hover:bg-gray-50/50 transition-colors cursor-pointer"
+                                        onClick={() => setSelectedSub(sub)}
+                                    >
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
                                                 <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
@@ -332,7 +356,9 @@ export default function AdminDashboard() {
                                         <td className="px-6 py-4">
                                             <div className="flex flex-col">
                                                 <span className="font-medium text-gray-900 text-sm">{sub.plan}</span>
-                                                <span className="text-xs text-gray-500 capitalize">{sub.type.toLowerCase()} • {sub.billingCycle}ly</span>
+                                                <span className="text-xs text-gray-500 capitalize">
+                                                    {sub.type.toLowerCase()} • {sub.billingCycle}ly
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
@@ -363,20 +389,23 @@ export default function AdminDashboard() {
                 {!tableLoading && totalItems > 0 && (
                     <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/30 flex items-center justify-between">
                         <p className="text-xs text-gray-500">
-                            Showing <span className="font-bold">{((page - 1) * limit) + 1}</span> to <span className="font-bold">{Math.min(page * limit, totalItems)}</span> of <span className="font-bold">{totalItems}</span> results
+                            Showing{' '}
+                            <span className="font-bold">{((page - 1) * limit) + 1}</span> to{' '}
+                            <span className="font-bold">{Math.min(page * limit, totalItems)}</span> of{' '}
+                            <span className="font-bold">{totalItems}</span> results
                         </p>
                         <div className="flex gap-2">
                             <button
                                 onClick={() => setPage(p => Math.max(1, p - 1))}
                                 disabled={page === 1}
-                                className="p-1 px-3 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 text-xs font-medium"
+                                className="p-1 px-3 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 text-xs font-medium transition"
                             >
                                 Previous
                             </button>
                             <button
                                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                                 disabled={page === totalPages}
-                                className="p-1 px-3 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 text-xs font-medium"
+                                className="p-1 px-3 rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-50 hover:bg-gray-50 text-xs font-medium transition"
                             >
                                 Next
                             </button>
@@ -386,7 +415,6 @@ export default function AdminDashboard() {
             </div>
         </div>
     );
-
 }
 
 function StatCard({ title, value, icon, trend, subtext, color }: any) {
@@ -421,7 +449,7 @@ function StatusBadge({ status }: { status: string }) {
     const defaultStyle = 'bg-gray-100 text-gray-600 border-gray-200';
 
     return (
-        <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${styles[status.toLowerCase()] || defaultStyle}`}>
+        <span className={`px-2.5 py-1 rounded-full text-xs font-bold border capitalize ${styles[status?.toLowerCase()] || defaultStyle}`}>
             {status}
         </span>
     );

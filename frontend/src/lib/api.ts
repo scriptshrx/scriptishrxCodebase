@@ -50,16 +50,21 @@ api.interceptors.response.use(
             try {
                 // Attempt Refresh with absolute URL
                 const baseUrl = getBaseUrl();
-                const refreshUrl = `${baseUrl}/api/auth/refresh`;
+                const refreshUrl = `${baseUrl}/auth/refresh`;
                 
                 const { data } = await axios.post(refreshUrl, {}, {
                     withCredentials: true
                 });
 
-                if (data.token) {
+                if (!data) {
+                    console.error(`[API Interceptor] ❌ Refresh response has no data`);
+                    return Promise.reject(error);
+                }
+
+                if (data.auth?.token) {
                     console.log(`[API Interceptor] ✅ Token refreshed successfully`);
-                    localStorage.setItem('token', data.token); // Update Access Token
-                    originalRequest.headers.Authorization = `Bearer ${data.token}`;
+                    localStorage.setItem('token', data.auth.token); // Update Access Token
+                    originalRequest.headers.Authorization = `Bearer ${data.auth.token}`;
                     return api(originalRequest); // Retry original request
                 }
             } catch (refreshError) {

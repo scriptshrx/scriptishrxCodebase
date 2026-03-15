@@ -145,7 +145,7 @@ export default function DashboardPage() {
                     </h1>
                     <p className="text-slate-500 font-medium mt-2 flex items-center gap-2">
                         <Globe className="w-4 h-4 text-slate-400" />
-                        ScriptishRx Command Center
+                        Scriptish Command Center
                         <span className="mx-2 text-slate-300">|</span>
                         <span className="text-slate-400">{currentDate}</span>
                     </p>

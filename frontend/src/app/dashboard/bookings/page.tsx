@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Calendar as CalendarIcon, Clock, Trash2, Edit2, Check, AlertCircle, X, Search, Video, ExternalLink } from 'lucide-react';
+import { Plus, Calendar as CalendarIcon, Clock, Trash2, Edit2, Check, AlertCircle, X, Video } from 'lucide-react';
 import EmptyState from '@/components/EmptyState';
-import CallConversations from '@/components/CallConversations';
 
 const API_BASE = 'https://scriptshrxcodebase.onrender.com';
 
@@ -15,9 +14,14 @@ function Toast({ message, type, onClose }: { message: string, type: 'success' | 
     }, [onClose]);
 
     return (
-        <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg transform transition-all animate-in slide-in-from-right-5 fade-in duration-300 ${type === 'success' ? 'bg-green-50 text-green-800 border border-green-100' : 'bg-red-50 text-red-800 border border-red-100'
-            }`}>
-            {type === 'success' ? <Check className="w-5 h-5 text-green-600" /> : <AlertCircle className="w-5 h-5 text-red-600" />}
+        <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg transform transition-all animate-in slide-in-from-right-5 fade-in duration-300 ${
+            type === 'success'
+                ? 'bg-green-50 text-green-800 border border-green-100'
+                : 'bg-red-50 text-red-800 border border-red-100'
+        }`}>
+            {type === 'success'
+                ? <Check className="w-5 h-5 text-green-600" />
+                : <AlertCircle className="w-5 h-5 text-red-600" />}
             <span className="font-medium text-sm">{message}</span>
             <button onClick={onClose} className="p-1 hover:bg-black/5 rounded-full transition-colors">
                 <X className="w-4 h-4 opacity-50" />
@@ -30,37 +34,36 @@ export default function BookingsPage() {
     const [bookings, setBookings] = useState<any[]>([]);
     const [clients, setClients] = useState<any[]>([]);
     const [showAddModal, setShowAddModal] = useState(false);
-    const [newBooking, setNewBooking] = useState({ clientId: '', date: '', time: '', purpose: '', meetingLink: '' });
-
-    // loading indicators
+    const [newBooking, setNewBooking] = useState({
+        clientId: '', date: '', time: '', purpose: '', meetingLink: ''
+    });
     const [isLoadingBookings, setIsLoadingBookings] = useState(false);
     const [isLoadingClients, setIsLoadingClients] = useState(false);
-
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
-    const showToast = (message: string, type: 'success' | 'error') => setToast({ message, type });
-
-
     const [showEditModal, setShowEditModal] = useState(false);
     const [editBooking, setEditBooking] = useState<any>(null);
-    const [editForm, setEditForm] = useState({ date: '', time: '', purpose: '', status: '', meetingLink: '' });
+    const [editForm, setEditForm] = useState({
+        date: '', time: '', purpose: '', status: '', meetingLink: ''
+    });
+
+    // ✅ Safe token getter — only runs client-side
+    const getToken = () => {
+        if (typeof window === 'undefined') return null;
+        return localStorage.getItem('token');
+    };
+
+    const showToast = (message: string, type: 'success' | 'error') => setToast({ message, type });
 
     const fetchBookings = async () => {
         setIsLoadingBookings(true);
         try {
-            console.log('[Bookings] Fetching bookings...');
-            const token = localStorage.getItem('token');
-            
+            const token = getToken();
             const response = await axios.get(`${API_BASE}/api/bookings`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            
-            console.log(`[Bookings] ✅ Received ${response.data.bookings?.length || 0} bookings`);
-            console.log('[Bookings] Sample booking data:', response.data.bookings?.[0]);
             setBookings(response.data.bookings || []);
         } catch (error: any) {
-            console.error('[Bookings] ❌ Error:', error.message);
-            console.error('[Bookings] Status:', error.response?.status);
-            console.error('[Bookings] Data:', error.response?.data);
+            console.error('[Bookings] Error fetching bookings:', error.message);
         } finally {
             setIsLoadingBookings(false);
         }
@@ -68,51 +71,36 @@ export default function BookingsPage() {
 
     const fetchClients = async () => {
         setIsLoadingClients(true);
-        let token = localStorage.getItem('token');
+        const token = getToken();
         try {
-            console.log('[Bookings] Fetching clients from team/leads...');
-            
-            // Fetch from the same endpoint as the leads page (Captured Leads)
             const response = await axios.get(`${API_BASE}/api/organization/team`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            
-            console.log(`[Bookings] ✅ Received ${response.data.team?.length || 0} team members`);
             setClients(response.data.team || []);
         } catch (error: any) {
-            console.error('[Bookings] ❌ Error fetching team members:', error.message);
-            console.error('[Bookings] Status:', error.response?.status);
-            
-            // Fallback to the old clients endpoint if team endpoint fails
+            console.error('[Bookings] Error fetching team, trying fallback:', error.message);
             try {
-                console.log('[Bookings] Falling back to /api/clients endpoint...');
                 const response = await axios.get(`${API_BASE}/api/clients`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
-                console.log(`[Bookings] ✅ Received ${response.data.clients?.length || 0} clients from fallback`);
                 setClients(response.data.clients || []);
             } catch (fallbackError: any) {
-                console.error('[Bookings] ❌ Fallback also failed:', fallbackError.message);
+                console.error('[Bookings] Fallback also failed:', fallbackError.message);
             }
         } finally {
             setIsLoadingClients(false);
         }
     };
 
+    // ✅ useEffect only runs on client — safe for localStorage
     useEffect(() => {
-        console.log('[Bookings] Page mounted - fetching data...');
-        const token = localStorage.getItem('token');
-        console.log(`[Bookings] Token in localStorage: ${token ? '✅ YES' : '❌ NO'}`);
-        
+        const token = getToken();
         if (token) {
             fetchBookings();
             fetchClients();
         } else {
-            console.warn('[Bookings] ⚠️ No token found - cannot fetch data');
+            console.warn('[Bookings] No token found — cannot fetch data');
         }
-        
-        //const interval = setInterval(fetchBookings, 10000);
-        //return () => clearInterval(interval);
     }, []);
 
     const handleAddBooking = async () => {
@@ -121,57 +109,54 @@ export default function BookingsPage() {
         }
 
         try {
-            const token = localStorage.getItem('token');
+            const token = getToken();
             const dateTime = new Date(`${newBooking.date}T${newBooking.time}`);
 
-            // Step 1: Resolve team member (user) to client
-            // The dropdown shows team members (users) but bookings require clients (separate records)
-            // If the selected ID is a user ID (not a client ID), resolve it to a client first
             let resolvedClientId = newBooking.clientId;
             const selected = clients.find(c => c.id === newBooking.clientId);
-            
-            if (selected && selected.email) {
-                console.log(`[Bookings] Selected: ${selected.name} (${selected.email}), resolving to client...`);
+
+            if (selected?.email) {
                 try {
-                    // Search for existing client by email
-                    const searchRes = await axios.get(`${API_BASE}/api/clients?search=${encodeURIComponent(selected.email)}`, {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    const found = (searchRes.data.clients || []).find((cl: any) => cl.email === selected.email);
-                    
+                    const searchRes = await axios.get(
+                        `${API_BASE}/api/clients?search=${encodeURIComponent(selected.email)}`,
+                        { headers: { Authorization: `Bearer ${token}` } }
+                    );
+                    const found = (searchRes.data.clients || []).find(
+                        (cl: any) => cl.email === selected.email
+                    );
+
                     if (found) {
-                        console.log(`[Bookings] ✅ Found existing client: ${found.id}`);
                         resolvedClientId = found.id;
                     } else {
-                        // Create new client from team member
-                        console.log(`[Bookings] Creating new client from team member...`);
-                        const createRes = await axios.post(`${API_BASE}/api/clients`, {
-                            name: selected.name,
-                            email: selected.email,
-                            phone: selected.phoneNumber || selected.phone || undefined,
-                            source: 'Team Member'
-                        }, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        });
+                        const createRes = await axios.post(
+                            `${API_BASE}/api/clients`,
+                            {
+                                name: selected.name,
+                                email: selected.email,
+                                phone: selected.phoneNumber || selected.phone || undefined,
+                                source: 'Team Member'
+                            },
+                            { headers: { Authorization: `Bearer ${token}` } }
+                        );
                         resolvedClientId = createRes.data.client.id;
-                        console.log(`[Bookings] ✅ Created new client: ${resolvedClientId}`);
                     }
                 } catch (resolveErr: any) {
-                    console.error('[Bookings] Failed to resolve team member to client:', resolveErr.message);
-                    throw new Error(`Failed to set up client: ${resolveErr.response?.data?.error || resolveErr.message}`);
+                    throw new Error(
+                        `Failed to set up client: ${resolveErr.response?.data?.error || resolveErr.message}`
+                    );
                 }
             }
 
-            // Step 2: Create booking with resolved client ID
-            console.log(`[Bookings] Creating booking with clientId: ${resolvedClientId}`);
-            await axios.post(`${API_BASE}/api/bookings`, {
-                clientId: resolvedClientId,
-                date: dateTime.toISOString(),
-                purpose: newBooking.purpose,
-                meetingLink: newBooking.meetingLink || undefined
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await axios.post(
+                `${API_BASE}/api/bookings`,
+                {
+                    clientId: resolvedClientId,
+                    date: dateTime.toISOString(),
+                    purpose: newBooking.purpose,
+                    meetingLink: newBooking.meetingLink || undefined
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
             setShowAddModal(false);
             setNewBooking({ clientId: '', date: '', time: '', purpose: '', meetingLink: '' });
@@ -179,15 +164,17 @@ export default function BookingsPage() {
             showToast('Booking created successfully!', 'success');
         } catch (error: any) {
             console.error('[Bookings] Error creating booking:', error.message);
-            console.error('[Bookings] Response:', error.response?.data);
-            showToast(error.response?.data?.error || error.message || 'Failed to create booking.', 'error');
+            showToast(
+                error.response?.data?.error || error.message || 'Failed to create booking.',
+                'error'
+            );
         }
     };
 
     const handleDeleteBooking = async (id: string) => {
         if (!confirm('Are you sure you want to delete this booking?')) return;
         try {
-            const token = localStorage.getItem('token');
+            const token = getToken();
             await axios.delete(`${API_BASE}/api/bookings/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -215,17 +202,19 @@ export default function BookingsPage() {
     const handleUpdateBooking = async () => {
         if (!editBooking) return;
         try {
-            const token = localStorage.getItem('token');
+            const token = getToken();
             const dateTime = new Date(`${editForm.date}T${editForm.time}`);
 
-            await axios.patch(`${API_BASE}/api/bookings/${editBooking.id}`, {
-                date: dateTime.toISOString(),
-                purpose: editForm.purpose,
-                status: editForm.status,
-                meetingLink: editForm.meetingLink || undefined
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await axios.patch(
+                `${API_BASE}/api/bookings/${editBooking.id}`,
+                {
+                    date: dateTime.toISOString(),
+                    purpose: editForm.purpose,
+                    status: editForm.status,
+                    meetingLink: editForm.meetingLink || undefined
+                },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
 
             setShowEditModal(false);
             setEditBooking(null);
@@ -239,8 +228,15 @@ export default function BookingsPage() {
 
     return (
         <div className="space-y-6">
-            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
 
+            {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Bookings</h1>
@@ -255,6 +251,7 @@ export default function BookingsPage() {
                 </button>
             </div>
 
+            {/* Bookings Grid */}
             {isLoadingBookings ? (
                 <div className="flex justify-center py-20">
                     <span className="text-gray-500">Loading bookings...</span>
@@ -266,18 +263,19 @@ export default function BookingsPage() {
                     icon={CalendarIcon}
                     actionLabel="New Booking"
                     onAction={() => setShowAddModal(true)}
-                
                 />
-                
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {bookings.map((booking) => (
-                        <div key={booking.id} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        <div
+                            key={booking.id}
+                            className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                        >
                             <div className="flex justify-between items-start mb-4">
                                 <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
                                     <CalendarIcon className="w-5 h-5" />
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 items-center">
                                     <button
                                         onClick={() => handleEditClick(booking)}
                                         className="p-1 hover:bg-gray-100 text-gray-400 hover:text-blue-600 rounded"
@@ -290,19 +288,25 @@ export default function BookingsPage() {
                                     >
                                         <Trash2 className="w-4 h-4" />
                                     </button>
-                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${booking.status === 'Scheduled' ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-600'
-                                        }`}>
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                        booking.status === 'Scheduled'
+                                            ? 'bg-green-100 text-green-600'
+                                            : 'bg-gray-100 text-gray-600'
+                                    }`}>
                                         {booking.status}
                                     </span>
                                 </div>
                             </div>
-                            <h3 className="font-bold text-lg mb-1">{booking.client?.name || 'Unknown Client'}</h3>
+
+                            <h3 className="font-bold text-lg mb-1">
+                                {booking.client?.name || 'Unknown Client'}
+                            </h3>
                             <p className="text-gray-500 text-sm mb-4">{booking.purpose}</p>
 
                             <div className="mb-4 space-y-2">
                                 {booking.client?.email && (
                                     <p className="text-sm text-gray-600 flex items-center gap-2">
-                                        <span className="font-medium">📧</span>
+                                        <span>📧</span>
                                         <a href={`mailto:${booking.client.email}`} className="hover:text-blue-600 break-all">
                                             {booking.client.email}
                                         </a>
@@ -310,7 +314,7 @@ export default function BookingsPage() {
                                 )}
                                 {booking.client?.phone && (
                                     <p className="text-sm text-gray-600 flex items-center gap-2">
-                                        <span className="font-medium">📱</span>
+                                        <span>📱</span>
                                         <a href={`tel:${booking.client.phone}`} className="hover:text-blue-600">
                                             {booking.client.phone}
                                         </a>
@@ -318,13 +322,14 @@ export default function BookingsPage() {
                                 )}
                             </div>
 
-                            <div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t border-gray-50 mb-4">
-                                <div className="flex items-center">
-                                    <Clock className="w-4 h-4 mr-2" />
+                            <div className="flex items-center justify-between text-sm text-gray-500 pt-4 border-t border-gray-50">
+                                <div className="flex items-center gap-2">
+                                    <Clock className="w-4 h-4" />
                                     {new Date(booking.date).toLocaleString()}
                                 </div>
                                 {booking.meetingLink && (
                                     <a
+                                    
                                         href={booking.meetingLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -335,19 +340,12 @@ export default function BookingsPage() {
                                     </a>
                                 )}
                             </div>
-
-                            <div className="border-t border-gray-50 pt-4">
-                               {/* <CallConversations 
-                                    callSessions={booking.client?.callSessions || []} 
-                                    clientName={booking.client?.name || 'Unknown Client'}
-                                />
-                                */}
-                            </div>
                         </div>
                     ))}
                 </div>
             )}
 
+            {/* Add Booking Modal */}
             {showAddModal && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-3xl w-full max-w-md">
@@ -360,9 +358,7 @@ export default function BookingsPage() {
                             >
                                 <option value="">Select a lead / team member</option>
                                 {clients.map(c => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.name}
-                                    </option>
+                                    <option key={c.id} value={c.id}>{c.name}</option>
                                 ))}
                             </select>
                             <div className="grid grid-cols-2 gap-4">
@@ -388,7 +384,7 @@ export default function BookingsPage() {
                             />
                             <input
                                 type="url"
-                                placeholder="Meeting Link (optional - auto-generates with Google Calendar)"
+                                placeholder="Meeting Link (optional)"
                                 className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
                                 value={newBooking.meetingLink}
                                 onChange={e => setNewBooking({ ...newBooking, meetingLink: e.target.value })}
@@ -412,13 +408,15 @@ export default function BookingsPage() {
                 </div>
             )}
 
+            {/* Edit Booking Modal */}
             {showEditModal && editBooking && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-3xl w-full max-w-md">
                         <h2 className="text-xl font-bold mb-4">Edit Booking</h2>
                         <div className="space-y-4">
                             <div className="p-3 bg-gray-100 rounded-xl text-gray-500">
-                                Client: <span className="font-bold text-gray-900">{editBooking.client?.name}</span>
+                                Client:{' '}
+                                <span className="font-bold text-gray-900">{editBooking.client?.name}</span>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <input

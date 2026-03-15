@@ -28,10 +28,7 @@ export default function UpgradePage() {
     const [upgrading, setUpgrading] = useState<string | null>(null);
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
-    useEffect(() => {
-        fetchCurrentPlan();
-    }, []);
-
+   
     const fetchCurrentPlan = async () => {
         const token = localStorage.getItem('token');
         try {
@@ -48,6 +45,9 @@ export default function UpgradePage() {
             setLoading(false);
         }
     };
+ useEffect(() => {
+        fetchCurrentPlan();
+    }, []);
 
     const handleUpgrade = async (plan: string) => {
         setUpgrading(plan);

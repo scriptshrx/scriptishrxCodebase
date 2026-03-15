@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Search as SearchIcon, Trash2, AlertTriangle, Info, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useStore } from '@/lib/zustand';
 
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
@@ -77,15 +78,8 @@ const BaseRow = ({ base, selected, onClick }: { base: KnowledgeBase; selected: b
 
 // main view
 
-type KnowledgeResourcesViewProps = {
-  createModalOpen: boolean;
-  onCreateModalOpenChange: (open: boolean) => void;
-};
-
-export default function KnowledgeResourcesView({
-  createModalOpen,
-  onCreateModalOpenChange
-}: KnowledgeResourcesViewProps) {
+export default function KnowledgeResourcesView() {
+  const { createModalOpen, setCreateModalOpen } = useStore();
   const [bases, setBases] = useState<KnowledgeBase[]>([]);
   const [selectedBaseId, setSelectedBaseId] = useState<string | null>(null);
   const [documents, setDocuments] = useState<KnowledgeDocument[]>([]);
@@ -204,7 +198,7 @@ export default function KnowledgeResourcesView({
           <div className="p-4 flex justify-between items-center">
             <h3 className="font-semibold">Knowledge Resources</h3>
             <button
-              onClick={() => onCreateModalOpenChange(true)}
+              onClick={() => setCreateModalOpen(true)}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
             >
               <Plus className="w-4 h-4" />
@@ -333,10 +327,10 @@ export default function KnowledgeResourcesView({
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-6">
-              <Button variant="outline" onClick={() => onCreateModalOpenChange(false)}>
+              <Button variant="outline" onClick={() => setCreateModalOpen(false)}>
                 Cancel
               </Button>
-              <Button onClick={() => { handleCreateBase(); onCreateModalOpenChange(false);} }>
+              <Button onClick={() => { handleCreateBase(); setCreateModalOpen(false);} }>
                 Create
               </Button>
             </div>
