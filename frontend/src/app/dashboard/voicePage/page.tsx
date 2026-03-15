@@ -164,6 +164,12 @@ export default function VoicePage() {
     fetchAgents();
   }, []);
 
+  useEffect(() => {
+    if (!store.selectedVoicePage) {
+      store.setSelectedVoicePage('Voice Agents');
+    }
+  }, [store.selectedVoicePage]);
+
 
 
   // render

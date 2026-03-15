@@ -102,6 +102,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         return () => document.removeEventListener('mousedown', handler);
     }, [mounted, showMobileMenu]);
 
+    useEffect(() => {
+        if (pathname?.startsWith('/dashboard/voicePage')) {
+            setSelectedVoiceAgentNav(true);
+        }
+    }, [pathname]);
+
     // Debounced Search
     useEffect(() => {
         if (!mounted) return;
@@ -252,7 +258,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             href="/dashboard/voicePage"
                             label="Voice Agents"
                             icon={<Phone />}
-                            active={pathname?.startsWith('/dashboard/voiceAgents')}
+                            active={pathname?.startsWith('/dashboard/voicePage')}
                             onClick={toggleVoiceNav}
                         />
                         {selectedVoiceAgentNav && (
@@ -268,11 +274,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     { name: 'Webhooks', icon: Globe, route: '' },
                                 ].map(item => {
                                     const Icon = item.icon;
-                                    const isActive = selectedSideBar === item.name;
+                                    const isActive = store.selectedVoicePage === item.name;
                                     return (
                                         <button
                                             type="button"
-                                            onClick={() => { store.selectedVoicePage(item.name) }}
+                                            onClick={() => { store.setSelectedVoicePage(item.name) }}
                                             key={item.name}
                                             className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
                                                 isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-white/10 text-blue-100 hover:text-white'
