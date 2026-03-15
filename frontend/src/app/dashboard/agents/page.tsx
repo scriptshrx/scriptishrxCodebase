@@ -217,7 +217,7 @@ export default function VoiceAgentsView() {
                   </td>
                 </tr>
               )}
-              {filteredAgents.map(agent => (
+              {filteredAgents.length>0&&filteredAgents.map(agent => (
                 <tr
                   key={agent.id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer relative"
