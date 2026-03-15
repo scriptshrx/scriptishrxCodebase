@@ -18,6 +18,8 @@ import { useStore } from '@/lib/zustand';
 
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
+const store = useStore();
+
 // Types
 type WeightedBinding = {
   agentId: string;

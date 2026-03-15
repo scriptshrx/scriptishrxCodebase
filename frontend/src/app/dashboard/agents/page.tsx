@@ -94,6 +94,7 @@ async function apiFetch(path: string, opts: any = {}, router?: any) {
 }
 
 export default function VoiceAgentsView() {
+    const store = useStore()
   const { agents, loading, error, openEdit, handleDelete, handleDuplicate, createModalOpen, setCreateModalOpen } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
@@ -101,7 +102,7 @@ export default function VoiceAgentsView() {
  const myRouter = useRouter();
 
   const fetchAgents = async () => {
-    const store = useStore.getState();
+   
     store.setLoading(true);
     store.setError(null);
     try {
