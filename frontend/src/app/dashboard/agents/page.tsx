@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import {
   MoreVertical,
   Search as SearchIcon,
@@ -125,7 +125,7 @@ export default function VoiceAgentsView() {
   };
 
 
-  const filteredAgents = useMemo(() => {
+  const filteredAgents =() => {
     let arr = [...agents];
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
@@ -137,7 +137,7 @@ export default function VoiceAgentsView() {
       return sortOrder === 'Newest' ? tb - ta : ta - tb;
     });
     return arr;
-  }, [agents, searchQuery, sortOrder]);
+  };
 
  
   return (

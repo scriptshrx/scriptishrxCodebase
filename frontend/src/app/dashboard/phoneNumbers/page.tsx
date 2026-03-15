@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Plus,
   Search as SearchIcon,
@@ -415,13 +415,11 @@ export default function PhoneNumbersView() {
     }
   }, [selectedNumberId]);
 
-  const filteredNumbers = useMemo(() => {
-    if (!searchQuery) return numbersList;
-    const q = searchQuery.toLowerCase();
-    return numbersList.filter(
-      n => n.nickname?.toLowerCase().includes(q) || n.phoneNumber.includes(q)
-    );
-  }, [numbersList, searchQuery]);
+  const filteredNumbers = searchQuery
+    ? numbersList.filter(
+        n => n.nickname?.toLowerCase().includes(searchQuery.toLowerCase()) || n.phoneNumber.includes(searchQuery.toLowerCase())
+      )
+    : numbersList;
 
   const handleSaveNumber = async () => {
     if (!selectedNumber || !formData) return;
