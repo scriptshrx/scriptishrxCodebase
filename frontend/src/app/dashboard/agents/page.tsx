@@ -210,14 +210,14 @@ export default function VoiceAgentsView() {
                   </td>
                 </tr>
               )}
-              {!loading && !error && filteredAgents.length === 0 && (
+              {!loading && !error && filteredAgents().length === 0 && (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
                     No agents found.
                   </td>
                 </tr>
               )}
-              {filteredAgents.length>0&&filteredAgents.map(agent => (
+              {filteredAgents().length>0&&filteredAgents().map(agent => (
                 <tr
                   key={agent.id}
                   className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer relative"
