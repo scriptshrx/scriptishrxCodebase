@@ -21,13 +21,7 @@ const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
 const store = useStore();
 
-// Change to selectors to prevent unnecessary re-renders
-const modalOpen = useStore(state => state.modalOpen);
-const modalMode = useStore(state => state.modalMode);
-const modalAgent = useStore(state => state.modalAgent);
-const closeModal = useStore(state => state.closeModal);
 
-const handleSave = useStore(state => state.handleSave);
 
 type AgentType = 'Single Prompt' | 'Multi Prompt' | 'Custom LLM';
 
