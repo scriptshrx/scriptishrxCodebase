@@ -526,8 +526,8 @@ function NavItem({
             onClick={onClick}
             className={`flex items-center justify-between px-4 py-3 hover:bg-white/80 rounded-xl transition-all duration-200 group relative
             ${active
-                ? 'bg-white text-blue-600 shadow-md font-bold'
-                : 'text-blue-100 hover:bg-white/10 hover:text-white hover:bg-white hover:shadow-md'
+                ? 'bg-white text-blue-600 shadow-sm font-bold'
+                : 'text-blue-100 hover:bg-white/10 hover:text-white hover:bg-white/90 hover:shadow-md'
             }`}
         >
             <div className="flex items-center gap-3 hover-text-blue-600">
