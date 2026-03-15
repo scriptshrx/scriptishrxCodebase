@@ -103,8 +103,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }, [mounted, showMobileMenu]);
 
     useEffect(() => {
-        if (pathname?.startsWith('/dashboard/voicePage')) {
+        const voiceRoutes = ['/dashboard/agents', '/dashboard/phoneNumbers', '/dashboard/knowledgeResources'];
+        if (voiceRoutes.some(route => pathname?.startsWith(route))) {
             setSelectedVoiceAgentNav(true);
+        } else {
+            setSelectedVoiceAgentNav(false);
         }
     }, [pathname]);
 
@@ -259,7 +262,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             
                             label="Voice Agents"
                             icon={<Phone />}
-                            active={pathname?.startsWith('/dashboard/voicePage')}
+                            active={selectedVoiceAgentNav}
                             onClick={toggleVoiceNav}
                         />
                         {selectedVoiceAgentNav && (
@@ -276,11 +279,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 ].map(item => {
                                     const Icon = item.icon;
                                     const route = user?.email!=='ezehmark@gmail.com'?'/dashboard/menAtWork':item.route
-                                    const isActive = store.selectedVoicePage === item.name;
+                                    const isActive = item.route ? pathname === route : store.selectedVoicePage === item.name;
                                     return (
                                         <button
                                             type="button"
-                                            onClick={() => { store.setSelectedVoicePage(item.name);router.push(route) }}
+                                            onClick={() => { store.setSelectedVoicePage(item.name); if (route) router.push(route) }}
                                             key={item.name}
                                             className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
                                                 isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-white/10 text-blue-100 hover:text-white'
