@@ -1,3 +1,4 @@
+'use client'
 import { useState, useMemo } from 'react';
 import {
   MoreVertical,
@@ -141,7 +142,7 @@ export default function VoiceAgentsView() {
  
   return (
     <>
-      <main className="flex-1 p-8">
+      <main className="flex-1">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold">Voice Agents</h1>

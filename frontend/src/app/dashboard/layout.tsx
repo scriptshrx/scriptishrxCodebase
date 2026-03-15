@@ -264,7 +264,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         {selectedVoiceAgentNav && (
                             <nav className="px-4 space-y-1">
                                 {[
-                                    { name: 'Voice Agents', icon: LayoutList,route:'/dashboard/agents' },
+                                    { name: 'Agents', icon: LayoutList,route:'/dashboard/agents' },
                                     { name: 'Phone Numbers', icon: Phone,route:'/dashboard/phoneNumbers' },
                                     { name: 'Knowledge Resources', icon: Brain,route:'/dashboard/knowledgeResources' },
                                     { name: 'Call Logs', icon: PhoneIncoming, },
