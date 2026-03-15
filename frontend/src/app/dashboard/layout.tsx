@@ -245,7 +245,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                     <Section title="AI CONCIERGE">
                         <NavItem
-                            href="/dashboard/voiceAgents"
+                            href="/dashboard/voicePage"
                             label="Voice Agents"
                             icon={<Phone />}
                             active={pathname?.startsWith('/dashboard/voiceAgents')}
