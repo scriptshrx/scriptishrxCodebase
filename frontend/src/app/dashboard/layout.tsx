@@ -320,8 +320,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                  user?.subscription?.plan !== 'Trial' &&
                  user?.subscription?.plan !== 'Basic' && (
                 
-                                <button className="w-1/2 mx-auto cursor-pointer shadow-sm my-8 bg-blue-600 text-[#059669] py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all active:scale-95">
-                                    <Zap className="w-4 h-4 fill-current" />
+                                <button className="w-1/2 mx-auto cursor-pointer shadow-sm my-8 bg-blue-600 text-gray-100 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm hover:shadow-md transition-all active:scale-95">
+                                    <Zap className="w-4 h-4 text-white" />
                                     Upgrade
                                 </button>
                            
