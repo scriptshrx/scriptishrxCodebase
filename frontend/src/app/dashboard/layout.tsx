@@ -286,7 +286,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                             onClick={() => { store.setSelectedVoicePage(item.name); if (route) router.push(route) }}
                                             key={item.name}
                                             className={`w-full flex items-center gap-3 px-4 bg-white/10 py-2 rounded-lg cursor-pointer transition ${
-                                                isActive ? 'bg-blue-100 font-semibold text-blue-600' : 'hover:bg-white/80 text-white hover:text-gray-300'
+                                                isActive ? 'bg-blue-100 font-semibold text-blue-600' : 'hover:bg-blue-300 text-white hover:text-white'
                                             }`}
                                         >
                                             <Icon className="w-5 h-5 group-hover:text-blue-600" />
