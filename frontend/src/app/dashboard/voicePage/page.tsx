@@ -126,7 +126,7 @@ export default function VoicePage() {
     return () => m.removeEventListener('change', listener);
   }, []);
 
-  const [selectedSideBar, setSelectSideBar] = useState('Voice Agents');
+  
   const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
   const [user, setUser] = useState<any>({});
 
@@ -199,7 +199,7 @@ export default function VoicePage() {
               { name: 'Webhooks', icon: Globe }
             ].map(item => {
               const Icon = item.icon;
-              const isActive = selectedSideBar === item.name;
+              const isActive = store.selectedVoicePage === item.name;
               return (
                 <button
                   type='button'

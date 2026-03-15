@@ -9,6 +9,8 @@ import {
     Bell, Menu, FileText, LogOut, Zap, PieChart, X,
     LayoutList, Brain, PhoneIncoming, CreditCard, Key, Globe
 } from 'lucide-react';
+import { useStore } from '@/lib/apizustand';
+
 
 interface UserPayload {
     name: string;
@@ -22,6 +24,8 @@ interface UserPayload {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+
+    const store = useStore();
     const pathname = usePathname();
     const router = useRouter();
     const [mounted, setMounted] = useState(false);
@@ -268,7 +272,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     return (
                                         <button
                                             type="button"
-                                            onClick={() => { setSelectSideBar(item.name) }}
+                                            onClick={() => { store.selectedVoicePage(item.name) }}
                                             key={item.name}
                                             className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
                                                 isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-white/10 text-blue-100 hover:text-white'
