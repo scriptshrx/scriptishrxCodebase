@@ -180,55 +180,7 @@ export default function VoicePage() {
     :
     <div className="flex min-h-screen bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100">
       {/* sidebar (same as befoe) */}
-      <aside className="w-64 bg-white border-r border-gray-200 flex flex-col justify-between dark:bg-gray-800 dark:border-gray-700">
-        <div>
-          <div className="p-6 flex items-center gap-2 text-xl font-bold">
-            <img src={'/newLogo.png'} className="w-12 h-12 rounded-lg shadow-md text-blue-600" />
-            <span>Scriptish</span>
-          </div>
-         
-          <nav className="px-4 space-y-1">
-            {[
-              { name: 'Voice Agents', icon: LayoutList },
-              { name: 'Phone Numbers', icon: Phone },
-              { name: 'Knowledge Resources', icon: Brain },
-              { name: 'Call Logs', icon: PhoneIncoming },
-              { name: 'Patients', icon: Users },
-              { name: 'Billing', icon: CreditCard },
-              { name: 'API Keys', icon: Key },
-              { name: 'Webhooks', icon: Globe }
-            ].map(item => {
-              const Icon = item.icon;
-              const isActive = store.selectedVoicePage === item.name;
-              return (
-                <button
-                  type='button'
-                  onClick={() => setSelectSideBar(item.name)}
-                  key={item.name}
-                  className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
-                    isActive ? 'bg-blue-100 font-semibold dark:bg-blue-800' : 'hover:bg-blue-100 dark:hover:bg-blue-800'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-sm truncate">{item.name}</span>
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-        <div className="p-6 space-y-4 border-t border-gray-200">
-          <div className="bg-green-100/70 p-3 dark:bg-gray-600/50 rounded-lg text-xs">
-            <div className="font-semibold text-green-600 dark:text-green-500">Pay As You Go</div>
-            <div className="text-green-600/80">No upcoming bill</div>
-          </div>
-          <div className="flex items-center gap-2 cursor-pointer">
-            <div className="w-6 h-6 bg-gray-200 rounded-full flex items-center justify-center text-xs font-medium">
-              {tenant ? tenant.name.charAt(0).toUpperCase() : 'T'}
-            </div>
-            <span className="text-sm truncate">{tenant?.email || '—'}</span>
-          </div>
-        </div>
-      </aside>
+     
 
       {/* main section */}
       {store.selectedVoicePage === 'Voice Agents' && (
