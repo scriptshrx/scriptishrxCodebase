@@ -285,11 +285,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                             type="button"
                                             onClick={() => { store.setSelectedVoicePage(item.name); if (route) router.push(route) }}
                                             key={item.name}
-                                            className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
-                                                isActive ? 'bg-blue-100 font-semibold text-blue-600' : 'hover:bg-white/10 text-blue-100 hover:text-white'
+                                            className={`w-full flex items-center gap-3 px-4 bg-white/10 py-2 rounded-lg cursor-pointer transition ${
+                                                isActive ? 'bg-blue-100 font-semibold text-blue-600' : 'hover:bg-white/80 text-blue-100 hover:text-gray-300'
                                             }`}
                                         >
-                                            <Icon className="w-5 h-5" />
+                                            <Icon className="w-5 h-5 group-hover:text-blue-600" />
                                             <span className="text-sm truncate">{item.name}</span>
                                         </button>
                                     );
