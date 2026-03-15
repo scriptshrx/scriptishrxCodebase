@@ -144,7 +144,7 @@ export default function VoiceAgentsView() {
   return (
     <>
       <main className="flex-1">
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center -m-8">
           <div>
             <h1 className="text-2xl font-bold">Voice Agents</h1>
             <p className="text-sm text-gray-500">Manage Scriptish voice agents</p>
