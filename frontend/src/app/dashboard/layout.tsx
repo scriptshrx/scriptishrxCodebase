@@ -528,7 +528,7 @@ function NavItem({
             }`}
         >
             <div className="flex items-center gap-3 hover-text-blue-600">
-                <span className={`${active ? 'text-blue-600' : 'text-blue-500 group-hover:text-white'} transition-colors`}>
+                <span className={`${active ? 'text-blue-600' : 'text-blue-500 group-hover:text-blue-500'} transition-colors`}>
                     {icon}
                 </span>
                 <span className="text-sm text-gray-600">{label}</span>
