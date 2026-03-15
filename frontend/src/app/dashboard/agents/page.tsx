@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   MoreVertical,
   Search as SearchIcon,
@@ -125,7 +125,9 @@ export default function VoiceAgentsView() {
     }
   };
 
-
+useEffect(()=>{
+  fetchAgents()
+},[])
   const filteredAgents =() => {
     let arr = [...agents];
     if (searchQuery) {
