@@ -286,7 +286,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                             onClick={() => { store.setSelectedVoicePage(item.name); if (route) router.push(route) }}
                                             key={item.name}
                                             className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
-                                                isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-white/10 text-blue-100 hover:text-white'
+                                                isActive ? 'bg-blue-100 font-semibold text-blue-600' : 'hover:bg-white/10 text-blue-100 hover:text-white'
                                             }`}
                                         >
                                             <Icon className="w-5 h-5" />
@@ -534,7 +534,7 @@ function NavItem({
                 <span className={`${active ? 'text-blue-600' : 'text-blue-500 group-hover:text-blue-500'} transition-colors`}>
                     {icon}
                 </span>
-                <span className="text-sm text-gray-600">{label}</span>
+                <span className={`text-sm ${active ? 'text-blue-600' : 'text-gray-600'}`}>{label}</span>
             </div>
             {badge && (
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm ${active ? 'bg-blue-100 text-blue-600' : 'bg-white/20 text-white'}`}>
