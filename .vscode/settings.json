@@ -11,6 +11,7 @@
     "typescriptreact": false,
     "javascriptreact": false
   },
-  "editor.inlineSuggest.enabled": false
+  "editor.inlineSuggest.enabled": false,
+  "typescript.validate.enable": false
 }
 
