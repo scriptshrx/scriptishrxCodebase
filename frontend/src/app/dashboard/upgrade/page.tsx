@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Check, Shield, Zap, Sparkles, Loader2, AlertCircle, X } from 'lucide-react';
 
-// Simple Toast Component (Reused logic for consistency)
 function Toast({ message, type, onClose }: { message: string, type: 'success' | 'error', onClose: () => void }) {
     useEffect(() => {
         const timer = setTimeout(onClose, 3000);
@@ -11,9 +10,14 @@ function Toast({ message, type, onClose }: { message: string, type: 'success' | 
     }, [onClose]);
 
     return (
-        <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg transform transition-all animate-in slide-in-from-right-5 fade-in duration-300 ${type === 'success' ? 'bg-green-50 text-green-800 border border-green-100' : 'bg-red-50 text-red-800 border border-red-100'
-            }`}>
-            {type === 'success' ? <Check className="w-5 h-5 text-green-600" /> : <AlertCircle className="w-5 h-5 text-red-600" />}
+        <div className={`fixed top-4 right-4 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg transform transition-all animate-in slide-in-from-right-5 fade-in duration-300 ${
+            type === 'success'
+                ? 'bg-green-50 text-green-800 border border-green-100'
+                : 'bg-red-50 text-red-800 border border-red-100'
+        }`}>
+            {type === 'success'
+                ? <Check className="w-5 h-5 text-green-600" />
+                : <AlertCircle className="w-5 h-5 text-red-600" />}
             <span className="font-medium text-sm">{message}</span>
             <button onClick={onClose} className="p-1 hover:bg-black/5 rounded-full transition-colors">
                 <X className="w-4 h-4 opacity-50" />
@@ -28,9 +32,14 @@ export default function UpgradePage() {
     const [upgrading, setUpgrading] = useState<string | null>(null);
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null);
 
-   
+    // ✅ Safe token getter — only runs client-side
+    const getToken = () => {
+        if (typeof window === 'undefined') return null;
+        return localStorage.getItem('token');
+    };
+
     const fetchCurrentPlan = async () => {
-        const token = localStorage.getItem('token');
+        const token = getToken();
         try {
             const res = await fetch('/api/settings', {
                 headers: { 'Authorization': `Bearer ${token}` }
@@ -45,13 +54,15 @@ export default function UpgradePage() {
             setLoading(false);
         }
     };
- useEffect(() => {
+
+    // ✅ useEffect only runs on client — safe for localStorage
+    useEffect(() => {
         fetchCurrentPlan();
     }, []);
 
     const handleUpgrade = async (plan: string) => {
         setUpgrading(plan);
-        const token = localStorage.getItem('token');
+        const token = getToken();
         try {
             const res = await fetch('/api/settings/subscription', {
                 method: 'PUT',
@@ -86,17 +97,24 @@ export default function UpgradePage() {
 
     return (
         <div className="max-w-6xl mx-auto pb-10 relative">
-            {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
 
             <div className="text-center mb-12">
-                <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">Upgrade your Plan</h1>
+                <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">
+                    Upgrade your Plan
+                </h1>
                 <p className="mt-4 text-xl text-gray-500">
                     Unlock the full potential of Scriptish with advanced AI and CRM features.
                 </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Basic Plan */}
                 <PricingCard
                     title="Basic"
                     price="$99.99"
@@ -113,7 +131,6 @@ export default function UpgradePage() {
                     isUpgrading={upgrading === 'Basic'}
                 />
 
-                {/* Intermediate Plan */}
                 <PricingCard
                     title="Intermediate"
                     price="$149.99"
@@ -132,7 +149,6 @@ export default function UpgradePage() {
                     isUpgrading={upgrading === 'Intermediate'}
                 />
 
-                {/* Advanced Plan */}
                 <PricingCard
                     title="Advanced"
                     price="$249.99"
@@ -154,16 +170,22 @@ export default function UpgradePage() {
     );
 }
 
-function PricingCard({ title, price, description, features, isPopular, icon, currentPlan, onUpgrade, isUpgrading }: any) {
+function PricingCard({
+    title, price, description, features,
+    isPopular, icon, currentPlan, onUpgrade, isUpgrading
+}: any) {
     const isCurrent = currentPlan === title;
 
     return (
-        <div className={`relative flex flex-col p-8 bg-white rounded-3xl border transition-all hover:shadow-xl ${isPopular ? 'border-blue-500 shadow-lg scale-105 z-10' : 'border-gray-100 shadow-sm hover:-translate-y-1'
-            }`}>
+        <div className={`relative flex flex-col p-8 bg-white rounded-3xl border transition-all hover:shadow-xl ${
+            isPopular
+                ? 'border-blue-500 shadow-lg scale-105 z-10'
+                : 'border-gray-100 shadow-sm hover:-translate-y-1'
+        }`}>
             {isPopular && (
                 <div className="absolute top-0 right-0 transform translate-x-1/3 -translate-y-1/3">
                     <span className="bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                        More Popular
+                        Most Popular
                     </span>
                 </div>
             )}
@@ -194,12 +216,13 @@ function PricingCard({ title, price, description, features, isPopular, icon, cur
             <button
                 onClick={onUpgrade}
                 disabled={isCurrent || isUpgrading}
-                className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center ${isCurrent
-                    ? 'bg-green-100 text-green-700 cursor-default'
-                    : isPopular
-                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200'
-                        : 'bg-gray-900 text-white hover:bg-gray-800'
-                    } ${isUpgrading ? 'opacity-70 cursor-wait' : ''}`}
+                className={`w-full py-3 rounded-xl font-bold transition-all flex items-center justify-center ${
+                    isCurrent
+                        ? 'bg-green-100 text-green-700 cursor-default'
+                        : isPopular
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200'
+                            : 'bg-gray-900 text-white hover:bg-gray-800'
+                } ${isUpgrading ? 'opacity-70 cursor-wait' : ''}`}
             >
                 {isUpgrading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

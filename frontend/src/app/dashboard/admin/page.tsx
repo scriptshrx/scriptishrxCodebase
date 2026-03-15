@@ -18,6 +18,7 @@ export default function AdminDashboard() {
     const [loading, setLoading] = useState(true);
     const [tableLoading, setTableLoading] = useState(false);
     const [selectedSub, setSelectedSub] = useState<any>(null);
+    const [mounted, setMounted] = useState(false);
 
     // Filters & Pagination
     const [page, setPage] = useState(1);
@@ -29,10 +30,14 @@ export default function AdminDashboard() {
     const [typeFilter, setTypeFilter] = useState('ALL');
     const [error, setError] = useState('');
 
+    // ✅ Ensure component only renders fully on client
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     async function fetchDashboardData() {
         try {
             const { data } = await api.get('/admin/subscribers/summary');
-            if (!data) throw new Error('No data received');
             if (data.success) {
                 setStats(data.data);
             }
@@ -58,7 +63,6 @@ export default function AdminDashboard() {
             });
 
             const { data } = await api.get(`/admin/subscribers?${query}`);
-            if (!data) throw new Error('No data received');
             if (data.success) {
                 setSubscribers(data.data);
                 setTotalPages(data.pagination.totalPages);
@@ -72,12 +76,14 @@ export default function AdminDashboard() {
     }
 
     useEffect(() => {
+        if (!mounted) return;
         fetchDashboardData();
-    }, []);
+    }, [mounted]);
 
     useEffect(() => {
+        if (!mounted) return;
         fetchSubscribers();
-    }, [page, search, statusFilter, typeFilter]);
+    }, [mounted, page, search, statusFilter, typeFilter]);
 
     const handleExport = () => {
         if (!subscribers.length) {
@@ -96,10 +102,8 @@ export default function AdminDashboard() {
         ]);
 
         const csvContent = headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
-
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
-
         const link = document.createElement("a");
         link.setAttribute("href", url);
         link.setAttribute("download", `subscribers_export_${new Date().toISOString().split('T')[0]}.csv`);
@@ -109,6 +113,9 @@ export default function AdminDashboard() {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     };
+
+    // ✅ Block render until client is ready
+    if (!mounted) return null;
 
     if (loading) {
         return (
@@ -158,7 +165,6 @@ export default function AdminDashboard() {
                         </div>
 
                         <div className="p-6 space-y-6">
-                            {/* Avatar + Name */}
                             <div className="flex items-center gap-4">
                                 <div className="w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-2xl">
                                     {selectedSub.user?.name?.charAt(0).toUpperCase() || 'U'}
@@ -170,7 +176,6 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
-                            {/* Plan + Billing */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="p-4 bg-gray-50 rounded-xl border border-gray-100">
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Current Plan</p>
@@ -186,7 +191,6 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
-                            {/* Account Info */}
                             <div className="space-y-3">
                                 <h5 className="text-sm font-bold text-gray-900 border-b border-gray-100 pb-2">Account Info</h5>
                                 <div className="flex justify-between text-sm">
@@ -203,7 +207,6 @@ export default function AdminDashboard() {
                                 </div>
                             </div>
 
-                            {/* Actions */}
                             <div className="pt-4 flex gap-3">
                                 <button className="flex-1 py-2.5 bg-white border border-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-50 transition">
                                     Reset Password
@@ -275,10 +278,7 @@ export default function AdminDashboard() {
                         type="text"
                         placeholder="Search by name, email..."
                         value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                            setPage(1);
-                        }}
+                        onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                         className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition"
                     />
                 </div>

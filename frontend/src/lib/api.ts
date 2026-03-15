@@ -1,79 +1,59 @@
 import axios from 'axios';
 
 const getBaseUrl = () => {
-    // base host for API calls; add `/api` here so client code can use paths
-    // like `/notifications` without needing to remember the prefix.
     return 'https://scriptishrxcodebase.onrender.com/api';
 };
 
 const api = axios.create({
-    baseURL: getBaseUrl(), // already includes /api
+    baseURL: getBaseUrl(),
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
-// Request Interceptor: Attach Token
+// ✅ Request Interceptor: Attach Token
 api.interceptors.request.use((config) => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-    console.log(`[API Interceptor] ${config.method?.toUpperCase()} ${config.url}`);
+    if (typeof window === 'undefined') return config; // ✅ Skip entirely on SSR
+
+    const token = localStorage.getItem('token');
     if (token) {
-        console.log(`[API Interceptor] ✅ Token attached (${token.substring(0, 20)}...)`);
         config.headers.Authorization = `Bearer ${token}`;
-    } else {
-        console.warn(`[API Interceptor] ⚠️ No token found in localStorage - request will likely fail`);
     }
     return config;
 });
 
-// Response Interceptor: Handle 401 (Refresh Logic)
+// ✅ Response Interceptor: Handle 401
 api.interceptors.response.use(
-    (response) => {
-        console.log(`[API Interceptor] ✅ SUCCESS ${response.status} ${response.config.method?.toUpperCase()} ${response.config.url}`);
-        return response;
-    },
+    (response) => response,
     async (error) => {
-        const originalRequest = error.config;
-        console.error(`[API Interceptor] ❌ ERROR`);
-        console.error(`  Status: ${error.response?.status || 'No Response'}`);
-        console.error(`  Method: ${error.config?.method?.toUpperCase()}`);
-        console.error(`  URL: ${error.config?.url}`);
-        console.error(`  Message: ${error.message}`);
-        console.error(`  CORS: ${error.response?.headers?.['access-control-allow-origin'] ? 'ALLOWED' : 'BLOCKED'}`);
+        if (typeof window === 'undefined') {
+            // ✅ On SSR, never attempt refresh or localStorage access
+            return Promise.reject(error);
+        }
 
-        // If 401 and we haven't retried yet
+        const originalRequest = error.config;
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-            console.log(`[API Interceptor] 🔄 Attempting token refresh...`);
 
             try {
-                // Attempt Refresh with absolute URL
                 const baseUrl = getBaseUrl();
-                const refreshUrl = `${baseUrl}/auth/refresh`;
-                
-                const { data } = await axios.post(refreshUrl, {}, {
+                const { data } = await axios.post(`${baseUrl}/auth/refresh`, {}, {
                     withCredentials: true
                 });
 
-                if (!data) {
-                    console.error(`[API Interceptor] ❌ Refresh response has no data`);
-                    return Promise.reject(error);
-                }
+                // ✅ Safe optional chaining — no destructuring
+                const newToken = data?.auth?.token;
 
-                if (data.auth?.token) {
-                    console.log(`[API Interceptor] ✅ Token refreshed successfully`);
-                    localStorage.setItem('token', data.auth.token); // Update Access Token
-                    originalRequest.headers.Authorization = `Bearer ${data.auth.token}`;
-                    return api(originalRequest); // Retry original request
+                if (newToken) {
+                    localStorage.setItem('token', newToken);
+                    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    return api(originalRequest);
                 }
             } catch (refreshError) {
-                // Refresh failed (Session expired)
-                console.error(`[API Interceptor] ❌ Token refresh failed - logging out`);
-                if (typeof window !== 'undefined') {
-                    localStorage.removeItem('token');
-                    window.location.href = '/login';
-                }
+                localStorage.removeItem('token');
+                window.location.href = '/login';
             }
         }
 
