@@ -157,6 +157,8 @@ export default function VoiceAgentsView() {
           </div>
         </div>
 
+        
+
         {/* controls */}
         <div className="flex flex-wrap gap-4 mb-4">
           <div className="relative flex-1 min-w-[200px]">

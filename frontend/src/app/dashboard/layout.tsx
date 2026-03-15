@@ -255,6 +255,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
                     <Section title="AI CONCIERGE">
                         <NavItem
+                        href='/dashboard/agents'
                             
                             label="Voice Agents"
                             icon={<Phone />}
@@ -274,11 +275,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     { name: 'Webhooks', icon: Globe, route: '' },
                                 ].map(item => {
                                     const Icon = item.icon;
+                                    const route = user?.email!=='ezehmark@gmail.com'?'/dashboard/menAtWork':item.route
                                     const isActive = store.selectedVoicePage === item.name;
                                     return (
                                         <button
                                             type="button"
-                                            onClick={() => { store.setSelectedVoicePage(item.name);router.push(item.route) }}
+                                            onClick={() => { store.setSelectedVoicePage(item.name);router.push(route) }}
                                             key={item.name}
                                             className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
                                                 isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-white/10 text-blue-100 hover:text-white'

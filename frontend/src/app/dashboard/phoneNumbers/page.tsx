@@ -539,6 +539,111 @@ export default function PhoneNumbersView() {
 
   return (
     <main className="flex-1 flex bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
+
+      {/* Edit/AssignPhone Modal */}
+            {store.modalOpen && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+                <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6">
+                  <h2 className="text-xl font-bold mb-4">
+                    {store.modalMode === 'edit' && 'Edit Voice Agent'}
+                    {store.modalMode === 'assignPhone' && 'Assign Phone'}
+                  </h2>
+                  {store.modalMode === 'assignPhone' ? (
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-gray-800">Phone Number</label>
+                        <Input
+                          value={store.modalAgent?.phoneNumber || ''}
+                          onChange={e => store.setModalAgent({ ...store.modalAgent, phoneNumber: e.target.value })}
+                          placeholder="+1 234 567 8900"
+                          className="bg-white border-gray-300 text-gray-900"
+                        />
+                      </div>
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={store.closeModal}>Cancel</Button>
+                        <Button onClick={() => store.handleSave(store.modalAgent, store.modalMode, apiFetch, router, fetchAgents)}>Save</Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-gray-800">Agent Name</label>
+                        <Input
+                          value={store.modalAgent?.name || ''}
+                          onChange={e => store.setModalAgent({ ...store.modalAgent, name: e.target.value })}
+                          placeholder="Front Desk Bot"
+                          className="bg-white border-gray-300 text-gray-900"
+                        />
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold text-gray-800">Agent Type</label>
+                          <select
+                            value={store.modalAgent?.agentType}
+                            onChange={e => store.setModalAgent({ ...store.modalAgent, agentType: e.target.value as AgentType })}
+                            className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white text-gray-900 text-sm"
+                          >
+                            <option>Single Prompt</option>
+                            <option>Multi Prompt</option>
+                            <option>Custom LLM</option>
+                          </select>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold text-gray-800">Voice ID</label>
+                          <Input
+                            value={store.modalAgent?.agentConfig?.voice?.voice_id || ''}
+                            onChange={e => store.setModalAgent({
+                              ...store.modalAgent,
+                              agentConfig: {
+                                ...store.modalAgent.agentConfig,
+                                voice: {
+                                  ...(store.modalAgent.agentConfig?.voice || {}),
+                                  voice_id: e.target.value,
+                                },
+                              },
+                            })}
+                            placeholder="myra, jenny, etc."
+                            className="bg-white border-gray-300 text-gray-900"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-gray-800">Provider</label>
+                        <select
+                          value={store.modalAgent?.provider || 'retell'}
+                          onChange={e => store.setModalAgent({ ...store.modalAgent, provider: e.target.value })}
+                          className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white text-gray-900 text-sm"
+                        >
+                          <option value="retell">Retell</option>
+                          <option value="twilio">Twilio</option>
+                          <option value="custom">Custom</option>
+                        </select>
+                      </div>
+                      {store.modalAgent?.agentType === 'Single Prompt' && (
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold text-gray-800">Prompt</label>
+                          <textarea
+                            value={store.modalAgent?.agentConfig?.prompt?.system_prompt || ''}
+                            onChange={e => store.setModalAgent({
+                              ...store.modalAgent,
+                              agentConfig: {
+                                ...store.modalAgent.agentConfig,
+                                prompt: { ...store.modalAgent.agentConfig.prompt, system_prompt: e.target.value },
+                              },
+                            })}
+                            className="w-full min-h-[100px] p-3 border border-gray-300 rounded-xl text-gray-900"
+                          />
+                        </div>
+                      )}
+                      <div className="flex justify-end gap-2">
+                        <Button variant="outline" onClick={store.closeModal}>Cancel</Button>
+                        <Button onClick={() => store.handleSave(store.modalAgent, store.modalMode, apiFetch, router, fetchAgents)}>Save</Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
         <div>
