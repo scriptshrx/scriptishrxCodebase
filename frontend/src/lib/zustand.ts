@@ -25,7 +25,7 @@ const useStore = create((set, get) => ({
   modalOpen: false,
   modalMode: null,
   modalAgent: null,
-  selectedVoicePage:''
+  selectedVoicePage:'',
 
   // functions
   setSelectedVoicePage:(val)=>set({selectedVoicePage:val}),
