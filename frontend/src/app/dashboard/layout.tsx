@@ -227,7 +227,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* SIDEBAR */}
             <aside
                 ref={sidebarRef}
-                className={`fixed lg:static top-0 left-0 h-full lg:h-auto w-64 bg-gradient-to-t from-blue-100 to-blue-300 z-50
+                className={`fixed lg:static top-0 left-0 h-full lg:h-auto w-64 bg-gradient-to-tr from-blue-100 to-blue-300 z-50
                 transition-transform duration-300 flex flex-col shadow-xl
                 ${showMobileMenu ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
