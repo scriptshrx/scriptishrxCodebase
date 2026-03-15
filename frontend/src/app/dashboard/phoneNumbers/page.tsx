@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useStore } from '@/lib/zustand';
 
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
@@ -352,15 +353,7 @@ const ConnectPhoneProviderModal = ({
 };
 
 // Main Component
-type PhoneNumbersViewProps = {
-  createModalOpen: boolean;
-  onCreateModalOpenChange: (open: boolean) => void;
-};
-
-export default function PhoneNumbersView({
-  createModalOpen,
-  onCreateModalOpenChange
-}: PhoneNumbersViewProps) {
+export default function PhoneNumbersView() {
   const [numbersList, setNumbersList] = useState<PhoneNumberDetails[]>([]);
   const [selectedNumberId, setSelectedNumberId] = useState<string | null>(null);
   const [selectedNumber, setSelectedNumber] = useState<PhoneNumberDetails | null>(null);

@@ -1,5 +1,4 @@
-'use client'
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import {
   MoreVertical,
   Search as SearchIcon,
@@ -13,6 +12,7 @@ import { Input } from '@/components/ui/Input';
 import CreateAgentModal from '@/components/voice/CreateAgentModal';
 
 import { useRouter } from 'next/navigation';
+import { useStore } from '@/lib/zustand';
 
 type AgentType = 'Single Prompt' | 'Multi Prompt' | 'Custom LLM';
 
@@ -30,20 +30,7 @@ type Agent = {
   updatedAt: string;
 };
 
-type VoiceAgentsViewProps = {
-  agents: Agent[];
-  loading: boolean;
-  error: string | null;
-  onFetchAgents: () => Promise<void>;
-  onEdit: (agent: Agent) => void;
-  onDelete: (agent: Agent) => Promise<void>;
-  onDuplicate: (agent: Agent) => Promise<void>;
-  createModalOpen: boolean;
-  onCreateModalOpenChange: (open: boolean) => void;
-};
-
-
-// api helper (router is supplied by the caller)
+// api helper
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
 async function apiFetch(path: string, opts: any = {}, router?: any) {
@@ -104,23 +91,21 @@ async function apiFetch(path: string, opts: any = {}, router?: any) {
   console.log('[apiFetch] Success response:', data);
   return data;
 }
- const [agents, setAgents] = useState<Agent[]>([]);
-  const [selectedSideBar, setSelectSideBar] = useState('Voice Agents');
-  const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<any>({});
-  const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<'edit' | 'assignPhone' | null>(null);
-  const [modalAgent, setModalAgent] = useState<Partial<Agent> | null>(null);
+
+export default function VoiceAgentsView() {
+  const { agents, loading, error, openEdit, handleDelete, handleDuplicate, createModalOpen, setCreateModalOpen } = useStore();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
+  const [rowMenuOpenId, setRowMenuOpenId] = useState<string | null>(null);
+ const myRouter = useRouter();
 
   const fetchAgents = async () => {
-    setLoading(true);
-    setError(null);
+    const store = useStore.getState();
+    store.setLoading(true);
+    store.setError(null);
     try {
       console.log('[fetchAgents] Starting fetch from:', `${API_BASE}/voice-agents`);
-      const data = await apiFetch('/voice-agents', {}, router);
+      const data = await apiFetch('/voice-agents', {}, myRouter);
       console.log('[fetchAgents] Raw response:', data);
       const list = (data.agents || []).map((a: any) => ({
         ...a,
@@ -128,104 +113,16 @@ async function apiFetch(path: string, opts: any = {}, router?: any) {
         agentConfig: a.agentConfig || {},
       }));
       console.log('[fetchAgents] Parsed agents:', list);
-      setAgents(list);
-      setLoading(false);
-    }
-    catch(e: any){
+      store.setAgents(list);
+      store.setLoading(false);
+    } catch (e: any) {
       console.error('[fetchAgents] Error:', e);
       const errorMsg = e?.message || String(e);
-      setLoading(false)
-      setError(errorMsg);
+      store.setLoading(false);
+      store.setError(errorMsg);
     }
   };
 
-  useEffect(() => {
-    const userString = localStorage.getItem('user');
-    if(userString){
-      const userData = JSON.parse(userString);
-      setUser(userData);
-      setTenant(userData);
-      console.log('User is', userString);
-    }
-    fetchAgents();
-  }, []);
-
-  // actions
-  const openEdit = (agent: Agent) => {
-    setModalMode('edit');
-    setModalAgent({
-      ...agent,
-      agentConfig: agent.agentConfig || {},
-    });
-    setModalOpen(true);
-  };
-
-  const openAssignPhone = (agent: Agent) => {
-    setModalMode('assignPhone');
-    setModalAgent(agent);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setModalAgent(null);
-    setModalMode(null);
-  };
-
-  const handleSave = async () => {
-    if (!modalAgent) return;
-    try {
-      if (modalMode === 'edit' && modalAgent.id) {
-        const patchBody: any = { agentConfig: modalAgent.agentConfig };
-        if (modalAgent.name) patchBody.name = modalAgent.name;
-        if (modalAgent.agentType) patchBody.agentType = modalAgent.agentType;
-        await apiFetch(`/voice-agents/${modalAgent.id}`, {
-          method: 'PATCH',
-          body: JSON.stringify(patchBody)
-        }, router);
-      }
-      await fetchAgents();
-      closeModal();
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
-  const handleDelete = async (agent: Agent) => {
-    try {
-      await apiFetch(`/voice-agents/${agent.id}`, { method: 'DELETE' }, router);
-      await fetchAgents();
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
-  const handleDuplicate = async (agent: Agent) => {
-    const { id, ...rest } = agent as any;
-    const copy = { ...rest, name: `${agent.name} (copy)` } as Partial<Agent>;
-    try {
-      await apiFetch('/voice-agents', { method: 'POST', body: JSON.stringify(copy) }, router);
-      await fetchAgents();
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
-export default function VoiceAgentsView({
-  agents,
-  loading,
-  error,
-  onFetchAgents,
-  onEdit,
-  onDelete,
-  onDuplicate,
-  createModalOpen,
-  onCreateModalOpenChange,
-}: VoiceAgentsViewProps) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState<'Newest' | 'Oldest'>('Newest');
-  const [rowMenuOpenId, setRowMenuOpenId] = useState<string | null>(null);
- const router = useRouter();
 
   const filteredAgents = useMemo(() => {
     let arr = [...agents];
@@ -241,23 +138,6 @@ export default function VoiceAgentsView({
     return arr;
   }, [agents, searchQuery, sortOrder]);
 
-  const handleDelete = async (agent: Agent) => {
-    if (!confirm(`Delete agent '${agent.name}'?`)) return;
-    try {
-      await onDelete(agent);
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
-  const handleDuplicate = async (agent: Agent) => {
-    try {
-      await onDuplicate(agent);
-    } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
  
   return (
     <>
@@ -268,7 +148,7 @@ export default function VoiceAgentsView({
             <p className="text-sm text-gray-500">Manage Scriptish voice agents</p>
           </div>
           <div className="relative">
-            <Button onClick={() => onCreateModalOpenChange(true)}
+            <Button onClick={() => setCreateModalOpen(true)}
             variant="primary"
             size="default">
               <Plus className="w-4 h-4 mr-2" />Create Voice Agent <ChevronDown className="w-4 h-4 ml-2" />
@@ -367,7 +247,7 @@ export default function VoiceAgentsView({
                           onClick={() => {
                             localStorage.setItem('template',JSON.stringify(agent));
                             console.log(agent);
-                            router?.push(`/voice/new/${agent.mode}?editing=true`);
+                            myRouter?.push(`/voice/new/${agent.mode}?editing=true`);
                             
                             // onEdit(agent);
                             //setRowMenuOpenId(null);
@@ -378,7 +258,7 @@ export default function VoiceAgentsView({
                         </button>
                         <button
                           onClick={() => {
-                            handleDuplicate(agent);
+                            handleDuplicate(agent, apiFetch, myRouter, fetchAgents);
                             setRowMenuOpenId(null);
                           }}
                           className="w-full text-left px-4 py-2 hover:bg-gray-100 bg:hover:bg-gray-100/50 text-sm"
@@ -387,7 +267,8 @@ export default function VoiceAgentsView({
                         </button>
                         <button
                           onClick={() => {
-                            handleDelete(agent);
+                            if (!confirm(`Delete agent '${agent.name}'?`)) return;
+                            handleDelete(agent, apiFetch, myRouter, fetchAgents);
                             setRowMenuOpenId(null);
                           }}
                           className="w-full text-left px-4 py-2 hover:bg-red-100 dark:hover:bg-red-800/60 text-sm text-red-600"
@@ -405,7 +286,7 @@ export default function VoiceAgentsView({
       </main>
 
       {/* Modal */}
-      <CreateAgentModal open={createModalOpen} agents={agents} onOpenChange={onCreateModalOpenChange} />
+      <CreateAgentModal open={createModalOpen} agents={agents} onOpenChange={setCreateModalOpen} />
     </>
   );
 }
