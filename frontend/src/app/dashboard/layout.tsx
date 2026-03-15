@@ -524,11 +524,11 @@ function NavItem({
             className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group relative
             ${active
                 ? 'bg-white text-blue-600 shadow-md font-bold'
-                : 'text-blue-100 hover:bg-white/10 hover:text-white hover:bg-white'
+                : 'text-blue-100 hover:bg-white/10 hover:text-white hover:bg-white hover:shadow-md'
             }`}
         >
-            <div className="flex items-center gap-3">
-                <span className={`${active ? 'text-blue-600' : 'text-blue-300 group-hover:text-white'} transition-colors`}>
+            <div className="flex items-center gap-3 hover:bg-white hover-text-blue-600">
+                <span className={`${active ? 'text-blue-600' : 'text-blue-500 group-hover:text-white'} transition-colors`}>
                     {icon}
                 </span>
                 <span className="text-sm text-gray-600">{label}</span>
