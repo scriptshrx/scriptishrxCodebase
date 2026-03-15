@@ -19,19 +19,7 @@ import { useStore } from '@/lib/zustand';
 
 const API_BASE = 'https://scriptshrxcodebase.onrender.com/api';
 
-const store = useStore();
-
-
-
 type AgentType = 'Single Prompt' | 'Multi Prompt' | 'Custom LLM';
-
-// Change to selectors to prevent unnecessary re-renders
-const modalOpen = useStore(state => state.modalOpen);
-const modalMode = useStore(state => state.modalMode);
-const modalAgent = useStore(state => state.modalAgent);
-const closeModal = useStore(state => state.closeModal);
-const setModalAgent = useStore(state => state.setModalAgent);
-const handleSave = useStore(state => state.handleSave);
 
 // Types
 type WeightedBinding = {
@@ -370,6 +358,15 @@ const ConnectPhoneProviderModal = ({
 // Main Component
 export default function PhoneNumbersView() {
   const router = useRouter();
+
+  // Change to selectors to prevent unnecessary re-renders
+  const modalOpen = useStore(state => state.modalOpen);
+  const modalMode = useStore(state => state.modalMode);
+  const modalAgent = useStore(state => state.modalAgent);
+  const closeModal = useStore(state => state.closeModal);
+  const setModalAgent = useStore(state => state.setModalAgent);
+  const handleSave = useStore(state => state.handleSave);
+
   const [numbersList, setNumbersList] = useState<PhoneNumberDetails[]>([]);
   const [selectedNumberId, setSelectedNumberId] = useState<string | null>(null);
   const [selectedNumber, setSelectedNumber] = useState<PhoneNumberDetails | null>(null);
