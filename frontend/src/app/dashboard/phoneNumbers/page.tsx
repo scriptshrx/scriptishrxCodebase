@@ -26,7 +26,7 @@ const modalOpen = useStore(state => state.modalOpen);
 const modalMode = useStore(state => state.modalMode);
 const modalAgent = useStore(state => state.modalAgent);
 const closeModal = useStore(state => state.closeModal);
-const setModalAgent = useStore(state => state.setModalAgent);
+
 const handleSave = useStore(state => state.handleSave);
 
 type AgentType = 'Single Prompt' | 'Multi Prompt' | 'Custom LLM';
