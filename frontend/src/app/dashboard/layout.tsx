@@ -531,7 +531,7 @@ function NavItem({
                 <span className={`${active ? 'text-blue-600' : 'text-blue-300 group-hover:text-white'} transition-colors`}>
                     {icon}
                 </span>
-                <span className="text-sm">{label}</span>
+                <span className="text-sm text-gray-600">{label}</span>
             </div>
             {badge && (
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm ${active ? 'bg-blue-100 text-blue-600' : 'bg-white/20 text-white'}`}>
