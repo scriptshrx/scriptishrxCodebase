@@ -9,7 +9,7 @@ import {
     Bell, Menu, FileText, LogOut, Zap, PieChart, X,
     LayoutList, Brain, PhoneIncoming, CreditCard, Key, Globe
 } from 'lucide-react';
-import { useStore } from '@/lib/apizustand';
+import { useStore } from '@/lib/zustand';
 
 
 interface UserPayload {
