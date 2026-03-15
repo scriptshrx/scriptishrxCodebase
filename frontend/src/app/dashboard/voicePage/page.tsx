@@ -231,13 +231,13 @@ export default function VoicePage() {
       </aside>
 
       {/* main section */}
-      {selectedSideBar === 'Voice Agents' && (
+      {store.selectedVoicePage === 'Voice Agents' && (
         <VoiceAgentsView />
       )}
-      {selectedSideBar === 'Phone Numbers' && (
+      {store.selectedVoicePage === 'Phone Numbers' && (
         <PhoneNumbersView />
       )}
-      {selectedSideBar === 'Knowledge Resources' && (
+      {store.selectedVoicePage === 'Knowledge Resources' && (
         <KnowledgeResourcesView />
       )}
 
