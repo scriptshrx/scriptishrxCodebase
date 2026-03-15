@@ -254,10 +254,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         {selectedVoiceAgentNav && (
                             <nav className="px-4 space-y-1">
                                 {[
-                                    { name: 'Voice Agents', icon: LayoutList, route: '/dashboard/voiceAgents' },
-                                    { name: 'Phone Numbers', icon: Phone, route: '/dashboard/phoneNumbers' },
-                                    { name: 'Knowledge Resources', icon: Brain, route: '/dashboard/knowledgeResources' },
-                                    { name: 'Call Logs', icon: PhoneIncoming, route: '/dashboard/callLogs' },
+                                    { name: 'Voice Agents', icon: LayoutList, },
+                                    { name: 'Phone Numbers', icon: Phone, },
+                                    { name: 'Knowledge Resources', icon: Brain, },
+                                    { name: 'Call Logs', icon: PhoneIncoming, },
                                     { name: 'Patients', icon: Users, route: '' },
                                     { name: 'Billing', icon: CreditCard, route: '' },
                                     { name: 'API Keys', icon: Key, route: '' },
@@ -268,7 +268,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     return (
                                         <button
                                             type="button"
-                                            onClick={() => { setSelectSideBar(item.name); if (item.route) router.push(item.route); }}
+                                            onClick={() => { setSelectSideBar(item.name) }}
                                             key={item.name}
                                             className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
                                                 isActive ? 'bg-blue-100 font-semibold' : 'hover:bg-white/10 text-blue-100 hover:text-white'
