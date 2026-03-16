@@ -308,9 +308,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <NavItem href="/dashboard/settings" label="Settings" icon={<Settings />} active={pathname.startsWith('/dashboard/settings')} />
                         <button
                             onClick={logout}
-                            className="flex items-center px-4 py-3 w-full text-blue-100 hover:bg-white/10 hover:text-white rounded-xl transition-all group"
+                            className="flex items-center px-4 py-3 w-full text-red-600 bg-red-100/50 hover:bg-red-400/50 hover:text-white rounded-xl transition-all group"
                         >
-                            <span className="mr-3"><LogOut className="w-5 h-5 text-blue-300 group-hover:text-white transition-colors" /></span>
+                            <span className="mr-3"><LogOut className="w-5 h-5 text-red-600 group-hover:text-white transition-colors" /></span>
                             <span className="font-medium text-sm">Log out</span>
                         </button>
                     </Section>
