@@ -296,8 +296,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 })}
                             </nav>
                         )}
-                        <NavItem href="/dashboard/chat" label="Chatbot" icon={<MessageSquare />} active={pathname === '/dashboard/chat'} />
-                        <NavItem href="/dashboard/workflows" label="Workflows" icon={<Zap />} active={pathname === '/dashboard/workflows'} />
+                        <NavItem href="/dashboard/chat" label="Chatbot" icon={<MessageSquare />} active={pathname.startsWith('/dashboard/chat')} />
+                        <NavItem href="/dashboard/workflows" label="Workflows" icon={<Zap />} active={pathname.startsWith('/dashboard/workflows')} />
                     </Section>
 
                     <Section title="ADMINISTRATION">
@@ -305,7 +305,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </Section>
 
                     <Section title="GENERAL">
-                        <NavItem href="/dashboard/settings" label="Settings" icon={<Settings />} active={pathname === '/dashboard/settings'} />
+                        <NavItem href="/dashboard/settings" label="Settings" icon={<Settings />} active={pathname.startsWith('/dashboard/settings')} />
                         <button
                             onClick={logout}
                             className="flex items-center px-4 py-3 w-full text-blue-100 hover:bg-white/10 hover:text-white rounded-xl transition-all group"
