@@ -849,7 +849,7 @@ function SinglePromptAgentContent() {
   };
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+    <div className="flex flex-col bg-gray-50 dark:bg-gray-900 -m-8 text-gray-800 dark:text-gray-100">
       {/* functions modal */}
 
       {functionsModalOpen && <FunctionsModal />}

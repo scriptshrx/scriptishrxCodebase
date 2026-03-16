@@ -249,11 +249,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto scrollbar-hide">
                     <Section title="MENU">
                         <NavItem href="/dashboard" label="Dashboard" icon={<LayoutDashboard />} active={pathname === '/dashboard'} />
-                        <NavItem href="/dashboard/clients" label="Customers" icon={<Users />} active={pathname === '/dashboard/clients'} />
-                        <NavItem href="/dashboard/leads" label="Leads" icon={<Users size={18} />} active={pathname === '/dashboard/leads'} badge="New" />
-                        <NavItem href="/dashboard/bookings" label="Bookings" icon={<Calendar />} active={pathname === '/dashboard/bookings'} />
-                        <NavItem href="/dashboard/minutes" label="Meeting Minutes" icon={<FileText />} active={pathname === '/dashboard/minutes'} />
-                        <NavItem href="/dashboard/insights" label="Analytics" icon={<PieChart />} active={pathname === '/dashboard/insights'} />
+                        <NavItem href="/dashboard/clients" label="Customers" icon={<Users />} active={pathname.startsWith('/dashboard/clients')} />
+                        <NavItem href="/dashboard/leads" label="Leads" icon={<Users size={18} />} active={pathname.startsWith('/dashboard/leads')} badge="New" />
+                        <NavItem href="/dashboard/bookings" label="Bookings" icon={<Calendar />} active={pathname.startsWith('/dashboard/bookings')} />
+                        <NavItem href="/dashboard/minutes" label="Meeting Minutes" icon={<FileText />} active={pathname.startsWith('/dashboard/minutes')} />
+                        <NavItem href="/dashboard/insights" label="Analytics" icon={<PieChart />} active={pathname.startsWith('/dashboard/insights')} />
                     </Section>
 
                     <Section title="AI CONCIERGE">
@@ -410,7 +410,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                         <div className="flex items-baseline gap-2">
                                             <h3 className="font-bold text-gray-900">Notifications</h3>
                                             {unreadCount > 0 && (
-                                                <span className="text-xs font-bold text-blue-600 bg-red-600 px-2 py-0.5 rounded-full">
+                                                <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
                                                     {unreadCount} New
                                                 </span>
                                             )}
@@ -526,7 +526,7 @@ function NavItem({
                 <span className={`text-sm ${active ? 'text-blue-600' : 'text-gray-600'}`}>{label}</span>
             </div>
             {badge && (
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm ${active ? 'bg-blue-100 text-blue-600' : 'bg-white/20 text-white'}`}>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm ${active ? 'bg-red-600 text-gray-100' : 'bg-red-600/90 text-white'}`}>
                     {badge}
                 </span>
             )}
