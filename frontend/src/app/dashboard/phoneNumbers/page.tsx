@@ -296,7 +296,7 @@ const ConnectPhoneProviderModal = ({
               value={formData.phoneNumber}
               onChange={e => setFormData({ ...formData, phoneNumber: e.target.value })}
               placeholder="Enter phone number (e.g., +15551234567)"
-              className={`w-full h-10 px-3 rounded-md border text-gray-900 text-sm ${
+              className={`w-full h-10 px-3 rounded-md border text-gray-900 dark:placeholder:text-gray-300 dark:text-gray-200 text-sm ${
                 errors.phoneNumber ? 'border-red-300' : 'border-gray-300'
               }`}
             />
@@ -337,13 +337,13 @@ const ConnectPhoneProviderModal = ({
               value={formData.nickname}
               onChange={e => setFormData({ ...formData, nickname: e.target.value })}
               placeholder="Enter a nickname for this number"
-              className="w-full h-10 px-3 rounded-md border border-gray-300 text-gray-900 text-sm"
+              className="w-full h-10 px-3 rounded-md border dark:placeholder:text-gray-300 dark:text-gray-200 border-gray-300 text-gray-900 text-sm"
             />
           </div>
         </div>
 
         <div className="flex justify-end gap-2 mt-6">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" className='border border-gray-500 text-gray-800 dark:text-gray-300' onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
           <Button onClick={handleSubmit}>
