@@ -84,7 +84,7 @@ async function apiFetch(path: string, opts: any = {}) {
   return await res.json();
 }
 
-// Sub-components
+// Sub-component
 
 const NumberRow = ({
   number,
