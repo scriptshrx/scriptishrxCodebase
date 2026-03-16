@@ -569,7 +569,7 @@ export default function PhoneNumbersView() {
                           value={modalAgent?.phoneNumber || ''}
                           onChange={e => setModalAgent({ ...modalAgent, phoneNumber: e.target.value })}
                           placeholder="+1 234 567 8900"
-                          className="bg-white border-gray-300 text-gray-900"
+                          className="bg-white border-gray-300 text-gray-900 dark:placeholder:text-gray-300 dark:text-gray-200"
                         />
                       </div>
                       <div className="flex justify-end gap-2">
@@ -585,7 +585,7 @@ export default function PhoneNumbersView() {
                           value={modalAgent?.name || ''}
                           onChange={e => setModalAgent({ ...modalAgent, name: e.target.value })}
                           placeholder="Front Desk Bot"
-                          className="bg-white border-gray-300 text-gray-900"
+                          className="bg-white border-gray-300 text-gray-900 dark:placeholder:text-gray-300 dark:text-gray-200"
                         />
                       </div>
                       <div className="grid md:grid-cols-2 gap-4">
@@ -616,7 +616,7 @@ export default function PhoneNumbersView() {
                               },
                             })}
                             placeholder="myra, jenny, etc."
-                            className="bg-white border-gray-300 text-gray-900"
+                            className="bg-white border-gray-300 text-gray-900 dark:placeholder:text-gray-300 dark:text-gray-200"
                           />
                         </div>
                       </div>
@@ -649,7 +649,7 @@ export default function PhoneNumbersView() {
                         </div>
                       )}
                       <div className="flex justify-end gap-2">
-                        <Button variant="outline" onClick={closeModal}>Cancel</Button>
+                        <Button variant="outline" className='border text-gray-800 dark:text-gray-300 border-gray-400' onClick={closeModal}>Cancel</Button>
                         <Button onClick={() => handleSave(modalAgent, modalMode, apiFetch, router, fetchAgents)}>Save</Button>
                       </div>
                     </div>
