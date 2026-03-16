@@ -105,27 +105,6 @@ export default function VoicePage() {
   const router = useRouter();
   const store = useStore();
 
-  // dark mode state based on system preferences
-  const [darkMode, setDarkMode] = useState<boolean>(false);
-
-  const applyDark = (enabled: boolean) => {
-    const html = document.documentElement;
-    if (enabled) html.classList.add('dark');
-    else html.classList.remove('dark');
-  };
-
-  useEffect(() => {
-    const m = window.matchMedia('(prefers-color-scheme: dark)');
-    setDarkMode(m.matches);
-    applyDark(m.matches);
-    const listener = (e: MediaQueryListEvent) => {
-      setDarkMode(e.matches);
-      applyDark(e.matches);
-    };
-    m.addEventListener('change', listener);
-    return () => m.removeEventListener('change', listener);
-  }, []);
-
   
   const [tenant, setTenant] = useState<{ name: string; email?: string } | null>(null);
   const [user, setUser] = useState<any>({});
