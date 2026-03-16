@@ -410,7 +410,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                         <div className="flex items-baseline gap-2">
                                             <h3 className="font-bold text-gray-900">Notifications</h3>
                                             {unreadCount > 0 && (
-                                                <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
+                                                <span className="text-xs font-bold text-blue-600 bg-red-600 px-2 py-0.5 rounded-full">
                                                     {unreadCount} New
                                                 </span>
                                             )}
