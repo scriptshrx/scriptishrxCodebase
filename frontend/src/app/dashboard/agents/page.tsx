@@ -267,7 +267,7 @@ useEffect(()=>{
                             handleDuplicate(agent, apiFetch, myRouter, fetchAgents);
                             setRowMenuOpenId(null);
                           }}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-100 bg:hover:bg-gray-100/50 text-sm"
+                          className="w-full text-left dark:text-gray-300 px-4 py-2 hover:bg-gray-100 bg:hover:bg-gray-100/50 text-sm"
                         >
                           Duplicate
                         </button>
