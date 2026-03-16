@@ -109,7 +109,7 @@ const NumberRow = ({
     <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">{number.phoneNumber}</div>
     <div className="flex gap-2 mt-2">
       {number.provider && (
-        <span className="px-2 py-0.5 bg-gray-200 text-xs rounded text-gray-700 dark:text-gray-800">
+        <span className="px-2 py-0.5 bg-green-500/60 text-xs rounded text-gray-700 dark:text-gray-800">
           {number.provider}
         </span>
       )}
@@ -660,7 +660,7 @@ export default function PhoneNumbersView() {
       {/* Left Column */}
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
         <div>
-        <div className="p-4 mb-2 border-b justify-between gap-2 items-center flex border-gray-200">
+        <div className="p-4 mb-2 border-b justify-between gap-2 items-center flex border-gray-200 dark:border-gray-700">
 
           <h2 className="text-md font-bold mb-4 my-auto">{formData?.phoneNumber || 'Add New Number'}</h2>
            <button onClick={()=>setShowAddNumber(true)}
@@ -670,7 +670,7 @@ export default function PhoneNumbersView() {
                   Add
                 </button>
           </div>
-          <div className="relative">
+          <div className="relative mb-8">
             <Input
               placeholder="Search numbers"
               value={searchQuery}
