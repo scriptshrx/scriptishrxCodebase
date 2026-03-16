@@ -330,7 +330,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
             {/* MAIN */}
             <main className="flex-1 flex flex-col overflow-hidden bg-gray-50">
-                <header className="h-20 px-8 flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm relative">
+                <header className="h-20 px-8 hidden flex items-center justify-between bg-white border-b border-gray-100 sticky top-0 z-30 shadow-sm relative">
                     <div className="flex-1 flex items-center gap-6">
                         <button
                             onClick={() => setShowMobileMenu(true)}
@@ -339,7 +339,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             <Menu className="h-6 w-6" />
                         </button>
 
-                        <div className="relative z-50 hidden">
+                        <div className="relative z-50">
                             <div className="hidden md:flex items-center bg-gray-100 rounded-full px-5 py-2.5 w-96 max-w-lg transition-all focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white border border-transparent focus-within:border-blue-100">
                                 <Search className={`h-4 w-4 ${isSearching ? 'text-blue-500 animate-pulse' : 'text-gray-400'}`} />
                                 <input
