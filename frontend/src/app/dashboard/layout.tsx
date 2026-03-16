@@ -339,7 +339,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             <Menu className="h-6 w-6" />
                         </button>
 
-                        <div className="relative z-50">
+                        <div className="relative z-50 hidden">
                             <div className="hidden md:flex items-center bg-gray-100 rounded-full px-5 py-2.5 w-96 max-w-lg transition-all focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:bg-white border border-transparent focus-within:border-blue-100">
                                 <Search className={`h-4 w-4 ${isSearching ? 'text-blue-500 animate-pulse' : 'text-gray-400'}`} />
                                 <input
