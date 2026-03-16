@@ -249,14 +249,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <nav className="flex-1 px-4 py-6 space-y-8 overflow-y-auto scrollbar-hide">
                     <Section title="MENU">
                         <NavItem href="/dashboard" label="Dashboard" icon={<LayoutDashboard />} active={pathname === '/dashboard'} />
-                        <NavItem href="/dashboard/clients" label="Customers" icon={<Users />} active={pathname.startsWith('/dashboard/clients')} />
-                        <NavItem href="/dashboard/leads" label="Leads" icon={<Users size={18} />} active={pathname.startsWith('/dashboard/leads')} badge="New" />
-                        <NavItem href="/dashboard/bookings" label="Bookings" icon={<Calendar />} active={pathname.startsWith('/dashboard/bookings')} />
-                        <NavItem href="/dashboard/minutes" label="Meeting Minutes" icon={<FileText />} active={pathname.startsWith('/dashboard/minutes')} />
-                        <NavItem href="/dashboard/insights" label="Analytics" icon={<PieChart />} active={pathname.startsWith('/dashboard/insights')} />
-                    </Section>
-
-                    <Section title="AI CONCIERGE">
+                         <Section title="AI CONCIERGE">
                         <NavItem
                         href='/dashboard/agents'
                             
@@ -299,6 +292,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <NavItem href="/dashboard/chat" label="Chatbot" icon={<MessageSquare />} active={pathname.startsWith('/dashboard/chat')} />
                         <NavItem href="/dashboard/workflows" label="Workflows" icon={<Zap />} active={pathname.startsWith('/dashboard/workflows')} />
                     </Section>
+                        <NavItem href="/dashboard/clients" label="Customers" icon={<Users />} active={pathname.startsWith('/dashboard/clients')} />
+                        <NavItem href="/dashboard/leads" label="Leads" icon={<Users size={18} />} active={pathname.startsWith('/dashboard/leads')} badge="New" />
+                        <NavItem href="/dashboard/bookings" label="Bookings" icon={<Calendar />} active={pathname.startsWith('/dashboard/bookings')} />
+                        <NavItem href="/dashboard/minutes" label="Meeting Minutes" icon={<FileText />} active={pathname.startsWith('/dashboard/minutes')} />
+                        <NavItem href="/dashboard/insights" label="Analytics" icon={<PieChart />} active={pathname.startsWith('/dashboard/insights')} />
+                    </Section>
+
+                   
 
                     <Section title="ADMINISTRATION">
                         <NavItem href="/dashboard/admin" label="Subscriber Management" icon={<Zap className="text-amber-300" />} active={pathname?.startsWith('/dashboard/admin')} />
@@ -308,9 +309,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <NavItem href="/dashboard/settings" label="Settings" icon={<Settings />} active={pathname.startsWith('/dashboard/settings')} />
                         <button
                             onClick={logout}
-                            className="flex items-center px-4 py-3 w-full text-red-600 bg-red-100/50 hover:bg-red-400/50 hover:text-white rounded-xl transition-all group"
+                            className="flex items-center cursor-pointer px-4 py-3 w-full text-red-600 bg-red-100/50 hover:bg-red-400/50 hover:text-white rounded-xl transition-all group"
                         >
-                            <span className="mr-3"><LogOut className="w-5 h-5 cursor-pointer text-red-600 group-hover:text-white transition-colors" /></span>
+                            <span className="mr-3"><LogOut className="w-5 h-5 text-red-600 group-hover:text-white transition-colors" /></span>
                             <span className="font-medium text-sm">Log out</span>
                         </button>
                     </Section>
