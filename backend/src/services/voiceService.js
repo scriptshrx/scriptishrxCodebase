@@ -35,9 +35,12 @@ class VoiceService {
         this.sessions = new Map();
     }
 
-    async getGreeting(tenantId, timezone = 'UTC') {
+    async getGreeting(tenantId, timezone = 'UTC', agent = null) {
         try {
-            // Fetch tenant's custom welcome message
+            if (agent && agent.agentConfig?.prompt?.welcome_message) {
+                return agent.agentConfig.prompt.welcome_message;
+            }
+            // Fallback to tenant's custom welcome message
             const tenant = await prisma.tenant.findUnique({
                 where: { id: tenantId },
                 select: { aiWelcomeMessage: true }
@@ -114,6 +117,7 @@ class VoiceService {
                 const calledDigits = normalizeDigits(calledNumber);
 
                 // 1) check phone_numbers table for an exact match (new multi-number support)
+                let agent = null;
                 if (calledNumber) {
                     const pn = await prisma.phoneNumber.findFirst({
                         where: { phoneNumber: calledNumber }
@@ -136,6 +140,19 @@ class VoiceService {
                         if (tenantMatch && isAiConfigured(tenantMatch)) {
                             t = tenantMatch;
                             console.log(`[VoiceService] ✓ Tenant found via phone_numbers table: ${t.name} (ID: ${t.id})`);
+                            // Find agent from inboundAgents
+                            if (pn.inboundAgents && Array.isArray(pn.inboundAgents) && pn.inboundAgents.length > 0) {
+                                const agentId = pn.inboundAgents[0]; // Use first agent
+                                agent = await prisma.voiceAgent.findUnique({
+                                    where: { id: agentId },
+                                    select: { id: true, name: true, agentConfig: true, status: true }
+                                });
+                                if (agent && agent.status === 'active') {
+                                    console.log(`[VoiceService] ✓ Agent found: ${agent.name} (ID: ${agent.id})`);
+                                } else {
+                                    agent = null;
+                                }
+                            }
                         } else if (tenantMatch) {
                             console.log(`[VoiceService] ⚠ Tenant matched via phone_numbers but lacks AI config: ${tenantMatch.name} (ID: ${tenantMatch.id})`);
                         }
@@ -214,48 +231,33 @@ class VoiceService {
                     }
                 }
 
-                // Fallback: get any tenant with AI configured
-                if (!t) {
-                    // Fetch all tenants with AI config and find the first one that's properly configured
-                    const tenants = await prisma.tenant.findMany({
-                        select: {
-                            id: true,
-                            name: true,
-                            aiName: true,
-                            aiWelcomeMessage: true,
-                            customSystemPrompt: true,
-                            aiConfig: true,
-                            timezone: true
-                        },
-                        take: 50 // Limit to avoid fetching thousands
+                // If tenant found but no agent, fetch the first active VoiceAgent for the tenant
+                if (t && t.id !== 'fallback' && !agent) {
+                    const agents = await prisma.voiceAgent.findMany({
+                        where: { tenantId: t.id, status: 'active' },
+                        select: { id: true, name: true, agentConfig: true },
+                        take: 1
                     });
-
-                    // Find first tenant with AI configured
-                    t = tenants.find(tenant => isAiConfigured(tenant)) || null;
-
-                    if (t) {
-                        console.log(`[VoiceService] ✓ Using fallback tenant with AI config: ${t.name} (ID: ${t.id})`);
-                        console.log('[VoiceService] customSystemPrompt from fallback:', t?.customSystemPrompt);
-                    } else {
-                        console.log('[VoiceService] ✗ No tenants with AI config found in database, using hardcoded fallback');
-                        t = { id: 'fallback', name: 'Our Business', aiName: 'AI Assistant' };
+                    if (agents.length > 0) {
+                        agent = agents[0];
+                        console.log(`[VoiceService] ✓ Fallback agent found: ${agent.name} (ID: ${agent.id})`);
                     }
                 }
                 
-                return t;
+                return { tenant: t, agent: agent };
             } catch (err) {
                 console.error('[VoiceService] Tenant lookup error:', err);
-                return { id: 'fallback', name: 'Fallback Business', aiName: 'AI Assistant' };
+                return { tenant: { id: 'fallback', name: 'Fallback Business', aiName: 'AI Assistant' }, agent: null };
             }
         })();
 
         // 2. Attach Listener IMMEDIATELY (to catch early 'start' events)
         ws.on('message', async msg => {
             try {
-                const tenant = await tenantPromise;
+                const { tenant, agent } = await tenantPromise;
                 const msgString = msg.toString();
                 // console.log('[VoiceService] Received:', msgString.slice(0, 50)); 
-                await this.handleMessage(ws, JSON.parse(msgString), tenant);
+                await this.handleMessage(ws, JSON.parse(msgString), tenant, agent);
             } catch (e) {
                 console.error('Twilio WS error:', e);
             }
@@ -264,7 +266,7 @@ class VoiceService {
         ws.on('close', () => this.closeSession(ws));
     }
 
-    async handleMessage(ws, msg, tenant) {
+    async handleMessage(ws, msg, tenant, agent) {
         let session = this.sessions.get(ws);
 
         if (msg.event === 'start') {
@@ -312,6 +314,7 @@ class VoiceService {
             session = {
                 streamSid: msg.start.streamSid,
                 tenant: currentTenant,
+                agent: agent,
                 openAiWs: null,
                 audioQueue: [],
                 remainder: Buffer.alloc(0),
@@ -478,17 +481,21 @@ class VoiceService {
             pricing = await this.getPricingContext(tenant.id);
         }
 
-        // 3. Build the System Prompt - Use customSystemPrompt from tenant
-        // PRIMARY SOURCE: customSystemPrompt field → default
+        // 3. Build the System Prompt
         let systemPrompt;
-        
-        console.log('[VoiceService] Tenant customSystemPrompt value:', tenant?.customSystemPrompt);
-        
-        // PRIMARY SOURCE: customSystemPrompt (direct field from tenant table)
-        if (tenant?.customSystemPrompt && tenant.customSystemPrompt.trim()) {
+        let agentConfig = null;
+        if (session.agent && session.agent.agentConfig) {
+            agentConfig = session.agent.agentConfig;
+            systemPrompt = agentConfig.prompt?.system_prompt || tenant?.customSystemPrompt;
+            console.log('\n========================================');
+            console.log(`🎯 SYSTEM PROMPT SOURCE: Agent config (PRIMARY)`);
+            console.log(`📝 Prompt length: ${systemPrompt?.length || 0} characters`);
+            console.log(`✓ First 200 chars: ${systemPrompt?.slice(0, 200)}`);
+            console.log('========================================\n');
+        } else if (tenant?.customSystemPrompt && tenant.customSystemPrompt.trim()) {
             systemPrompt = tenant.customSystemPrompt;
             console.log('\n========================================');
-            console.log(`🎯 SYSTEM PROMPT SOURCE: customSystemPrompt field (PRIMARY)`);
+            console.log(`🎯 SYSTEM PROMPT SOURCE: Tenant customSystemPrompt (FALLBACK)`);
             console.log(`📝 Prompt length: ${systemPrompt.length} characters`);
             console.log(`✓ First 200 chars: ${systemPrompt.slice(0, 200)}`);
             console.log('========================================\n');
@@ -573,10 +580,61 @@ RESTRICTIONS
 `
         }
         
-        // Append pricing info if not already in custom prompt
-       /* if (!systemPrompt.toLowerCase().includes('pricing') && pricing) {
-            systemPrompt += `\n\nPricing Information:\n${pricing}`;
-        }*/
+        // 4. Build tools from agent config
+        let tools = [];
+        if (agentConfig && agentConfig.functions) {
+            tools = agentConfig.functions.map(func => {
+                const funcName = Object.keys(func)[0];
+                const funcConfig = func[funcName];
+                return {
+                    type: 'function',
+                    name: funcConfig.name,
+                    description: funcConfig.description,
+                    parameters: {
+                        type: funcConfig.type || 'object',
+                        properties: {
+                            // Define properties based on function, for now empty
+                        },
+                        required: []
+                    }
+                };
+            });
+        } else {
+            // Fallback to default tools
+            tools = [{
+                type: 'function',
+                name: 'bookAppointment',
+                description: 'Books an appointment for the customer.',
+                parameters: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'string' },
+                        phone: { type: 'string' },
+                        email: { type: 'string', description: 'Customer email address' },
+                        dateTime: { type: 'string', description: 'ISO format date string' },
+                        purpose: { type: 'string' }
+                    },
+                    required: ['phone', 'dateTime']
+                }
+            },
+            {
+                type: 'function',
+                name: 'sendBookingReminder',
+                description: 'Sends a booking reminder email to the customer and tenant after appointment is booked.',
+                parameters: {
+                    type: 'object',
+                    properties: {
+                        customerEmail: { type: 'string', description: 'Customer email address' },
+                        customerPhone: { type: 'string', description: 'Customer phone number' },
+                        customerName: { type: 'string', description: 'Customer name' },
+                        bookingDate: { type: 'string', description: 'Booking date in ISO format' },
+                        product: { type: 'string', description: 'Product/service booked/needs or goals of the customer' },
+                        bookingId: { type: 'string', description: 'Booking reference ID' }
+                    },
+                    required: ['customerEmail', 'customerName', 'bookingDate', 'product']
+                }
+            }];
+        }
 
         console.log('[VoiceService] Initiating OpenAI WebSocket connection');
         console.log('[VoiceService] System Prompt:', systemPrompt.slice(0, 500) + '...');
@@ -603,7 +661,7 @@ RESTRICTIONS
                 session: {
                     input_audio_format: 'g711_ulaw',
                     output_audio_format: 'g711_ulaw',
-                    voice: 'alloy',
+                    voice: agentConfig?.voice?.voice_id || 'alloy',
                     instructions: systemPrompt,
                     modalities: ['audio', 'text'],
                     input_audio_transcription: {
@@ -615,39 +673,7 @@ RESTRICTIONS
                         prefix_padding_ms: 300,
                         silence_duration_ms: 500
                     },
-                    tools: [{
-                        type: 'function',
-                        name: 'bookAppointment',
-                        description: 'Books an appointment for the customer.',
-                        parameters: {
-                            type: 'object',
-                            properties: {
-                                name: { type: 'string' },
-                                phone: { type: 'string' },
-                                email: { type: 'string', description: 'Customer email address' },
-                                dateTime: { type: 'string', description: 'ISO format date string' },
-                                purpose: { type: 'string' }
-                            },
-                            required: ['phone', 'dateTime']
-                        }
-                    },
-                    {
-                        type: 'function',
-                        name: 'sendBookingReminder',
-                        description: 'Sends a booking reminder email to the customer and tenant after appointment is booked.',
-                        parameters: {
-                            type: 'object',
-                            properties: {
-                                customerEmail: { type: 'string', description: 'Customer email address' },
-                                customerPhone: { type: 'string', description: 'Customer phone number' },
-                                customerName: { type: 'string', description: 'Customer name' },
-                                bookingDate: { type: 'string', description: 'Booking date in ISO format' },
-                                product: { type: 'string', description: 'Product/service booked/needs or goals of the customer' },
-                                bookingId: { type: 'string', description: 'Booking reference ID' }
-                            },
-                            required: ['customerEmail', 'customerName', 'bookingDate', 'product']
-                        }
-                    }]
+                    tools: tools
                 }
             }));
 
@@ -658,7 +684,7 @@ RESTRICTIONS
                         console.error('[VoiceService] ❌ Cannot send greeting: tenant is null or has no ID');
                         return;
                     }
-                    const personalizedGreeting = await this.getGreeting(tenant.id, tenant?.timezone);
+                    const personalizedGreeting = await this.getGreeting(tenant.id, tenant?.timezone, session.agent);
                     console.log('[VoiceService] Sending greeting:', personalizedGreeting);
                     openAiWs.send(JSON.stringify({
                         type: 'response.create',
@@ -738,6 +764,10 @@ RESTRICTIONS
                         console.log(`\x1b[1mTool Result:\x1b[0m`, result);
                     } else if (msg.name === 'sendBookingReminder') {
                         result = await this.handleSendBookingReminder(args, tenantIdForTool);
+                    } else if (msg.name === 'check_schedule') {
+                        result = await this.handleCheckSchedule(args, tenantIdForTool, session.agent);
+                    } else {
+                        result = { success: false, message: `Unknown function: ${msg.name}` };
                     }
                     
                     openAiWs.send(JSON.stringify({
@@ -1029,9 +1059,64 @@ RESTRICTIONS
     }
 
     /**
-     * Handle Booking Reminder Email Tool Call
+     * Handle Check Schedule Tool Call
      */
-    async handleSendBookingReminder(args, tenantId) {
+    async handleCheckSchedule(args, tenantId, agent) {
+        console.log(`[VoiceService] Checking Schedule for Tenant ${tenantId}:`, args);
+
+        try {
+            const agentConfig = agent?.agentConfig;
+            const daysSpan = parseInt(agentConfig?.functions?.find(f => f.checkScheduleFunction)?.checkScheduleFunction?.daysSpan) || 14;
+            const maxSlots = parseInt(agentConfig?.functions?.find(f => f.checkScheduleFunction)?.checkScheduleFunction?.maxSlots) || 4;
+            const timezone = agentConfig?.functions?.find(f => f.checkScheduleFunction)?.checkScheduleFunction?.timezone || 'UTC';
+
+            // Get existing bookings
+            const startDate = new Date();
+            const endDate = new Date();
+            endDate.setDate(startDate.getDate() + daysSpan);
+
+            const bookings = await prisma.booking.findMany({
+                where: {
+                    tenantId,
+                    date: {
+                        gte: startDate,
+                        lte: endDate
+                    },
+                    status: 'Scheduled'
+                },
+                select: { date: true }
+            });
+
+            // Generate available slots (mock: 9am-5pm, 1 hour slots)
+            const availableSlots = [];
+            for (let i = 0; i < daysSpan; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() + i);
+                for (let hour = 9; hour < 17; hour++) {
+                    const slotTime = new Date(date);
+                    slotTime.setHours(hour, 0, 0, 0);
+                    const isBooked = bookings.some(b => {
+                        const diff = Math.abs(b.date - slotTime);
+                        return diff < 60 * 60 * 1000; // within 1 hour
+                    });
+                    if (!isBooked) {
+                        availableSlots.push(slotTime.toISOString());
+                        if (availableSlots.length >= maxSlots) break;
+                    }
+                }
+                if (availableSlots.length >= maxSlots) break;
+            }
+
+            return {
+                success: true,
+                availableSlots: availableSlots.slice(0, maxSlots),
+                message: `Found ${availableSlots.length} available slots.`
+            };
+        } catch (error) {
+            console.error('Check Schedule Error:', error);
+            return { success: false, message: "Error checking schedule." };
+        }
+    }
         console.log(`[VoiceService] Sending Booking Reminder for Tenant ${tenantId}:`, args);
 
         const { customerEmail, customerPhone, customerName, bookingDate, product, bookingId } = args;

@@ -89,6 +89,11 @@ function SinglePromptAgentContent() {
   // dynamic variables detected in prompt ({{var}} syntax)
   const [dynamicVariables, setDynamicVariables] = useState<string[]>([]);
 
+  const [calendarSettings, setCalendarSettings] = useState({
+    apiKey: '',
+    eventTypeSlug: ''
+  });
+
   const [showTitleInput, setShowTitleInput] = useState(false);
   const titleInputRef = useRef<HTMLInputElement>(null);
 
@@ -196,6 +201,7 @@ function SinglePromptAgentContent() {
         setFunctionsList(template.agentConfig.functions);
         setSpeechSettings(template.agentConfig.speech);
         setVoiceId(template.agentConfig.voice.voice_id);
+        setCalendarSettings(template.agentConfig.calendar || { apiKey: '', eventTypeSlug: '' });
         setLoading(false);
       }
     }
@@ -242,6 +248,7 @@ function SinglePromptAgentContent() {
         },
         functions: functionsList,
         webhooks: { url: webhookUrl },
+        calendar: calendarSettings,
         dynamic_variables: dynamicVariables,
       };
 
@@ -302,6 +309,7 @@ function SinglePromptAgentContent() {
         },
         functions: functionsList,
         webhooks: { url: webhookUrl },
+        calendar: calendarSettings,
         dynamic_variables: dynamicVariables,
       };
 
@@ -995,6 +1003,7 @@ function SinglePromptAgentContent() {
 
               { name: "Speech Settings", icon: AudioWaveform, key: "speech" },
               { name: "Call Settings", icon: PhoneCall, key: "call" },
+              { name: "Calendar Integration", icon: Calendar, key: "calendar" },
               { name: "Knowledge Resources", icon: BrainCircuit, key: "brain" },
               { name: "Post-Call Analysis", icon: FileText, key: "post" },
               { name: "Security Settings", icon: Shield, key: "security" },
@@ -1130,6 +1139,28 @@ function SinglePromptAgentContent() {
                   background: `linear-gradient(to right, #6b7280 ${speechSettings.sensitivity}%, #e5e7eb ${speechSettings.sensitivity}%)`,
                 }}
                 className="w-full h-2 rounded-lg appearance-none cursor-pointer"
+              />
+            </div>
+          </div>
+        );
+      case "calendar":
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Cal.com API Key</label>
+              <Input
+                type="password"
+                value={calendarSettings.apiKey}
+                onChange={(e) => setCalendarSettings(prev => ({ ...prev, apiKey: e.target.value }))}
+                placeholder="Enter your Cal.com API key"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Event Type Slug</label>
+              <Input
+                value={calendarSettings.eventTypeSlug}
+                onChange={(e) => setCalendarSettings(prev => ({ ...prev, eventTypeSlug: e.target.value }))}
+                placeholder="Enter your event type slug (e.g., 30min)"
               />
             </div>
           </div>
