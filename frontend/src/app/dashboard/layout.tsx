@@ -236,7 +236,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <div className="bg-white p-2 rounded-lg shadow-md">
                             <img src="/newLogo.png" alt="Scriptish" className="h-6 w-auto" />
                         </div>
-                        <span className="font-bold text-xl text-gray-300 tracking-tight">Scriptish</span>
+                        <span className="font-bold text-xl text-white tracking-tight">Scriptish</span>
                     </div>
                     <button
                         onClick={() => setShowMobileMenu(false)}
