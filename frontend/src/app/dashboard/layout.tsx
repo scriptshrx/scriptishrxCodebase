@@ -278,11 +278,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                             type="button"
                                             onClick={() => { store.setSelectedVoicePage(item.name); if (route) router.push(route) }}
                                             key={item.name}
-                                            className={`w-full flex items-center gap-3 px-4 bg-white/10 py-2 rounded-lg cursor-pointer transition ${
-                                                isActive ? 'bg-blue-100 font-semibold text-blue-600' : 'hover:bg-blue-300 text-white hover:text-white'
+                                            className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer transition ${
+                                                isActive ? 'bg-blue-100 font-semibold text-blue-600' : 'bg-transparent text-gray-700 hover:bg-blue-50 hover:text-blue-600'
                                             }`}
                                         >
-                                            <Icon className="w-5 h-5 group-hover:text-blue-600" />
+                                            <Icon className={`w-5 h-5 ${isActive ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'}`} />
                                             <span className="text-sm truncate">{item.name}</span>
                                         </button>
                                     );
@@ -489,7 +489,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
     return (
         <div className="mb-6">
-            <p className="px-4 text-[10px] font-bold text-blue-200/70 uppercase tracking-widest mb-3">{title}</p>
+            <p className="px-4 text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-3">{title}</p>
             <div className="space-y-1">{children}</div>
         </div>
     );
@@ -514,14 +514,14 @@ function NavItem({
         <Link
             href={href}
             onClick={onClick}
-            className={`flex items-center justify-between px-4 py-3 hover:bg-white/80 rounded-xl transition-all duration-200 group relative
+            className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group relative
             ${active
                 ? 'bg-white text-blue-600 shadow-sm font-bold'
-                : 'text-blue-100 hover:bg-white/10 hover:text-white hover:bg-white/90 hover:shadow-md'
+                : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-md'
             }`}
         >
             <div className="flex items-center gap-3 hover-text-blue-600">
-                <span className={`${active ? 'text-blue-600' : 'text-blue-500 group-hover:text-blue-500'} transition-colors`}>
+                <span className={`${active ? 'text-blue-600' : 'text-gray-600 group-hover:text-blue-600'} transition-colors`}>
                     {icon}
                 </span>
                 <span className={`text-sm ${active ? 'text-blue-600' : 'text-gray-600'}`}>{label}</span>
