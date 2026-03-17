@@ -857,14 +857,14 @@ function SinglePromptAgentContent() {
   };
 
   return (
-    <div className="flex flex-col bg-gray-50 dark:bg-gray-900 -m-8 mt-16 text-gray-800 dark:text-gray-100">
+    <div className="flex flex-col bg-gray-50 dark:bg-gray-900 -m-8 mt-8 text-gray-800 dark:text-gray-100">
       {/* functions modal */}
 
       {functionsModalOpen && <FunctionsModal />}
       {renderSelectedFunctionModal(selectedFunction)}
 
       {/* headers */}
-      <header className="fixed top-0 right-0 bg-white dark:bg-gray-800 z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="fixed top-0 right-0 bg-white left-0 dark:bg-gray-800 z-20 flex items-center justify-between px-6 py-3 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <button
           onClick={() => router.back()}
           className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
