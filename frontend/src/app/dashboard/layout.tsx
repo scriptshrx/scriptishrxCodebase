@@ -227,7 +227,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {/* SIDEBAR */}
             <aside
                 ref={sidebarRef}
-                className={`fixed lg:static top-0 left-0 h-full lg:h-auto w-64 bg-gradient-to-tr from-gray-100 via-gray-50 to-blue-200 z-50
+                className={`fixed lg:static top-0 left-0 h-full lg:h-auto w-64 bg-gradient-to-tl from-gray-100 via-gray-50 to-blue-200 z-50
                 transition-transform duration-300 flex flex-col shadow-xl
                 ${showMobileMenu ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
@@ -236,7 +236,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <div className="bg-white p-2 rounded-lg shadow-md">
                             <img src="/newLogo.png" alt="Scriptish" className="h-6 w-auto" />
                         </div>
-                        <span className="font-bold text-xl text-white tracking-tight">Scriptish</span>
+                        <span className="font-bold text-xl text-gray-300 tracking-tight">Scriptish</span>
                     </div>
                     <button
                         onClick={() => setShowMobileMenu(false)}
