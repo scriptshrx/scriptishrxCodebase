@@ -655,6 +655,15 @@ RESTRICTIONS
         // ----- OpenAI WebSocket opened -----
         openAiWs.on('open', () => {
             console.log('[VoiceService] OpenAI WebSocket opened');
+            
+            // Get call settings from agent config
+            const callSettings = agentConfig?.call_settings || {};
+            const silenceTimeoutMs = callSettings.silence_timeout_seconds ? 
+                callSettings.silence_timeout_seconds * 1000 : 500;
+            const interruptionThreshold = callSettings.interruption_sensitivity || 0.8;
+            
+            console.log(`[VoiceService] Call settings - silence_timeout: ${callSettings.silence_timeout_seconds || 'default (0.5s)'}s, interruption_sensitivity: ${interruptionThreshold}, max_duration: ${callSettings.max_call_duration_seconds || 'unlimited'}s`);
+            
             // Send session configuration (including tools & VAD)
             openAiWs.send(JSON.stringify({
                 type: 'session.update',
@@ -669,13 +678,22 @@ RESTRICTIONS
                     },
                     turn_detection: {
                         type: 'server_vad',
-                        threshold: 0.8,
+                        threshold: interruptionThreshold,
                         prefix_padding_ms: 300,
-                        silence_duration_ms: 500
+                        silence_duration_ms: silenceTimeoutMs
                     },
                     tools: tools
                 }
             }));
+
+            // Set up max call duration timeout if specified
+            if (callSettings.max_call_duration_seconds) {
+                const maxDurationMs = callSettings.max_call_duration_seconds * 1000;
+                session.callTimeout = setTimeout(() => {
+                    console.log(`[VoiceService] Max call duration reached (${callSettings.max_call_duration_seconds}s), ending call`);
+                    this.handleEndCall({ reason: 'Maximum call duration exceeded' }, ws, session);
+                }, maxDurationMs);
+            }
 
             // Send greeting after a short delay
             setTimeout(async () => {
@@ -752,6 +770,7 @@ RESTRICTIONS
                 // Tool call handling
                 if (msg.type === 'response.function_call_arguments.done') {
                     const args = JSON.parse(msg.arguments);
+                    this.console.log(args);
                     let result = { success: false, message: "Action failed" };
                     
                     // Use session.tenant.id to ensure we have the correct tenant from the inbound call
@@ -766,6 +785,8 @@ RESTRICTIONS
                         result = await this.handleSendBookingReminder(args, tenantIdForTool);
                     } else if (msg.name === 'check_schedule') {
                         result = await this.handleCheckSchedule(args, tenantIdForTool, session.agent);
+                    } else if (msg.name === 'end_call') {
+                        result = await this.handleEndCall(args, ws, session);
                     } else {
                         result = { success: false, message: `Unknown function: ${msg.name}` };
                     }
@@ -795,6 +816,12 @@ RESTRICTIONS
     closeSession(ws) {
         const session = this.sessions.get(ws);
         if (!session) return;
+
+        // Clear call timeout if it exists
+        if (session.callTimeout) {
+            clearTimeout(session.callTimeout);
+            console.log('[VoiceService] Cleared call duration timeout');
+        }
 
         if (session.pacer) clearInterval(session.pacer);
         if (session.openAiWs?.readyState === WebSocket.OPEN) {
@@ -923,6 +950,46 @@ RESTRICTIONS
         } catch (error) {
             console.error('Booking Error:', error);
             return { success: false, message: "There was an error saving your appointment." };
+        }
+    }
+
+    /**
+     * Handle End Call Tool Call
+     */
+    async handleEndCall(args, ws, session) {
+        console.log(`[VoiceService] End Call Request:`, args);
+
+        try {
+            // Extract reason if provided
+            const reason = args?.reason || 'Call ended by AI';
+
+            console.log(`[VoiceService] Ending call session. Reason: ${reason}`);
+
+            // Close the WebSocket session
+            this.closeSession(ws);
+
+            // Emit real-time update to frontend
+            try {
+                socketService.sendToTenant(session?.tenant?.id, 'call:ended', {
+                    streamSid: session?.streamSid,
+                    tenantId: session?.tenant?.id,
+                    reason: reason,
+                    timestamp: new Date().toISOString()
+                });
+            } catch (err) {
+                console.error('[VoiceService] Socket emit error on call end:', err.message);
+            }
+
+            return {
+                success: true,
+                message: `Call ended successfully. Reason: ${reason}`
+            };
+
+        } catch (error) {
+            console.error('[VoiceService] Error ending call:', error);
+            // Still try to close the session even if there was an error
+            this.closeSession(ws);
+            return { success: false, message: "Error ending call, but session was closed." };
         }
     }
 
@@ -1070,52 +1137,176 @@ RESTRICTIONS
             const maxSlots = parseInt(agentConfig?.functions?.find(f => f.checkScheduleFunction)?.checkScheduleFunction?.maxSlots) || 4;
             const timezone = agentConfig?.functions?.find(f => f.checkScheduleFunction)?.checkScheduleFunction?.timezone || 'UTC';
 
-            // Get existing bookings
+            console.log(`[VoiceService] Schedule parameters - daysSpan: ${daysSpan}, maxSlots: ${maxSlots}, timezone: ${timezone}`);
+
+            // Get calendar settings from agent config
+            const calendarSettings = agentConfig?.calendar;
+            const apiKey = calendarSettings?.apiKey;
+            const eventTypeSlug = calendarSettings?.eventTypeSlug;
+
+            console.log(`[VoiceService] Calendar settings - apiKey: ${apiKey ? '***' + apiKey.slice(-4) : 'NOT SET'}, eventTypeSlug: ${eventTypeSlug || 'NOT SET'}`);
+
+            if (!apiKey || !eventTypeSlug) {
+                console.warn('[VoiceService] Cal.com API key or event type slug not configured, falling back to mock schedule');
+                return await this.getMockSchedule(tenantId, daysSpan, maxSlots);
+            }
+
+            console.log(`[VoiceService] Fetching availability from Cal.com for event type: ${eventTypeSlug}`);
+            // Fetch availability from Cal.com API
+            const availableSlots = await this.fetchCalComAvailability(apiKey, eventTypeSlug, daysSpan, timezone);
+
+            console.log(`[VoiceService] Cal.com returned ${availableSlots.length} available slots`);
+            const limitedSlots = availableSlots.slice(0, maxSlots);
+            console.log(`[VoiceService] Returning ${limitedSlots.length} slots (limited by maxSlots: ${maxSlots})`);
+
+            return {
+                success: true,
+                availableSlots: limitedSlots,
+                message: `Found ${availableSlots.length} available slots from Cal.com.`
+            };
+        } catch (error) {
+            console.error('Check Schedule Error:', error);
+            // Fallback to mock schedule on error
+            console.warn('[VoiceService] Error fetching from Cal.com, falling back to mock schedule');
+            return await this.getMockSchedule(tenantId, 14, 4);
+        }
+    }
+
+    /**
+     * Fetch availability from Cal.com API
+     */
+    async fetchCalComAvailability(apiKey, eventTypeSlug, daysSpan, timezone) {
+        try {
+            const baseUrl = 'https://api.cal.com/v1';
             const startDate = new Date();
             const endDate = new Date();
             endDate.setDate(startDate.getDate() + daysSpan);
 
-            const bookings = await prisma.booking.findMany({
-                where: {
-                    tenantId,
-                    date: {
-                        gte: startDate,
-                        lte: endDate
-                    },
-                    status: 'Scheduled'
-                },
-                select: { date: true }
+            console.log(`[VoiceService] Making Cal.com API call to: ${baseUrl}/event-types/${eventTypeSlug}/availability`);
+            console.log(`[VoiceService] Date range: ${startDate.toISOString()} to ${endDate.toISOString()}`);
+
+            // Cal.com API call to get availability
+            // Note: The exact endpoint may vary. This assumes a common pattern.
+            // You may need to adjust based on actual Cal.com API documentation
+            const response = await fetch(`${baseUrl}/event-types/${eventTypeSlug}/availability`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
             });
 
-            // Generate available slots (mock: 9am-5pm, 1 hour slots)
-            const availableSlots = [];
-            for (let i = 0; i < daysSpan; i++) {
-                const date = new Date();
-                date.setDate(date.getDate() + i);
-                for (let hour = 9; hour < 17; hour++) {
-                    const slotTime = new Date(date);
-                    slotTime.setHours(hour, 0, 0, 0);
-                    const isBooked = bookings.some(b => {
-                        const diff = Math.abs(b.date - slotTime);
-                        return diff < 60 * 60 * 1000; // within 1 hour
-                    });
-                    if (!isBooked) {
-                        availableSlots.push(slotTime.toISOString());
-                        if (availableSlots.length >= maxSlots) break;
-                    }
-                }
-                if (availableSlots.length >= maxSlots) break;
+            console.log(`[VoiceService] Cal.com API response status: ${response.status}`);
+
+            if (!response.ok) {
+                throw new Error(`Cal.com API error: ${response.status} ${response.statusText}`);
             }
 
-            return {
-                success: true,
-                availableSlots: availableSlots.slice(0, maxSlots),
-                message: `Found ${availableSlots.length} available slots.`
-            };
+            const data = await response.json();
+            console.log(`[VoiceService] Cal.com API response data keys:`, Object.keys(data));
+            
+            // Parse Cal.com response - adjust based on actual API response structure
+            // Cal.com typically returns availability as an array of time slots
+            const availableSlots = [];
+            
+            if (data.availability && Array.isArray(data.availability)) {
+                console.log(`[VoiceService] Processing ${data.availability.length} availability slots`);
+                data.availability.forEach((slot, index) => {
+                    if (slot.start && slot.end) {
+                        // Convert to ISO string and add to available slots
+                        const startTime = new Date(slot.start);
+                        const endTime = new Date(slot.end);
+                        
+                        // Only include slots within our date range
+                        if (startTime >= startDate && startTime <= endDate) {
+                            availableSlots.push(startTime.toISOString());
+                            if (index < 5) { // Log first few slots
+                                console.log(`[VoiceService] Slot ${index + 1}: ${startTime.toISOString()}`);
+                            }
+                        }
+                    }
+                });
+            } else if (data.slots && Array.isArray(data.slots)) {
+                console.log(`[VoiceService] Processing ${data.slots.length} slot entries`);
+                // Alternative response format
+                data.slots.forEach((slot, index) => {
+                    if (slot.time) {
+                        const slotTime = new Date(slot.time);
+                        if (slotTime >= startDate && slotTime <= endDate) {
+                            availableSlots.push(slotTime.toISOString());
+                            if (index < 5) { // Log first few slots
+                                console.log(`[VoiceService] Slot ${index + 1}: ${slotTime.toISOString()}`);
+                            }
+                        }
+                    }
+                });
+            } else {
+                console.warn(`[VoiceService] Unexpected Cal.com response structure:`, data);
+            }
+
+            console.log(`[VoiceService] Total available slots found: ${availableSlots.length}`);
+            return availableSlots;
         } catch (error) {
-            console.error('Check Schedule Error:', error);
-            return { success: false, message: "Error checking schedule." };
+            console.error('[VoiceService] Error fetching from Cal.com:', error.message);
+            throw error;
         }
+    }
+
+    /**
+     * Fallback mock schedule when Cal.com is not available
+     */
+    async getMockSchedule(tenantId, daysSpan, maxSlots) {
+        console.log(`[VoiceService] Using mock schedule fallback - tenantId: ${tenantId}, daysSpan: ${daysSpan}, maxSlots: ${maxSlots}`);
+        
+        // Get existing bookings
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(startDate.getDate() + daysSpan);
+
+        console.log(`[VoiceService] Checking existing bookings from ${startDate.toISOString()} to ${endDate.toISOString()}`);
+
+        const bookings = await prisma.booking.findMany({
+            where: {
+                tenantId,
+                date: {
+                    gte: startDate,
+                    lte: endDate
+                },
+                status: 'Scheduled'
+            },
+            select: { date: true }
+        });
+
+        console.log(`[VoiceService] Found ${bookings.length} existing bookings to avoid`);
+
+        // Generate available slots (mock: 9am-5pm, 1 hour slots)
+        const availableSlots = [];
+        for (let i = 0; i < daysSpan; i++) {
+            const date = new Date();
+            date.setDate(date.getDate() + i);
+            for (let hour = 9; hour < 17; hour++) {
+                const slotTime = new Date(date);
+                slotTime.setHours(hour, 0, 0, 0);
+                const isBooked = bookings.some(b => {
+                    const diff = Math.abs(b.date - slotTime);
+                    return diff < 60 * 60 * 1000; // within 1 hour
+                });
+                if (!isBooked) {
+                    availableSlots.push(slotTime.toISOString());
+                    if (availableSlots.length >= maxSlots) break;
+                }
+            }
+            if (availableSlots.length >= maxSlots) break;
+        }
+
+        const finalSlots = availableSlots.slice(0, maxSlots);
+        console.log(`[VoiceService] Generated ${finalSlots.length} available mock slots`);
+
+        return {
+            success: true,
+            availableSlots: finalSlots,
+            message: `Found ${finalSlots.length} available slots (mock data).`
+        };
     }
         console.log(`[VoiceService] Sending Booking Reminder for Tenant ${tenantId}:`, args);
 
