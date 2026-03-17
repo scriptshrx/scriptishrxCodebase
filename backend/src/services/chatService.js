@@ -131,7 +131,7 @@ CONTEXT & BEHAVIOR (HYBRID MODE):
 3. **Execution Focused**: While being conversational, always be ready to facilitate real outcomes (checking availability, booking appointments) using your tools.
 4. **Transitioning**: If a user asks a general question that relates to our services, answer helpful then gently pivot to how we can help (e.g., "Yes, consistency is key for health. We actually offer wellness sessions that can help with that...").`;
 
-        // Customize prompt with user info if available
+        // Customize prompt with user info if avaiable
         if (userContext && userContext.name) {
             systemPrompt += `\n\nYou are speaking with ${userContext.name}.`;
         }
