@@ -99,7 +99,7 @@ const NumberRow = ({
     onClick={onClick}
     className={`p-4 border-l-4 cursor-pointer transition ${
       selected
-        ? 'border-l-blue-600 bg-blue-50/50 dark:bg-blue-800/50'
+        ? 'border-l-blue-600 bg-blue-50/50 dark:bg-blue-400/50'
         : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
@@ -665,7 +665,7 @@ export default function PhoneNumbersView() {
           <h2 className="text-md font-bold mb-4 my-auto">{formData?.phoneNumber || 'Add New Number'}</h2>
            <button onClick={()=>setShowAddNumber(true)}
            type='button' 
-           className="px-2 py-[8px] cursor-pointer bg-gray-800 dark:bg-gray-300 hover:bg-gray-900 text-white hover:text-white dark:text-gray-900 rounded-lg flex items-center gap-2">
+           className="px-2 py-[8px] cursor-pointer dark:bg-gray-800 bg-gray-300 hover:bg-gray-900 text-black hover:text-white dark:text-gray-200 rounded-lg flex items-center gap-2">
                   <Plus className="w-4 h-4 text-gray-900 dark:text-gray-200 hover:text-white/90" />
                   Add
                 </button>
