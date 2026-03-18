@@ -551,7 +551,7 @@ export default function PhoneNumbersView() {
   };
 
   return (
-    <main className=" flex h-full bg-gray-50 dark:bg-gray-900 dark:text-gray-100 -m-8">
+    <main className=" flex h-full bg-gray-50 dark:bg-gray-900 dark:text-gray-100 -m-8 bottom-0 inset-0">
 
       {/* Edit/AssignPhone Modal */}
             {modalOpen && (
