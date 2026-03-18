@@ -585,9 +585,11 @@ RESTRICTIONS
         if (agentConfig && agentConfig.functions) {
             tools = agentConfig.functions.map(func => {
                 // Destructure the function schema created by frontend checkbox UI
-                const { name, description, type = 'object', properties = {}, required = [] } = func;
+                // agentConfig contains function-specific settings (eventTypeId, timezone, etc.)
+                const { name, description, type = 'object', properties = {}, required = [], agentConfig: funcConfig = {} } = func;
                 
-                return {
+                // Store funcConfig for later use when tool is executed
+                const tool = {
                     type: 'function',
                     name,
                     description,
@@ -597,6 +599,17 @@ RESTRICTIONS
                         required
                     }
                 };
+                
+                // Store function-specific config in session for tool execution
+                if (Object.keys(funcConfig).length > 0) {
+                    if (!session.functionConfigs) {
+                        session.functionConfigs = {};
+                    }
+                    session.functionConfigs[name] = funcConfig;
+                    console.log(`[VoiceService] Stored config for function "${name}":`, funcConfig);
+                }
+                
+                return tool;
             });
         } else {
             // Fallback to default tools

@@ -437,8 +437,9 @@ function SinglePromptAgentContent() {
                     })
 
 
-                    required
+                    
                   }
+                  required
                   placeholder="Ends the call when done"
                 />
                 <Button
@@ -519,8 +520,10 @@ function SinglePromptAgentContent() {
                     onChange={(e) =>
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
-                        eventTypeId: e.target.value
-                       
+                        agentConfig: {
+                          ...(prev.agentConfig || {}),
+                          eventTypeId: e.target.value
+                        }
                       }))
                     }
                     required
@@ -537,9 +540,11 @@ function SinglePromptAgentContent() {
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
                         name: selectedFunction.value,
-                        timezone: e.target.value,
-
                         type: "object",
+                        agentConfig: {
+                          ...(prev.agentConfig || {}),
+                          timezone: e.target.value
+                        }
                       }))
                       required
                     }
@@ -557,9 +562,11 @@ function SinglePromptAgentContent() {
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
                         name: selectedFunction.value,
-                        daysSpan: e.target.value,
-
                         type: "object",
+                        agentConfig: {
+                          ...(prev.agentConfig || {}),
+                          daysSpan: parseInt(e.target.value) || 0
+                        }
                       }))
                       required
                     }
@@ -577,7 +584,10 @@ function SinglePromptAgentContent() {
                     onChange={(e) =>
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
-                        maxSlots: e.target.value,
+                        agentConfig: {
+                          ...(prev.agentConfig || {}),
+                          maxSlots: parseInt(e.target.value) || 0
+                        }
                       }))
                     }
                     placeholder="Max slots to return"
@@ -666,7 +676,10 @@ function SinglePromptAgentContent() {
                     onChange={(e) =>
                       setBookAppointmentFunction((prev) => ({
                         ...prev,
-                        eventTypeId: e.target.value,
+                        agentConfig: {
+                          ...(prev.agentConfig || {}),
+                          eventTypeId: e.target.value
+                        },
                         properties:{
                         name: { type: 'string' },
                         phone: { type: 'string' },
@@ -691,9 +704,11 @@ function SinglePromptAgentContent() {
                       setBookAppointmentFunction((prev) => ({
                         ...prev,
                         name: selectedFunction.value,
-                        timezone: e.target.value,
-
                         type: "object",
+                        agentConfig: {
+                          ...(prev.agentConfig || {}),
+                          timezone: e.target.value
+                        }
                       }))
                     }
                     placeholder='"eg. Africa/Lagos"'
