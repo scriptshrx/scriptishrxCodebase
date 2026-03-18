@@ -551,7 +551,7 @@ export default function PhoneNumbersView() {
   };
 
   return (
-    <main className="flex-1 flex h-full bg-gray-50 dark:bg-gray-900 dark:text-gray-100 -m-8">
+    <main className=" flex h-full bg-gray-50 dark:bg-gray-900 dark:text-gray-100 -m-8">
 
       {/* Edit/AssignPhone Modal */}
             {modalOpen && (
@@ -715,7 +715,7 @@ export default function PhoneNumbersView() {
             </div>
           </div>
         ) : (
-          <div className="max-w-2xl">
+          <div className="max-w-2xl h-full">
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-bold">Phone Number Settings</h1>
               <div className="relative">
