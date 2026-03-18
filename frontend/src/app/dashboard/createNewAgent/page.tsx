@@ -141,6 +141,7 @@ function SinglePromptAgentContent() {
   const [checkScheduleFunction, setCheckScheduleFunction] = useState({});
   const [bookAppointmentFunction, setBookAppointmentFunction] = useState({});
   const [sendSmsFunction, setSendSmsFunction] = useState({});
+  const [transferCallFunction, setTransferCallFunction] = useState({});
 
   // modal state for functions editor
   const [selectedFunction, setSelectedFunction] = useState<any>({});
@@ -406,7 +407,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -468,7 +469,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -627,7 +628,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 backdrop-blur-md py-16 items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md py-16 items-center z-[150] justify-center"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -840,7 +841,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -951,6 +952,97 @@ function SinglePromptAgentContent() {
                       const updated = [
                         ...prev,
                         { sendSmsFunction: sendSmsFunction },
+                      ];
+                      console.log("functionsList updated", updated);
+                      return updated;
+                    });
+                  }}
+                >
+                  Done
+                </Button>
+              </div>
+            </div>
+          )
+        );
+      case "transfer_call":
+        return (
+          openSelectedFunction && (
+            <div
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center"
+              onClick={() => setOpenSelectedFunction(false)}
+            >
+              <div
+                className="flex flex-col gap-2 p-6 h-full my-8 overflow-hidden overflow-y-auto rounded-lg mx-auto top-20 bg-white dark:bg-gray-900"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <label htmlFor="name">Name</label>
+                <input
+                  id="name"
+                  readOnly
+                  className="border bg-gray-300 dark:bg-gray-600/80 placeholder:text-blue-600 border-gray-700 rounded-md text-blue-600 p-2 px-4"
+                  placeholder={selectedFunction.value}
+                />
+
+                <label htmlFor="description">Description</label>
+                <input
+                  id="description"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setTransferCallFunction((prev) => ({
+                      ...prev,
+                      name: selectedFunction.value,
+                      description: e.target.value,
+                      type: "object",
+                      properties: {
+                        destinationNumber: {
+                          type: "string",
+                          description: "Phone number to transfer the call to",
+                        },
+                        ...(prev.properties || {}),
+                      },
+                      required: [
+                        "destinationNumber",
+                        ...(prev.required?.filter((r) => r !== "destinationNumber") || []),
+                      ],
+                    }))
+                  }
+                  placeholder="Transfer the call to another phone number"
+                />
+
+                <label htmlFor="destinationNumber">Destination Phone</label>
+                <input
+                  id="destinationNumber"
+                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
+                  onChange={(e) =>
+                    setTransferCallFunction((prev) => ({
+                      ...prev,
+                      name: selectedFunction.value,
+                      type: "object",
+                      properties: {
+                        ...(prev.properties || {}),
+                        destinationNumber: {
+                          type: "string",
+                          description: "Phone number to transfer the call to",
+                        },
+                      },
+                      required: [
+                        "destinationNumber",
+                        ...(prev.required?.filter((r) => r !== "destinationNumber") || []),
+                      ],
+                    }))
+                  }
+                  placeholder="e.g. +15551234567"
+                />
+
+                <Button
+                  variant="primary"
+                  onClick={() => {
+                    setOpenSelectedFunction(false);
+                    console.log(transferCallFunction);
+                    setFunctionsList((prev) => {
+                      const updated = [
+                        ...prev,
+                        { transferCallFunction: transferCallFunction },
                       ];
                       console.log("functionsList updated", updated);
                       return updated;
