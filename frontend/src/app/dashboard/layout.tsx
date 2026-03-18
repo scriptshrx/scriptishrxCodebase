@@ -53,8 +53,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     useEffect(() => {
 
         setMounted(true);
-        if(!store.user)router.push('/login')
-    }, []);
+        const bargedInUser = store.user;
+        if(!bargedInUser)router.push('/login')
+    }, [store.user]);
 
     // Fetch user — only after mount
     useEffect(() => {
