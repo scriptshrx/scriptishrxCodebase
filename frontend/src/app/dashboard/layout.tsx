@@ -53,9 +53,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     useEffect(() => {
 
         setMounted(true);
-        const bargedInUser = store.user;
-        if(!bargedInUser)router.push('/login')
-    }, [store.user]);
+     
+    }, []);
 
     // Fetch user — only after mount
     useEffect(() => {
@@ -65,6 +64,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 const token = localStorage.getItem('token');
                 if (!token) {
                     setUser({ name: 'Guest User', email: '', avatarUrl: '' });
+                    router.push('/login')
                     return;
                 }
                 const storedUser = localStorage.getItem('user');
