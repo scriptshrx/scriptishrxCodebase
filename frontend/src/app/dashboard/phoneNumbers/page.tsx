@@ -99,7 +99,7 @@ const NumberRow = ({
     onClick={onClick}
     className={`p-4 border-l-4 cursor-pointer transition ${
       selected
-        ? 'border-l-blue-600 bg-blue-50 dark:bg-blue-800/50'
+        ? 'border-l-blue-600 bg-blue-50/50 dark:bg-blue-800/50'
         : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
@@ -666,7 +666,7 @@ export default function PhoneNumbersView() {
            <button onClick={()=>setShowAddNumber(true)}
            type='button' 
            className="px-2 py-[8px] cursor-pointer bg-gray-800 dark:bg-gray-300 hover:bg-gray-900 text-white hover:text-white dark:text-gray-900 rounded-lg flex items-center gap-2">
-                  <Plus className="w-4 h-4 text-gray-200 dark:text-gray-200 hover:text-white/90" />
+                  <Plus className="w-4 h-4 text-gray-900 dark:text-gray-200 hover:text-white/90" />
                   Add
                 </button>
           </div>
@@ -675,7 +675,7 @@ export default function PhoneNumbersView() {
               placeholder="Search numbers"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 text-gray-800 mx-auto placeholder:text-gray-800 dark:placeholder:text-gray-400 dark:text-gray-300 border w-[90%] border-gray-400 shadow-md"
+              className="pl-10 text-gray-800 mx-auto placeholder:text-gray-800 dark:placeholder:text-gray-400 dark:text-gray-300 w-[90%]  shadow-md"
             />
            
           
@@ -691,7 +691,7 @@ export default function PhoneNumbersView() {
               You don't have any phone numbers
             </div>
           ) : (
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-200 dark:divide-gray-700">
               {filteredNumbers.map(number => (
                 <NumberRow
                   key={number.id}
