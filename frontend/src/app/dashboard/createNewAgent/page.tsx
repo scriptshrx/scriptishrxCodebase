@@ -569,9 +569,10 @@ function SinglePromptAgentContent() {
                           daysSpan: parseInt(e.target.value) || 0
                         }
                       }))
-                      required
+                     
                     }
                     placeholder="Allowed search days span"
+                     required
                   />
                 </div>
 
