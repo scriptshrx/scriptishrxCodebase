@@ -201,7 +201,7 @@ export default function KnowledgeResourcesView() {
               onClick={() => setCreateModalOpen(true)}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
             >
-              <Plus className="w-4 h-4 bg-blue-600" />
+              <Plus className="w-6 h-6 rounded-md cursor-pointer bg-blue-600" />
             </button>
           </div>
           {loading && <div className="p-4">Loading...</div>}
