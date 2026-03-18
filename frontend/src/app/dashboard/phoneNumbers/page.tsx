@@ -666,7 +666,7 @@ export default function PhoneNumbersView() {
            <button onClick={()=>setShowAddNumber(true)}
            type='button' 
            className="px-2 py-[8px] cursor-pointer bg-gray-800 dark:bg-gray-300 hover:bg-gray-900 text-white hover:text-white dark:text-gray-900 rounded-lg flex items-center gap-2">
-                  <Plus className="w-4 h-4 text-gray-200 dark:text-gray-900 hover:text-white/90" />
+                  <Plus className="w-4 h-4 text-gray-200 dark:text-gray-200 hover:text-white/90" />
                   Add
                 </button>
           </div>
