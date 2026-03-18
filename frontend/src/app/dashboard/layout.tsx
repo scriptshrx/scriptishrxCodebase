@@ -51,7 +51,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     // ✅ Mark as mounted — all localStorage/socket logic runs after this
     useEffect(() => {
+
         setMounted(true);
+        if(!store.user)router.push('/login')
     }, []);
 
     // Fetch user — only after mount
