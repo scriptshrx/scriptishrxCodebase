@@ -99,7 +99,7 @@ const NumberRow = ({
     onClick={onClick}
     className={`p-4 border-l-4 cursor-pointer transition ${
       selected
-        ? 'border-l-blue-600 bg-blue-50/50 dark:bg-blue-700/40'
+        ? 'border-l-blue-600 bg-blue-50/50 dark:bg-blue-700/10'
         : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
