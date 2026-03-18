@@ -615,7 +615,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 backdrop-blur-md items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 backdrop-blur-md py-16 items-center z-[150] justify-center"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -708,15 +708,23 @@ function SinglePromptAgentContent() {
                   id="callerName"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                  onChange={(e) =>
-                    setBookAppointmentFunction((prev) => ({
-                      ...prev,
-                      name: selectedFunction.value,
-                      properties:{...(prev.properties,e.target.checked?callerName:{type:'string',description:'The name of the caller'}:'')}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setBookAppointmentFunction((prev) => {
+                      const props = { ...prev.properties || {} };
+                      let required = [...(prev.required || [])];
                       
-                      callerName: e.target.checked,
-                    }))
-                  }
+                      if (isChecked) {
+                        props.name = { type: 'string', description: 'The name of the caller' };
+                        if (!required.includes('name')) required.push('name');
+                      } else {
+                        delete props.name;
+                        required = required.filter(r => r !== 'name');
+                      }
+                      
+                      return { ...prev, name: selectedFunction.value, properties: props, required, type: 'object' };
+                    });
+                  }}
                 />
                 <label htmlFor="callerPhone">Caller Phone</label>
 
@@ -724,13 +732,23 @@ function SinglePromptAgentContent() {
                   id="callerPhone"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                  onChange={(e) =>
-                    setBookAppointmentFunction((prev) => ({
-                      ...prev,
-                      name: selectedFunction.value,
-                      callerPhone: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setBookAppointmentFunction((prev) => {
+                      const props = { ...prev.properties || {} };
+                      let required = [...(prev.required || [])];
+                      
+                      if (isChecked) {
+                        props.phone = { type: 'string', description: 'The phone number of the caller' };
+                        if (!required.includes('phone')) required.push('phone');
+                      } else {
+                        delete props.phone;
+                        required = required.filter(r => r !== 'phone');
+                      }
+                      
+                      return { ...prev, name: selectedFunction.value, properties: props, required, type: 'object' };
+                    });
+                  }}
                 />
 
                 <label htmlFor="callerEmail">Caller E-mail</label>
@@ -738,13 +756,23 @@ function SinglePromptAgentContent() {
                   id="callerEmail"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                  onChange={(e) =>
-                    setBookAppointmentFunction((prev) => ({
-                      ...prev,
-                      name: selectedFunction.value,
-                      callerEmail: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setBookAppointmentFunction((prev) => {
+                      const props = { ...prev.properties || {} };
+                      let required = [...(prev.required || [])];
+                      
+                      if (isChecked) {
+                        props.email = { type: 'string', description: 'The email address of the caller' };
+                        if (!required.includes('email')) required.push('email');
+                      } else {
+                        delete props.email;
+                        required = required.filter(r => r !== 'email');
+                      }
+                      
+                      return { ...prev, name: selectedFunction.value, properties: props, required, type: 'object' };
+                    });
+                  }}
                 />
 
                 <label htmlFor="callerRequest">Caller Request</label>
@@ -752,13 +780,23 @@ function SinglePromptAgentContent() {
                   id="callerRequest"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                  onChange={(e) =>
-                    setBookAppointmentFunction((prev) => ({
-                      ...prev,
-
-                      callerRequest: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setBookAppointmentFunction((prev) => {
+                      const props = { ...prev.properties || {} };
+                      let required = [...(prev.required || [])];
+                      
+                      if (isChecked) {
+                        props.purpose = { type: 'string', description: 'The specific request or purpose the caller expressed' };
+                        if (!required.includes('purpose')) required.push('purpose');
+                      } else {
+                        delete props.purpose;
+                        required = required.filter(r => r !== 'purpose');
+                      }
+                      
+                      return { ...prev, name: selectedFunction.value, properties: props, required, type: 'object' };
+                    });
+                  }}
                 />
                 <Button
                   variant="primary"
@@ -811,8 +849,12 @@ function SinglePromptAgentContent() {
                       ...prev,
                       name: selectedFunction.value,
                       description: e.target.value,
-                      phone: true,
                       type: "object",
+                      properties: {
+                        phone: { type: 'string', description: 'The phone number to send SMS to' },
+                        ...(prev.properties || {})
+                      },
+                      required: ['phone', ...(prev.required?.filter(r => r !== 'phone') || [])]
                     }))
                   }
                   placeholder="Send SMS to the caller's phone"
@@ -840,12 +882,23 @@ function SinglePromptAgentContent() {
                   id="callerName"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                  onChange={(e) =>
-                    setSendSmsFunction((prev) => ({
-                      ...prev,
-                      callerName: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setSendSmsFunction((prev) => {
+                      const props = { ...prev.properties || {} };
+                      let required = [...(prev.required || [])];
+                      
+                      if (isChecked) {
+                        props.name = { type: 'string', description: 'The name of the caller' };
+                        if (!required.includes('name')) required.push('name');
+                      } else {
+                        delete props.name;
+                        required = required.filter(r => r !== 'name');
+                      }
+                      
+                      return { ...prev, name: selectedFunction.value, properties: props, required, type: 'object' };
+                    });
+                  }}
                 />
 
                 <label htmlFor="callerRequest">Caller Request</label>
@@ -853,13 +906,23 @@ function SinglePromptAgentContent() {
                   id="callerRequest"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
-                  onChange={(e) =>
-                    setSendSmsFunction((prev) => ({
-                      ...prev,
-
-                      callerRequest: e.target.checked,
-                    }))
-                  }
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setSendSmsFunction((prev) => {
+                      const props = { ...prev.properties || {} };
+                      let required = [...(prev.required || [])];
+                      
+                      if (isChecked) {
+                        props.purpose = { type: 'string', description: 'The specific request or purpose the caller expressed' };
+                        if (!required.includes('purpose')) required.push('purpose');
+                      } else {
+                        delete props.purpose;
+                        required = required.filter(r => r !== 'purpose');
+                      }
+                      
+                      return { ...prev, name: selectedFunction.value, properties: props, required, type: 'object' };
+                    });
+                  }}
                 />
 
                 <Button

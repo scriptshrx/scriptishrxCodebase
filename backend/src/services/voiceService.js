@@ -584,18 +584,17 @@ RESTRICTIONS
         let tools = [];
         if (agentConfig && agentConfig.functions) {
             tools = agentConfig.functions.map(func => {
-                const funcName = Object.keys(func)[0];
-                const funcConfig = func[funcName];
+                // Destructure the function schema created by frontend checkbox UI
+                const { name, description, type = 'object', properties = {}, required = [] } = func;
+                
                 return {
                     type: 'function',
-                    name: funcConfig.name,
-                    description: funcConfig.description,
+                    name,
+                    description,
                     parameters: {
-                        type: funcConfig.type || 'object',
-                        properties: {
-                            // Define properties based on function, for now empty
-                        },
-                        required: []
+                        type,
+                        properties,
+                        required
                     }
                 };
             });
