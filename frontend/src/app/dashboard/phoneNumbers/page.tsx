@@ -658,7 +658,7 @@ export default function PhoneNumbersView() {
               </div>
             )}
       {/* Left Column */}
-      <div className="w-80 bg-white border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-80 bg-white min-h-full border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
         <div>
         <div className="p-4 mb-2 border-b justify-between gap-2 items-center flex border-gray-200 dark:border-gray-700">
 
