@@ -53,36 +53,36 @@ function AuditLogsModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => v
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl p-6 h-[600px] flex flex-col transform transition-all animate-in zoom-in-95 duration-200">
-                <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl w-full max-w-2xl p-6 h-[600px] flex flex-col transform transition-all animate-in zoom-in-95 duration-200 border border-gray-200 dark:border-gray-700">
+                <div className="flex justify-between items-center mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-slate-100 rounded-lg"><Shield className="w-5 h-5 text-slate-700" /></div>
-                        <h3 className="text-xl font-bold text-gray-900">System Audit Logs</h3>
+                        <div className="p-2 bg-slate-100 dark:bg-slate-900 rounded-lg"><Shield className="w-5 h-5 text-slate-700 dark:text-slate-300" /></div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">System Audit Logs</h3>
                     </div>
-                    <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                        <X className="w-5 h-5 text-gray-500" />
+                    <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                        <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                     </button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto space-y-3 pr-2">
                     {loading ? (
-                        <div className="flex h-full items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300" /></div>
+                        <div className="flex h-full items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-gray-300 dark:text-gray-600" /></div>
                     ) : logs.length === 0 ? (
-                        <p className="text-center text-gray-400 py-10">No activity recorded yet.</p>
+                        <p className="text-center text-gray-400 dark:text-gray-500 py-10">No activity recorded yet.</p>
                     ) : (
                         logs.map((log) => (
-                            <div key={log.id} className="flex items-start justify-between p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors">
+                            <div key={log.id} className="flex items-start justify-between p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900 border border-transparent hover:border-slate-100 dark:hover:border-slate-800 transition-colors">
                                 <div>
-                                    <p className="font-bold text-sm text-slate-800">{log.action}</p>
-                                    <p className="text-xs text-slate-500 mt-1">{log.details || 'No details'}</p>
-                                    <p className="text-[10px] text-slate-400 mt-1 font-mono uppercase">{log.id}</p>
+                                    <p className="font-bold text-sm text-slate-800 dark:text-slate-200">{log.action}</p>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{log.details || 'No details'}</p>
+                                    <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-1 font-mono uppercase">{log.id}</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-md">
                                         {new Date(log.createdAt).toLocaleDateString()}
                                     </span>
-                                    <p className="text-[10px] text-slate-400 mt-1">{new Date(log.createdAt).toLocaleTimeString()}</p>
+                                    <p className="text-[10px] text-slate-400 dark:text-slate-600 mt-1">{new Date(log.createdAt).toLocaleTimeString()}</p>
                                 </div>
                             </div>
                         ))
@@ -326,26 +326,26 @@ function SubscriptionSettings({ plan, showToast }: any) {
     };
 
     return (
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 mb-8">
-            <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
-                <div className="p-2 bg-blue-50 rounded-lg">
-                    <CreditCard className="w-5 h-5 text-blue-600" />
+        <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 mb-8">
+            <div className="flex items-center gap-3 mb-6 border-b border-gray-100 dark:border-gray-700 pb-4">
+                <div className="p-2 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                    <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                    <h2 className="text-lg font-bold text-gray-900">Subscription & Billing</h2>
-                    <p className="text-sm text-gray-500">Manage your plan and payment methods.</p>
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Subscription & Billing</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Manage your plan and payment methods.</p>
                 </div>
             </div>
 
-            <div className="flex justify-between items-center p-6 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div className="flex justify-between items-center p-6 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl">
                 <div>
-                    <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">Current Plan</p>
-                    <h3 className="text-2xl font-extrabold text-slate-900">{plan}</h3>
-                    <p className="text-xs text-slate-500 mt-2">Next billing date: Jan 1, 2026</p>
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Current Plan</p>
+                    <h3 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">{plan}</h3>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Next billing date: Jan 1, 2026</p>
                 </div>
                 <button
                     onClick={handleManageBilling}
-                    className="flex items-center gap-2 px-6 py-3 bg-white border border-slate-300 shadow-sm text-slate-700 font-bold rounded-xl hover:bg-slate-50 hover:border-slate-400 transition-all"
+                    className="flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-800 border border-slate-300 dark:border-gray-700 shadow-sm text-slate-700 dark:text-gray-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-gray-700 hover:border-slate-400 dark:hover:border-gray-600 transition-all"
                 >
                     Manage Subscription <ExternalLink className="w-4 h-4" />
                 </button>
@@ -456,44 +456,44 @@ function VoiceAgentSettings({ showToast }: { showToast: (msg: string, type: 'suc
     return (
         <div className="space-y-8">
             {/* Status Card */}
-            <div className={`p-4 rounded-xl border ${inboundPhone ? 'bg-green-50 border-green-100' : 'bg-gray-50 border-gray-200'} transition-all`}>
+            <div className={`p-4 rounded-xl border ${ inboundPhone ? 'bg-green-50 dark:bg-green-900/20 border-green-100 dark:border-green-900' : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700'} transition-all`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className={`p-2 rounded-lg ${inboundPhone ? 'bg-green-100 text-green-600' : 'bg-gray-200 text-gray-500'}`}>
+                        <div className={`p-2 rounded-lg ${inboundPhone ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}`}>
                             <Phone className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold text-gray-900">{inboundPhone ? 'Voice System Active' : 'Setup Required'}</h3>
-                            <p className="text-xs text-gray-500">{inboundPhone ? `Calls authorized for: ${inboundPhone}` : 'Connect a Twilio number to start.'}</p>
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100">{inboundPhone ? 'Voice System Active' : 'Setup Required'}</h3>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{inboundPhone ? `Calls authorized for: ${inboundPhone}` : 'Connect a Twilio number to start.'}</p>
                         </div>
                     </div>
-                    {inboundPhone && <span className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full uppercase tracking-wider">Online</span>}
+                    {inboundPhone && <span className="text-xs font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full uppercase tracking-wider">Online</span>}
                 </div>
             </div>
 
             {/* Inbound Configuration */}
             <div className="space-y-4">
-                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">Inbound Configuration</h3>
+                <h3 className="text-sm font-bold text-gray-900 dark:text-gray-100 uppercase tracking-wider">Inbound Configuration</h3>
 
                 <div className="space-y-2">
-                    <label className="text-xs font-bold text-gray-500">Your Twilio Phone Number</label>
+                    <label className="text-xs font-bold text-gray-500 dark:text-gray-400">Your Twilio Phone Number</label>
                     <div className="flex gap-2">
                         <input
                             type="text"
                             value={inboundPhone}
                             onChange={(e) => setInboundPhone(e.target.value)}
                             placeholder="+1 234 567 8900"
-                            className="flex-1 px-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 font-medium"
+                            className="flex-1 px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl outline-none focus:ring-2 focus:ring-blue-100 dark:focus:ring-blue-900/50 font-medium text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                         />
                         <button
                             onClick={handleSaveInbound}
                             disabled={isSaving}
-                            className="px-6 py-2 bg-black text-white font-bold text-sm rounded-xl hover:bg-gray-800 disabled:opacity-50 transition-all"
+                            className="px-6 py-2 bg-black dark:bg-gray-700 text-white dark:text-gray-100 font-bold text-sm rounded-xl hover:bg-gray-800 dark:hover:bg-gray-600 disabled:opacity-50 transition-all"
                         >
                             {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Save'}
                         </button>
                     </div>
-                    <p className="text-xs text-gray-400">Enter the number you purchased in Twilio.</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">Enter the number you purchased in Twilio.</p>
                 </div>
 
                 <div className="space-y-2">

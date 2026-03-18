@@ -341,13 +341,13 @@ export default function ClientsPage() {
     };
 
     return (
-        <div className="space-y-6 pb-10">
+        <div className="space-y-6 pb-10 dark:bg-gray-900">
             {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Clients</h1>
-                    <p className="text-gray-500">Manage your client base</p>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Clients</h1>
+                    <p className="text-gray-500 dark:text-gray-400">Manage your client base</p>
                 </div>
                 <div className="flex gap-3">
                     <button
@@ -376,21 +376,21 @@ export default function ClientsPage() {
             </div>
 
             {/* Client List */}
-            <div className="bg-white rounded-3xl shadow-sm overflow-hidden">
-                <div className="p-4 border-b border-gray-100 flex gap-4">
-                    <div className="flex-1 flex items-center bg-gray-50 px-4 py-2 rounded-xl">
-                        <Search className="w-4 h-4 text-gray-400" />
+            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+                <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex gap-4">
+                    <div className="flex-1 flex items-center bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-xl">
+                        <Search className="w-4 h-4 text-gray-400 dark:text-gray-500" />
                         <input
                             type="text"
                             placeholder="Search clients..."
-                            className="ml-3 bg-transparent outline-none w-full text-sm"
+                            className="ml-3 bg-transparent outline-none w-full text-sm text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                         />
                     </div>
                 </div>
 
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm">
-                        <thead className="bg-gray-50 text-gray-500">
+                        <thead className="bg-gray-50 dark:bg-gray-700 text-gray-500 dark:text-gray-400">
                             <tr>
                                 <th className="px-6 py-4 font-medium">Name</th>
                                 <th className="px-6 py-4 font-medium">Contact</th>
@@ -399,15 +399,15 @@ export default function ClientsPage() {
                                 <th className="px-6 py-4 font-medium"></th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                             {clients.map((client) => (
-                                <tr key={client.id} className="hover:bg-gray-50 transition-colors">
+                                <tr key={client.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                     <td className="px-6 py-4">
-                                        <div className="font-medium text-gray-900">{client.name}</div>
-                                        <div className="text-xs text-gray-500">{client.email}</div>
+                                        <div className="font-medium text-gray-900 dark:text-gray-100">{client.name}</div>
+                                        <div className="text-xs text-gray-500 dark:text-gray-400">{client.email}</div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div className="flex items-center text-gray-500 gap-2">
+                                        <div className="flex items-center text-gray-500 dark:text-gray-400 gap-2">
                                             <Phone className="w-3 h-3" />
                                             {client.phone || 'N/A'}
                                             <button
@@ -420,23 +420,23 @@ export default function ClientsPage() {
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-600">
+                                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-200">
                                             Active
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-gray-500">
+                                    <td className="px-6 py-4 text-gray-500 dark:text-gray-400">
                                         {new Date(client.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 text-right flex justify-end gap-2">
                                         <button
                                             onClick={() => { setEditClient(client); setShowEditModal(true); }}
-                                            className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-blue-600"
+                                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-400 dark:text-gray-500 hover:text-blue-600 dark:hover:text-blue-400"
                                         >
                                             <Edit2 className="w-4 h-4" />
                                         </button>
                                         <button
                                             onClick={() => handleDeleteClient(client.id)}
-                                            className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-red-600"
+                                            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-gray-400 dark:text-gray-500 hover:text-red-600 dark:hover:text-red-400"
                                         >
                                             <Trash2 className="w-4 h-4" />
                                         </button>
@@ -453,46 +453,46 @@ export default function ClientsPage() {
             {
                 showAddModal && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-3xl w-full max-w-md">
-                            <h2 className="text-xl font-bold mb-4">Add New Client</h2>
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl w-full max-w-md border border-gray-200 dark:border-gray-700">
+                            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Add New Client</h2>
                             <div className="space-y-4">
                                 <input
                                     type="text"
                                     placeholder="Name"
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={newClient.name}
                                     onChange={e => setNewClient({ ...newClient, name: e.target.value })}
                                 />
                                 <input
                                     type="email"
                                     placeholder="Email"
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={newClient.email}
                                     onChange={e => setNewClient({ ...newClient, email: e.target.value })}
                                 />
                                 <input
                                     type="tel"
                                     placeholder="Phone"
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={newClient.phone}
                                     onChange={e => setNewClient({ ...newClient, phone: e.target.value })}
                                 />
                                 <textarea
                                     placeholder="Notes"
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={newClient.notes}
                                     onChange={e => setNewClient({ ...newClient, notes: e.target.value })}
                                 />
                                 <div className="flex justify-end gap-2">
                                     <button
                                         onClick={() => setShowAddModal(false)}
-                                        className="px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-xl"
+                                        className="px-4 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleAddClient}
-                                        className="px-4 py-2 bg-black text-white rounded-xl hover:bg-gray-800"
+                                        className="px-4 py-2 bg-black dark:bg-gray-700 text-white dark:text-gray-100 rounded-xl hover:bg-gray-800 dark:hover:bg-gray-600"
                                     >
                                         Save Client
                                     </button>
@@ -506,42 +506,42 @@ export default function ClientsPage() {
             {
                 showEditModal && editClient && (
                     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-3xl w-full max-w-md">
-                            <h2 className="text-xl font-bold mb-4">Edit Client</h2>
+                        <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl w-full max-w-md border border-gray-200 dark:border-gray-700">
+                            <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Edit Client</h2>
                             <div className="space-y-4">
                                 <input
                                     type="text"
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={editClient.name}
                                     onChange={e => setEditClient({ ...editClient, name: e.target.value })}
                                 />
                                 <input
                                     type="email"
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={editClient.email}
                                     onChange={e => setEditClient({ ...editClient, email: e.target.value })}
                                 />
                                 <input
                                     type="tel"
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={editClient.phone}
                                     onChange={e => setEditClient({ ...editClient, phone: e.target.value })}
                                 />
                                 <textarea
-                                    className="w-full p-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-black/5"
+                                    className="w-full p-3 bg-gray-50 dark:bg-gray-700 rounded-xl outline-none focus:ring-2 focus:ring-black/5 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400"
                                     value={editClient.notes || ''}
                                     onChange={e => setEditClient({ ...editClient, notes: e.target.value })}
                                 />
                                 <div className="flex justify-end gap-2">
                                     <button
                                         onClick={() => setShowEditModal(false)}
-                                        className="px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-xl"
+                                        className="px-4 py-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleUpdateClient}
-                                        className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700"
+                                        className="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-xl hover:bg-blue-700 dark:hover:bg-blue-600"
                                     >
                                         Save Changes
                                     </button>
@@ -562,15 +562,15 @@ export default function ClientsPage() {
                     />
 
                     {/* Toast/Modal at Bottom */}
-                    <div className="relative bg-white rounded-t-3xl shadow-2xl w-full max-w-md p-8 max-h-[90vh] overflow-y-auto">
+                    <div className="relative bg-white dark:bg-gray-800 rounded-t-3xl shadow-2xl w-full max-w-md p-8 max-h-[90vh] overflow-y-auto border border-gray-200 dark:border-gray-700">
                         <button
                             onClick={() => setShowConfigureInvite(false)}
-                            className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                            className="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
                         >
-                            <X className="w-5 h-5 text-gray-500" />
+                            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                         </button>
 
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2 pr-8">Configure Invite</h2>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 pr-8">Configure Invite</h2>
 
                          {/* Logo Upload Section */}
                                 <div className="space-y-3">
