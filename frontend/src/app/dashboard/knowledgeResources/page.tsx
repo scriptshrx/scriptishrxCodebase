@@ -193,7 +193,7 @@ export default function KnowledgeResourcesView() {
 
   return (
     <div className="flex h-full bg-white dark:bg-gray-900 dark:text-gray-100 -m-8">
-      <aside className="w-64 bg-white h-full border-r border-gray-500 flex flex-col dark:bg-gray-800 dark:border-gray-200">
+      <aside className="w-64 bg-white h-full border-r border-gray-500 dark:border-gray-700 flex flex-col dark:bg-gray-800 dark:border-gray-200">
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 flex justify-between items-center">
             <h3 className="font-semibold">Knowledge Resources</h3>
@@ -201,7 +201,7 @@ export default function KnowledgeResourcesView() {
               onClick={() => setCreateModalOpen(true)}
               className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 bg-blue-600" />
             </button>
           </div>
           {loading && <div className="p-4">Loading...</div>}
@@ -308,18 +308,18 @@ export default function KnowledgeResourcesView() {
       {/* create KB modal */}
       {createModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6">
-            <h2 className="text-xl font-bold mb-4">New Knowledge Base</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg p-6">
+            <h2 className="text-xl font-bold mb-4 dark:text-gray-100">New Knowledge Base</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold mb-1">Name *</label>
+                <label className="block text-sm font-semibold mb-1 dark:text-gray-200">Name *</label>
                 <Input
                   value={newBaseName}
                   onChange={e => setNewBaseName(e.target.value)}
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-1">Description</label>
+                <label className="block text-sm font-semibold mb-1 dark:text-gray-200">Description</label>
                 <Input
                   value={newBaseDesc}
                   onChange={e => setNewBaseDesc(e.target.value)}
