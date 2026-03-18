@@ -1309,7 +1309,7 @@ function SinglePromptAgentContent() {
       </div>
 
       {error && (
-        <div className="fixed top-20 left-20 p-4 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300">
+        <div className="fixed z-[700] top-20 left-1/2 rounded-lg text-red-500  p-4 bg-red-100/50 dark:bg-red-900/30 text-red-800 dark:text-red-500">
           {error}
         </div>
       )}
