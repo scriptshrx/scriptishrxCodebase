@@ -236,7 +236,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <div className="bg-white p-2 rounded-lg shadow-md">
                             <img src="/newLogo.png" alt="Scriptish" className="h-6 w-auto" />
                         </div>
-                        <span className="font-bold text-xl text-white tracking-tight">Scriptish</span>
+                        <span className="font-bold text-xl text-gray-800 tracking-tight">Scriptish</span>
                     </div>
                     <button
                         onClick={() => setShowMobileMenu(false)}
@@ -272,7 +272,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                 ].map(item => {
                                     const Icon = item.icon;
                                     const route = user?.email==='ezehmkark@gmail.com'?'/dashboard/menAtWork':item.route
-                                    const isActive = item.route ? pathname === route : store.selectedVoicePage === item.name;
+                                    const isActive = item.route ? pathname.includes(route) : store.selectedVoicePage === item.name;
                                     return (
                                         <button
                                             type="button"

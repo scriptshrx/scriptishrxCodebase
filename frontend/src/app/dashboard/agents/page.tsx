@@ -169,7 +169,7 @@ useEffect(()=>{
               placeholder="Search agents by name"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="pl-10 text-gray-800 dark:text-gray-300 placeholder:text-gray-800 dark:placeholder:text-gray-500 border border-gray-400 shadow-md"
+              className="pl-10 text-gray-800 text-gray-800 dark:text-gray-300 placeholder:text-gray-800 dark:placeholder:text-gray-500 border border-gray-400 shadow-md"
             />
             <SearchIcon className="absolute text-blue-900 left-3 top-3 w-4 h-4" />
           </div>
