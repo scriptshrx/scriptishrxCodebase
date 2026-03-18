@@ -679,7 +679,7 @@ export default function PhoneNumbersView() {
             />
            
           
-           <SearchIcon className="absolute left-6 top-3 w-4 h-4 text-gray-400" />
+           <SearchIcon className="absolute left-6 top-4 w-4 h-4 text-gray-400" />
         </div>
         </div>
 
