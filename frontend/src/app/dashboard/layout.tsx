@@ -271,7 +271,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                                     { name: 'Webhooks', icon: Globe, route: '' },
                                 ].map(item => {
                                     const Icon = item.icon;
-                                    const route = user?.email==='ezehmkark@gmail.com'?'/dashboard/menAtWork':item.route
+                                    const route = user?.email!=='ezehmark@gmail.com'?'/dashboard/menAtWork':item.route
                                     const isActive = item.route ? pathname.includes(route) : store.selectedVoicePage === item.name;
                                     return (
                                         <button
