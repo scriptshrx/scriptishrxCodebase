@@ -379,6 +379,7 @@ function SinglePromptAgentContent() {
                 key={i}
                 onClick={(e) => {
                   e.stopPropagation();
+                  setError("");
                   setSelectedFunction(f);
                   setOpenSelectedFunction(true);
                   //setFunctionsModalOpen(false);
@@ -446,6 +447,11 @@ function SinglePromptAgentContent() {
                 <Button
                   variant="primary"
                   onClick={() => {
+                    if (!endCallFunction.description) {
+                      setError("Description is required");
+                      return;
+                    }
+                    setError("");
                     setOpenSelectedFunction(false);
                     // add the configured functions to our stateful list so it persists across renders
                     setFunctionsList((prev) => {
@@ -603,6 +609,17 @@ function SinglePromptAgentContent() {
                     <Button
                       variant="primary"
                       onClick={() => {
+                        const missing =
+                          !checkScheduleFunction.description ||
+                          !checkScheduleFunction.agentConfig?.eventTypeId ||
+                          !checkScheduleFunction.agentConfig?.timezone ||
+                          checkScheduleFunction.agentConfig?.daysSpan == null ||
+                          checkScheduleFunction.agentConfig?.maxSlots == null;
+                        if (missing) {
+                          setError("All required fields must be filled out");
+                          return;
+                        }
+                        setError("");
                         setOpenSelectedFunction(false);
                         console.log(checkScheduleFunction);
                         setFunctionsList((prev) => {
@@ -819,6 +836,15 @@ function SinglePromptAgentContent() {
                 <Button
                   variant="primary"
                   onClick={() => {
+                    const missing =
+                      !bookAppointmentFunction.description ||
+                      !bookAppointmentFunction.agentConfig?.eventTypeId ||
+                      !bookAppointmentFunction.agentConfig?.timezone;
+                    if (missing) {
+                      setError("All required fields must be filled out");
+                      return;
+                    }
+                    setError("");
                     setOpenSelectedFunction(false);
                     console.log(bookAppointmentFunction);
                     setFunctionsList((prev) => {
@@ -946,6 +972,14 @@ function SinglePromptAgentContent() {
                 <Button
                   variant="primary"
                   onClick={() => {
+                    const missing =
+                      !sendSmsFunction.description ||
+                      !sendSmsFunction.properties?.phone;
+                    if (missing) {
+                      setError("All required fields must be filled out");
+                      return;
+                    }
+                    setError("");
                     setOpenSelectedFunction(false);
                     console.log(sendSmsFunction);
                     setFunctionsList((prev) => {
@@ -1037,6 +1071,14 @@ function SinglePromptAgentContent() {
                 <Button
                   variant="primary"
                   onClick={() => {
+                    const missing =
+                      !transferCallFunction.description ||
+                      !transferCallFunction.properties?.destinationNumber;
+                    if (missing) {
+                      setError("All required fields must be filled out");
+                      return;
+                    }
+                    setError("");
                     setOpenSelectedFunction(false);
                     console.log(transferCallFunction);
                     setFunctionsList((prev) => {
