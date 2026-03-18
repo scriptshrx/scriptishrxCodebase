@@ -546,9 +546,10 @@ function SinglePromptAgentContent() {
                           timezone: e.target.value
                         }
                       }))
-                      required
+                   
                     }
                     placeholder='"eg. Africa/Lagos"'
+                       required
                   />
                 </div>
 
