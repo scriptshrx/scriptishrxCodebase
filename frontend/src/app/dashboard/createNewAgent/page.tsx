@@ -408,7 +408,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center my-8"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -416,14 +416,14 @@ function SinglePromptAgentContent() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <label htmlFor="name">Name</label>
-                <input
+                <Input
                   readOnly
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 placeholder:text-blue-600 rounded-md p-2 px-4"
                   placeholder={selectedFunction.value}
                 />
 
-                <label htmlFor="description">Description</label>
-                <input
+                <label htmlFor="description">Description <span className="text-blue-500">*</span></label>
+                <Input
                   id="description"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
@@ -475,7 +475,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center my-8"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -484,7 +484,7 @@ function SinglePromptAgentContent() {
               >
                 <div className="flex flex-col">
                   <label htmlFor="name">Name</label>
-                  <input
+                  <Input
                     readOnly
                     className="border bg-gray-300 placeholder:text-blue-600 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4"
                     placeholder={selectedFunction.value}
@@ -492,8 +492,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="description">Description</label>
-                  <input
+                  <label htmlFor="description">Description <span className="text-blue-500">*</span></label>
+                  <Input
                     id="description"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
@@ -510,8 +510,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="provider">Provider</label>
-                  <input
+                  <label htmlFor="provider">Provider <span className="text-blue-500">*</span></label>
+                  <Input
                     id="provider"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     placeholder="Calendar provider (cal.com)"
@@ -520,8 +520,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="eventId">Event Type ID</label>
-                  <input
+                  <label htmlFor="eventId">Event Type ID <span className="text-blue-500">*</span></label>
+                  <Input
                     id="eventId"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
@@ -539,8 +539,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="tz">Time Zone</label>
-                  <input
+                  <label htmlFor="tz">Time Zone <span className="text-blue-500">*</span></label>
+                  <Input
                     id="tz"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
@@ -561,8 +561,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="daysSpan">Days Span</label>
-                  <input
+                  <label htmlFor="daysSpan">Days Span <span className="text-blue-500">*</span></label>
+                  <Input
                     id="daysSpan"
                     type="number"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -584,8 +584,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="maxSlots">Max Slots</label>
-                  <input
+                  <label htmlFor="maxSlots">Max Slots <span className="text-blue-500">*</span></label>
+                  <Input
                   required
                     id="maxSlots"
                     type="number"
@@ -645,7 +645,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md py-16 items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md py-16 items-center z-[150] justify-center my-8"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -653,14 +653,14 @@ function SinglePromptAgentContent() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <label htmlFor="name">Name</label>
-                <input
+                <Input
                   readOnly
                   className="border bg-gray-300 dark:bg-gray-600 placeholder:text-blue-600 border-gray-700 rounded-md text-blue-600 p-2 px-4"
                   placeholder={selectedFunction.value}
                 />
 
-                <label htmlFor="description">Description</label>
-                <input
+                <label htmlFor="description">Description <span className="text-blue-500">*</span></label>
+                <Input
                   id="description"
                   required
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -676,8 +676,8 @@ function SinglePromptAgentContent() {
                 />
 
                 <div className="flex flex-col">
-                  <label htmlFor="provider">Provider</label>
-                  <input
+                  <label htmlFor="provider">Provider <span className="text-blue-500">*</span></label>
+                  <Input
                   
                   required
                     id="provider"
@@ -688,8 +688,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="eventId">Event Type ID</label>
-                  <input
+                  <label htmlFor="eventId">Event Type ID <span className="text-blue-500">*</span></label>
+                  <Input
                   required
                     id="eventId"
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -715,8 +715,8 @@ function SinglePromptAgentContent() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="tz">Time Zone</label>
-                  <input
+                  <label htmlFor="tz">Time Zone <span className="text-blue-500">*</span></label>
+                  <Input
                     id="tz"
                     required
                     className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -739,7 +739,7 @@ function SinglePromptAgentContent() {
                 <label className="text-blue-600 font-bold">Parameters</label>
 
                 <label htmlFor="callerName">Caller Name</label>
-                <input
+                <Input
                   id="callerName"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -763,7 +763,7 @@ function SinglePromptAgentContent() {
                 />
                 <label htmlFor="callerPhone">Caller Phone</label>
 
-                <input
+                <Input
                   id="callerPhone"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -787,7 +787,7 @@ function SinglePromptAgentContent() {
                 />
 
                 <label htmlFor="callerEmail">Caller E-mail</label>
-                <input
+                <Input
                   id="callerEmail"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -811,7 +811,7 @@ function SinglePromptAgentContent() {
                 />
 
                 <label htmlFor="callerRequest">Caller Request</label>
-                <input
+                <Input
                   id="callerRequest"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -867,7 +867,7 @@ function SinglePromptAgentContent() {
         return (
           openSelectedFunction && (
             <div
-              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center"
+              className="flex fixed inset-0 bg-white/50 dark:bg-black/50 backdrop-blur-md items-center z-[150] justify-center my-8"
               onClick={() => setOpenSelectedFunction(false)}
             >
               <div
@@ -876,16 +876,16 @@ function SinglePromptAgentContent() {
               >
                 <label htmlFor="name">Name</label>
 
-                <input
+                <Input
                   id="name"
                   readOnly
                   className="border bg-gray-300 dark:bg-gray-600/80 placeholder:text-blue-600 border-gray-700 rounded-md text-blue-600 p-2 px-4"
                   placeholder={selectedFunction.value}
                 />
 
-                <label htmlFor="name">Description</label>
+                <label htmlFor="name">Description <span className="text-blue-500">*</span></label>
 
-                <input
+                <Input
                   id="description"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
@@ -906,8 +906,8 @@ function SinglePromptAgentContent() {
 
                 {/**Parameters */}
 
-                <label htmlFor="callerPhone">Caller Phone</label>
-                <input
+                <label htmlFor="callerPhone">Caller Phone <span className="text-blue-500">*</span></label>
+                <Input
                   id="callerPhone"
                   type="checkbox"
                   checked
@@ -922,7 +922,7 @@ function SinglePromptAgentContent() {
                 />
 
                 <label htmlFor="callerName">Caller Name</label>
-                <input
+                <Input
                   id="callerName"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -946,7 +946,7 @@ function SinglePromptAgentContent() {
                 />
 
                 <label htmlFor="callerRequest">Caller Request</label>
-                <input
+                <Input
                   id="callerRequest"
                   type="checkbox"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
@@ -1010,7 +1010,7 @@ function SinglePromptAgentContent() {
                 onClick={(e) => e.stopPropagation()}
               >
                 <label htmlFor="name">Name</label>
-                <input
+                <Input
                   id="name"
                   readOnly
                   className="border bg-gray-300 dark:bg-gray-600/80 placeholder:text-blue-600 border-gray-700 rounded-md text-blue-600 p-2 px-4"
@@ -1018,7 +1018,7 @@ function SinglePromptAgentContent() {
                 />
 
                 <label htmlFor="description">Description</label>
-                <input
+                <Input
                   id="description"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
@@ -1044,7 +1044,7 @@ function SinglePromptAgentContent() {
                 />
 
                 <label htmlFor="destinationNumber">Destination Phone</label>
-                <input
+                <Input
                   id="destinationNumber"
                   className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
@@ -1350,7 +1350,7 @@ function SinglePromptAgentContent() {
           <div className="space-y-4">
             <div>
               <label className="text-xs font-medium">Voice speed</label>
-              <input
+              <Input
                 type="range"
                 min={0}
                 max={100}
@@ -1368,7 +1368,7 @@ function SinglePromptAgentContent() {
               <label className="text-xs font-medium">
                 Interruption sensitivity
               </label>
-              <input
+              <Input
                 type="range"
                 min={0}
                 max={100}
@@ -1424,7 +1424,7 @@ function SinglePromptAgentContent() {
           <div className="space-y-4">
             <div>
               <label className="text-xs font-medium">Silence timeout (s)</label>
-              <input
+              <Input
                 type="number"
                 value={callSettings.silenceTimeout}
                 onChange={(e) =>
@@ -1440,7 +1440,7 @@ function SinglePromptAgentContent() {
               <label className="text-xs font-medium">
                 Max call duration (m)
               </label>
-              <input
+              <Input
                 type="number"
                 value={callSettings.maxDuration}
                 onChange={(e) =>
@@ -1457,7 +1457,7 @@ function SinglePromptAgentContent() {
       case "post":
         return (
           <div className="flex items-center gap-2">
-            <input
+            <Input
               type="checkbox"
               checked={postCall.enableSummaries}
               onChange={(e) =>
@@ -1470,7 +1470,7 @@ function SinglePromptAgentContent() {
       case "security":
         return (
           <div className="flex items-center gap-2">
-            <input
+            <Input
               type="checkbox"
               checked={security.piiRedaction}
               onChange={(e) => setSecurity({ piiRedaction: e.target.checked })}
