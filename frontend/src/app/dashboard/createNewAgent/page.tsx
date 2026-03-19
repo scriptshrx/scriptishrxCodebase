@@ -425,7 +425,6 @@ function SinglePromptAgentContent() {
                 <label htmlFor="description">Description <span className="text-blue-500">*</span></label>
                 <Input
                   id="description"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setEndCallFunction({
                       name: "end_call",
@@ -495,7 +494,6 @@ function SinglePromptAgentContent() {
                   <label htmlFor="description">Description <span className="text-blue-500">*</span></label>
                   <Input
                     id="description"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
@@ -513,7 +511,6 @@ function SinglePromptAgentContent() {
                   <label htmlFor="provider">Provider <span className="text-blue-500">*</span></label>
                   <Input
                     id="provider"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     placeholder="Calendar provider (cal.com)"
                     required
                   />
@@ -523,7 +520,6 @@ function SinglePromptAgentContent() {
                   <label htmlFor="eventId">Event Type ID <span className="text-blue-500">*</span></label>
                   <Input
                     id="eventId"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
@@ -542,7 +538,6 @@ function SinglePromptAgentContent() {
                   <label htmlFor="tz">Time Zone <span className="text-blue-500">*</span></label>
                   <Input
                     id="tz"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
@@ -565,7 +560,6 @@ function SinglePromptAgentContent() {
                   <Input
                     id="daysSpan"
                     type="number"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
@@ -589,7 +583,6 @@ function SinglePromptAgentContent() {
                   required
                     id="maxSlots"
                     type="number"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
                       setCheckScheduleFunction((prev) => ({
                         ...prev,
@@ -663,7 +656,6 @@ function SinglePromptAgentContent() {
                 <Input
                   id="description"
                   required
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setBookAppointmentFunction((prev) => ({
                       ...prev,
@@ -681,7 +673,6 @@ function SinglePromptAgentContent() {
                   
                   required
                     id="provider"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 placeholder:text-blue-600"
                     readOnly
                     placeholder="Calendar provider (cal.com)"
                   />
@@ -692,7 +683,6 @@ function SinglePromptAgentContent() {
                   <Input
                   required
                     id="eventId"
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
                       setBookAppointmentFunction((prev) => ({
                         ...prev,
@@ -719,7 +709,6 @@ function SinglePromptAgentContent() {
                   <Input
                     id="tz"
                     required
-                    className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                     onChange={(e) =>
                       setBookAppointmentFunction((prev) => ({
                         ...prev,
@@ -742,7 +731,6 @@ function SinglePromptAgentContent() {
                 <Input
                   id="callerName"
                   type="checkbox"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) => {
                     const isChecked = e.target.checked;
                     setBookAppointmentFunction((prev) => {
@@ -766,7 +754,6 @@ function SinglePromptAgentContent() {
                 <Input
                   id="callerPhone"
                   type="checkbox"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) => {
                     const isChecked = e.target.checked;
                     setBookAppointmentFunction((prev) => {
@@ -790,7 +777,6 @@ function SinglePromptAgentContent() {
                 <Input
                   id="callerEmail"
                   type="checkbox"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) => {
                     const isChecked = e.target.checked;
                     setBookAppointmentFunction((prev) => {
@@ -814,7 +800,6 @@ function SinglePromptAgentContent() {
                 <Input
                   id="callerRequest"
                   type="checkbox"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) => {
                     const isChecked = e.target.checked;
                     setBookAppointmentFunction((prev) => {
@@ -887,7 +872,6 @@ function SinglePromptAgentContent() {
 
                 <Input
                   id="description"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setSendSmsFunction((prev) => ({
                       ...prev,
@@ -925,7 +909,6 @@ function SinglePromptAgentContent() {
                 <Input
                   id="callerName"
                   type="checkbox"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) => {
                     const isChecked = e.target.checked;
                     setSendSmsFunction((prev) => {
@@ -949,7 +932,6 @@ function SinglePromptAgentContent() {
                 <Input
                   id="callerRequest"
                   type="checkbox"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) => {
                     const isChecked = e.target.checked;
                     setSendSmsFunction((prev) => {
@@ -1020,7 +1002,6 @@ function SinglePromptAgentContent() {
                 <label htmlFor="description">Description</label>
                 <Input
                   id="description"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setTransferCallFunction((prev) => ({
                       ...prev,
@@ -1046,7 +1027,6 @@ function SinglePromptAgentContent() {
                 <label htmlFor="destinationNumber">Destination Phone</label>
                 <Input
                   id="destinationNumber"
-                  className="border bg-gray-300 dark:bg-gray-600 border-gray-700 rounded-md p-2 px-4 text-black/90 dark:text-gray-200 dark:placeholder:text-gray-300"
                   onChange={(e) =>
                     setTransferCallFunction((prev) => ({
                       ...prev,
