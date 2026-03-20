@@ -48,20 +48,35 @@ process.on('message', async (msg) => {
     console.log('[KnowledgeIngestionWorker] extraction complete, length', extractedText.length);
     const chunks = chunkingService.chunkText(extractedText);
     const texts = chunks.map(c => c.content);
+    console.log('[KnowledgeIngestionWorker] chunking complete, chunks:', chunks.length);
+    
     const embeddings = await embeddingService.getEmbeddings(texts);
+    console.log('[KnowledgeIngestionWorker] embeddings complete, embeddings:', embeddings.length);
 
+    console.log('[KnowledgeIngestionWorker] starting chunk insert');
     for (let i = 0; i < chunks.length; i++) {
       const chunk = chunks[i];
       const emb = embeddings[i];
       const chunkId = crypto.randomUUID();
-      await prisma.$executeRaw`
-        INSERT INTO knowledge_chunks
-          (id, tenant_id, document_id, chunk_index, content, embedding)
-        VALUES
-          (${chunkId}, ${document.tenantId}, ${document.id}, ${chunk.chunkIndex}, ${chunk.content}, ${emb}::vector)
-      `;
+      
+      // Format embedding as PostgreSQL vector string
+      const embStr = JSON.stringify(emb);
+      console.log(`[KnowledgeIngestionWorker] inserting chunk ${i+1}/${chunks.length}, embeddingLength: ${emb?.length}`);
+      
+      try {
+        await prisma.$executeRaw`
+          INSERT INTO knowledge_chunks
+            (id, tenant_id, document_id, chunk_index, content, embedding)
+          VALUES
+            (${chunkId}, ${document.tenantId}, ${document.id}, ${chunk.chunkIndex}, ${chunk.content}, ${embStr}::vector)
+        `;
+      } catch (chunkErr) {
+        console.error(`[KnowledgeIngestionWorker] failed to insert chunk ${i}:`, chunkErr.message);
+        throw chunkErr;
+      }
     }
 
+    console.log('[KnowledgeIngestionWorker] updating document status to ready');
     await prisma.knowledgeDocuments.update({
       where: { id: document.id },
       data: {
@@ -76,6 +91,7 @@ process.on('message', async (msg) => {
     process.exit(0);
   } catch (err) {
     console.error('[KnowledgeIngestionWorker] error', err.message);
+    console.error('[KnowledgeIngestionWorker] stack:', err.stack);
     try {
       await prisma.knowledgeDocuments.update({
         where: { id: document.id },

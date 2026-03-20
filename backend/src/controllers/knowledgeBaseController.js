@@ -114,9 +114,45 @@ async function listDocuments(req, res) {
     res.json({ documents: docs });
 }
 
+async function deleteDocument(req, res) {
+    const tenantId = getTenantId(req);
+    const { knowledgeBaseId, documentId } = req.params;
+    
+    if (!tenantId || !knowledgeBaseId || !documentId) {
+        return res.status(400).json({ error: 'Missing parameters' });
+    }
+
+    try {
+        // Verify access
+        const doc = await prisma.knowledgeDocuments.findUnique({
+            where: { id: documentId }
+        });
+
+        if (!doc || doc.tenantId !== tenantId || doc.knowledgeBaseId !== knowledgeBaseId) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
+        // Delete associated chunks first
+        await prisma.knowledgeChunks.deleteMany({
+            where: { documentId }
+        });
+
+        // Delete document
+        await prisma.knowledgeDocuments.delete({
+            where: { id: documentId }
+        });
+
+        res.json({ success: true, message: 'Document deleted' });
+    } catch (err) {
+        console.error('[KB Controller] deleteDocument error', err);
+        res.status(500).json({ error: 'Failed to delete document', details: err.message });
+    }
+}
+
 module.exports = {
     uploadDocument,
     listBases,
     createBase,
-    listDocuments
+    listDocuments,
+    deleteDocument
 };

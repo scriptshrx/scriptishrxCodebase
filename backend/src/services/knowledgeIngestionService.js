@@ -26,13 +26,35 @@ function ingestDocument({ document, buffer, fileType, mimeType }) {
     // the flag to NODE_OPTIONS in your Render environment.
     // memory for the worker can be raised with NODE_HEAP_SIZE env var (MB)
     const memSize = process.env.NODE_HEAP_SIZE || '512';
+    
+    // Pass along critical env vars to worker
+    const workerEnv = {
+      ...process.env,
+      NODE_HEAP_SIZE: memSize,
+      DATABASE_URL: process.env.DATABASE_URL,
+      DIRECT_URL: process.env.DIRECT_URL,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      NODE_ENV: process.env.NODE_ENV || 'production'
+    };
+    
     const child = fork(workerPath, [], {
       execArgv: [`--max-old-space-size=${memSize}`],
-      env: { ...process.env, NODE_HEAP_SIZE: memSize }
+      env: workerEnv
     });
+
+    let timedOut = false;
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      console.error('[IngestionService] worker timeout after 5 minutes');
+      child.kill('SIGTERM');
+      reject(new Error('Document processing timeout (5 minutes exceeded)'));
+    }, 5 * 60 * 1000);
 
     child.on('message', (msg) => {
       console.log('[IngestionService] worker message', msg);
+      if (!timedOut) {
+        clearTimeout(timeout);
+      }
       if (msg && msg.error) {
         reject(new Error(msg.error));
       } else {
@@ -42,11 +64,14 @@ function ingestDocument({ document, buffer, fileType, mimeType }) {
 
     child.on('error', (err) => {
       console.error('[IngestionService] worker error', err);
+      clearTimeout(timeout);
       reject(err);
     });
-    child.on('exit', (code) => {
-      console.log(`[IngestionService] worker exited with code ${code}`);
-      if (code !== 0) {
+    
+    child.on('exit', (code, signal) => {
+      console.log(`[IngestionService] worker exited with code ${code}, signal ${signal}`);
+      clearTimeout(timeout);
+      if (!timedOut && code !== 0) {
         reject(new Error(`ingestion worker exited with code ${code}`));
       }
     });

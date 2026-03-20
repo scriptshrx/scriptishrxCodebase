@@ -144,7 +144,29 @@ export default function KnowledgeResourcesView() {
     }
   };
 
-  const handleUpload = async () => {
+  const handleDeleteDocument = async (docId: string) => {
+    if (!selectedBaseId) return;
+    if (!confirm('Delete this document?')) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/knowledge-bases/${selectedBaseId}/documents/${docId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+        }
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || 'Failed to delete document');
+        return;
+      }
+
+      fetchDocuments(selectedBaseId);
+    } catch (err: any) {
+      alert('Error deleting document: ' + (err.message || 'Network error'));
+    }
+  };
     if (!selectedBaseId) return;
     if (!file) {
       setUploadError('Select a file');
@@ -190,6 +212,20 @@ export default function KnowledgeResourcesView() {
       fetchDocuments(selectedBaseId);
     }
   }, [selectedBaseId]);
+
+  // Poll for document status updates while any document is processing
+  useEffect(() => {
+    if (!selectedBaseId) return;
+    
+    const hasProcessingDocs = documents.some(doc => doc.status === 'processing');
+    if (!hasProcessingDocs) return;
+
+    const interval = setInterval(() => {
+      fetchDocuments(selectedBaseId);
+    }, 2000); // Poll every 2 seconds
+
+    return () => clearInterval(interval);
+  }, [selectedBaseId, documents]);
 
   return (
     <div className="flex h-full bg-white dark:bg-gray-900 dark:text-gray-100 -m-8">
@@ -294,9 +330,32 @@ export default function KnowledgeResourcesView() {
               )}
               <ul className="space-y-2">
                 {documents.map(doc => (
-                  <li key={doc.id} className="flex justify-between items-center p-2 border border-gray-400 shadow-md rounded">
-                    <span className="truncate">{doc.fileName || doc.title}</span>
-                    <span className="text-xs flex flex-row gap-2 text-gray-500">{doc.status=='processing'&&<div className='h-4 w-4 rounded-full border border-t-[2px] border-green-500 animate-spin'></div>}{doc.status}</span>
+                  <li key={doc.id} className={`flex justify-between items-center p-3 border rounded ${
+                    doc.status === 'failed' ? 'border-red-300 bg-red-50 dark:bg-red-900/20' : 'border-gray-400 shadow-md'
+                  }`}>
+                    <div className="flex-1 min-w-0">
+                      <span className="truncate block text-sm">{doc.fileName || doc.title}</span>
+                      {doc.status === 'failed' && (
+                        <span className="text-xs text-red-600 dark:text-red-400 mt-1 block">{doc.errorMessage || 'Processing failed'}</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 ml-2">
+                      <span className={`text-xs flex flex-row gap-2 whitespace-nowrap ${
+                        doc.status === 'failed' ? 'text-red-600' : 'text-gray-500'
+                      }`}>
+                        {doc.status === 'processing' && (
+                          <div className='h-4 w-4 rounded-full border border-t-[2px] border-green-500 animate-spin'></div>
+                        )}
+                        {doc.status === 'failed' && <AlertTriangle className="w-4 h-4 text-red-600" />}
+                        {doc.status}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteDocument(doc.id)}
+                        className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>

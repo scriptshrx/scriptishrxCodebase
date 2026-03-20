@@ -16,4 +16,7 @@ router.get('/:knowledgeBaseId/documents', auth, controller.listDocuments);
 // POST /api/knowledge-bases/:knowledgeBaseId/documents
 router.post('/:knowledgeBaseId/documents', auth, upload.single('file'), controller.uploadDocument);
 
+// DELETE /api/knowledge-bases/:knowledgeBaseId/documents/:documentId
+router.delete('/:knowledgeBaseId/documents/:documentId', auth, controller.deleteDocument);
+
 module.exports = router;
