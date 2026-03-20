@@ -166,7 +166,7 @@ export default function KnowledgeResourcesView() {
     } catch (err: any) {
       alert('Error deleting document: ' + (err.message || 'Network error'));
     }
-  };
+  ;
     if (!selectedBaseId) return;
     if (!file) {
       setUploadError('Select a file');
@@ -202,6 +202,9 @@ export default function KnowledgeResourcesView() {
       setUploading(false);
     }
   };
+
+
+
 
   useEffect(() => {
     fetchBases();
