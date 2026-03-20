@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 async function main() {
     console.log('🌱 Creating Default Tenant and Admin User...');
 
-    // 1. Create Default Tenant
+    // 1. Create Default Tenants
     const tenant = await prisma.tenant.create({
         data: {
             name: 'ScriptishRx HQ',
