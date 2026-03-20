@@ -68,7 +68,7 @@ const BaseRow = ({ base, selected, onClick }: { base: KnowledgeBase; selected: b
   <div
     onClick={onClick}
     className={`p-4 border-l-4 cursor-pointer transition ${
-      selected ? 'border-l-blue-600 bg-blue-50 dark:bg-blue-800' : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
+      selected ? 'border-l-blue-600 bg-blue-50 dark:bg-blue-800/20' : 'border-l-transparent hover:bg-gray-50 dark:hover:bg-gray-700'
     }`}
   >
     <div className="font-semibold text-sm text-gray-900 dark:text-gray-100">{base.name}</div>
@@ -233,8 +233,8 @@ export default function KnowledgeResourcesView() {
   }, [selectedBaseId, documents]);
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-gray-900 dark:text-gray-100 -m-8">
-      <aside className="w-64 bg-white h-full border-r border-gray-500 dark:border-gray-700 flex flex-col dark:bg-gray-800 dark:border-gray-200">
+    <div className="flex min-h-screen bg-white dark:bg-gray-800 dark:text-gray-100 -m-8">
+      <aside className="w-64 bg-white h-full min-h-full border-r border-gray-500 dark:border-gray-700 flex flex-col dark:bg-gray-800 dark:border-gray-200">
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 flex justify-between items-center">
             <h3 className="font-semibold">Knowledge Resources</h3>
