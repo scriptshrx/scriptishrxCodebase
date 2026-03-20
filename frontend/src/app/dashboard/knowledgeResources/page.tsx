@@ -233,7 +233,7 @@ export default function KnowledgeResourcesView() {
   }, [selectedBaseId, documents]);
 
   return (
-    <div className="flex h-full bg-white dark:bg-gray-900 dark:text-gray-100 -m-8">
+    <div className="flex min-h-screen bg-white dark:bg-gray-900 dark:text-gray-100 -m-8">
       <aside className="w-64 bg-white h-full border-r border-gray-500 dark:border-gray-700 flex flex-col dark:bg-gray-800 dark:border-gray-200">
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 flex justify-between items-center">
