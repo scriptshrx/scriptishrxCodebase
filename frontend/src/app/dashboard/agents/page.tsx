@@ -253,7 +253,7 @@ useEffect(()=>{
                           onClick={() => {
                             localStorage.setItem('template',JSON.stringify(agent));
                             console.log(agent);
-                            myRouter?.push(`/voice/new/${agent.mode}?editing=true`);
+                            myRouter?.push(`/dashboard/createNewAgent?editing=true`);
                             
                             // onEdit(agent);
                             //setRowMenuOpenId(null);

@@ -264,8 +264,12 @@ function SinglePromptAgentContent() {
         method: "POST",
         body: JSON.stringify(body),
       });
+
+      console.log('Created?:',res)
       setAgentId(res.agent.id);
-      router.push(`/voiceAgent`);
+      setError('Agent created successfully')
+      setTimeout(()=>
+      router.push(`/dashboard/agents`),1500);
     } catch (e: any) {
       setError(e.message);
     } finally {
