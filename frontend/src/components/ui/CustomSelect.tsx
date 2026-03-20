@@ -67,7 +67,7 @@ export function CustomSelect({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full gap-2 left-0 mt-2 z-50 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg p-2 overflow-hidden">
+        <div className="absolute top-full gap-2 left-0 mt-2 z-50 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg p-1 overflow-hidden">
           <ul className="py-1">
             {options.map((option) => (
               <li key={option.value}>
