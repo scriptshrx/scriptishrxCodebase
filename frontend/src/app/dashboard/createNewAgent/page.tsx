@@ -192,18 +192,23 @@ function SinglePromptAgentContent() {
           return
         }
 
-        setName(`${template.name}-Edit`);
-        setAgentId(params.get('editing') ? template.id : null);
-        setCallSettings(template.agentConfig.call_settings);
-        setLanguage(template.agentConfig.speech.language || "English");
-        setLlmModel(template.agentConfig.llm.model);
-        setPrompt(template.agentConfig.prompt.system_prompt);
-        setWelcomeMessage(template.agentConfig.prompt.welcome_message);
-        setDynamicVariables(template.agentConfig.dynamic_variables);
-        setFunctionsList(template.agentConfig.functions);
-        setSpeechSettings(template.agentConfig.speech);
-        setVoiceId(template.agentConfig.voice.voice_id);
-        setCalendarSettings(template.agentConfig.calendar || { apiKey: '', eventTypeSlug: '' });
+        const existingAgent = ()=>{
+          const {...rest, id} = template;
+          return{...rest}
+        }
+
+        setName(`${existingAgent.name}-Edit`);
+        setAgentId(null);
+        setCallSettings(existingAgent.agentConfig.call_settings);
+        setLanguage(existingAgent.agentConfig.speech.language || "English");
+        setLlmModel(existingAgent.agentConfig.llm.model);
+        setPrompt(existingAgent.agentConfig.prompt.system_prompt);
+        setWelcomeMessage(existingAgent.agentConfig.prompt.welcome_message);
+        setDynamicVariables(existingAgent.agentConfig.dynamic_variables);
+        setFunctionsList(existingAgent.agentConfig.functions);
+        setSpeechSettings(existingAgent.agentConfig.speech);
+        setVoiceId(existingAgent.agentConfig.voice.voice_id);
+        setCalendarSettings(existingAgent.agentConfig.calendar || { apiKey: '', eventTypeSlug: '' });
         setLoading(false);
       }
     }
@@ -1309,7 +1314,7 @@ function SinglePromptAgentContent() {
             {functionsList.map((f, i) => (
               <div
                 key={i}
-                className="flex items-center text-gray-800 dark:text-gray-300 rounded-lg bg-gray-500 dark:bg-gray-900 shadow-md justify-between p-2"
+                className="flex items-center text-gray-800 dark:text-gray-300 rounded-lg bg-gray-300 dark:bg-gray-900 shadow-md justify-between p-2"
               >
                 <Bot height={20} width={20} className="text-blue-600 mr-2" />
                 <span>{Object.keys(f)[0] || "Unnamed"}</span>
