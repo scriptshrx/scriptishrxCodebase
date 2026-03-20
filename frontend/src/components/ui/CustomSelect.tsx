@@ -74,7 +74,7 @@ export function CustomSelect({
                 <button
                   type="button"
                   onClick={() => handleSelect(option.value)}
-                  className={`w-full px-2 py-2 rounded-lg cursor-pointer text-left text-sm transition-colors ${
+                  className={`w-full px-2 py-2 rounded-lg whitespace-nowrap cursor-pointer text-left text-sm transition-colors ${
                     option.value === value
                       ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-900 dark:text-blue-200 font-medium'
                       : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-100/90 dark:hover:bg-gray-700'
