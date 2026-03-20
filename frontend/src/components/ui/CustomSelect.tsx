@@ -67,14 +67,14 @@ export function CustomSelect({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute top-full gap-2 left-0 right-0 mt-2 z-50 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg p-2 overflow-hidden">
+        <div className="absolute top-full gap-2 left-0 mt-2 z-50 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg p-2 overflow-hidden">
           <ul className="py-1">
             {options.map((option) => (
               <li key={option.value}>
                 <button
                   type="button"
                   onClick={() => handleSelect(option.value)}
-                  className={`w-full px-2 py-2 rounded-lg whitespace-nowrap cursor-pointer text-left text-sm transition-colors ${
+                  className={`w-full px-1 py-1 rounded-lg whitespace-nowrap cursor-pointer text-left text-sm transition-colors ${
                     option.value === value
                       ? 'bg-blue-100 dark:bg-blue-900/40 text-blue-900 dark:text-blue-200 font-medium'
                       : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-100/90 dark:hover:bg-gray-700'
