@@ -193,8 +193,8 @@ function SinglePromptAgentContent() {
         }
 
         const existingAgent = ()=>{
-          const {...rest, id} = template;
-          return{...rest}
+          const {id, ...rest} = template;
+          return {...rest}
         }
 
         setName(`${existingAgent.name}-Edit`);
