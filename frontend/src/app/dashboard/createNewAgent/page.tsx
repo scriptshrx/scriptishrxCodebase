@@ -192,12 +192,12 @@ function SinglePromptAgentContent() {
           return
         }
 
-        const existingAgent = ()=>{
+        const existingAgent = (() => {
           console.log('Removing agent ID')
           const {id, ...rest} = template;
           console.log('Rest:',{...rest});
           return {...rest}
-        }
+        })();
 
         setName(`${existingAgent.name}-Edit`);
         setAgentId(null);
