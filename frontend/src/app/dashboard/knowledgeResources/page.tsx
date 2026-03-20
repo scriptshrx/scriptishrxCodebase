@@ -30,6 +30,18 @@ type KnowledgeDocument = {
   updatedAt: string;
 };
 
+type KnowledgeWebsite = {
+  id: string;
+  tenantId: string;
+  knowledgeBaseId: string;
+  url: string;
+  title?: string;
+  status: string;
+  scrapedContent?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 // API helper (same as other views)
 async function apiFetch(path: string, opts: any = {}) {
   const headers: any = {
@@ -83,6 +95,7 @@ export default function KnowledgeResourcesView() {
   const [bases, setBases] = useState<KnowledgeBase[]>([]);
   const [selectedBaseId, setSelectedBaseId] = useState<string | null>(null);
   const [documents, setDocuments] = useState<KnowledgeDocument[]>([]);
+  const [websites, setWebsites] = useState<KnowledgeWebsite[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [newBaseName, setNewBaseName] = useState('');
@@ -91,6 +104,10 @@ export default function KnowledgeResourcesView() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const [websiteUrl, setWebsiteUrl] = useState('');
+  const [addingWebsite, setAddingWebsite] = useState(false);
+  const [websiteError, setWebsiteError] = useState<string | null>(null);
 
   const fetchBases = async () => {
     setLoading(true);
@@ -117,9 +134,19 @@ export default function KnowledgeResourcesView() {
     }
   };
 
+  const fetchWebsites = async (kbId: string) => {
+    try {
+      const data = await apiFetch(`/knowledge-bases/${kbId}/websites`);
+      setWebsites(data.websites || []);
+    } catch (err: any) {
+      console.error('Failed to fetch websites:', err.message);
+    }
+  };
+
   const handleBaseSelect = (id: string) => {
     setSelectedBaseId(id);
     fetchDocuments(id);
+    fetchWebsites(id);
   };
 
   const handleCreateBase = async () => {
@@ -205,6 +232,74 @@ export default function KnowledgeResourcesView() {
     }
   };
 
+  const handleAddWebsite = async () => {
+    if (!selectedBaseId) return;
+    if (!websiteUrl.trim()) {
+      setWebsiteError('Enter a valid URL');
+      return;
+    }
+
+    // Basic URL validation
+    try {
+      new URL(websiteUrl);
+    } catch {
+      setWebsiteError('Invalid URL format');
+      return;
+    }
+
+    setAddingWebsite(true);
+    setWebsiteError(null);
+    try {
+      const res = await fetch(`${API_BASE}/knowledge-bases/${selectedBaseId}/websites`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+        },
+        body: JSON.stringify({ url: websiteUrl })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setWebsiteError(data.error || 'Failed to add website. Please try again.');
+        return;
+      }
+
+      setWebsiteUrl('');
+      setWebsiteError(null);
+      fetchWebsites(selectedBaseId);
+    } catch (err: any) {
+      setWebsiteError(err.message || 'Network error');
+    } finally {
+      setAddingWebsite(false);
+    }
+  };
+
+  const handleDeleteWebsite = async (websiteId: string) => {
+    if (!selectedBaseId) return;
+    if (!confirm('Delete this website resource?')) return;
+
+    try {
+      const res = await fetch(`${API_BASE}/knowledge-bases/${selectedBaseId}/websites/${websiteId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token') || ''}`
+        }
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.error || 'Failed to delete website');
+        return;
+      }
+
+      fetchWebsites(selectedBaseId);
+    } catch (err: any) {
+      alert('Error deleting website: ' + (err.message || 'Network error'));
+    }
+  };
+
 
 
 
@@ -215,22 +310,25 @@ export default function KnowledgeResourcesView() {
   useEffect(() => {
     if (selectedBaseId) {
       fetchDocuments(selectedBaseId);
+      fetchWebsites(selectedBaseId);
     }
   }, [selectedBaseId]);
 
-  // Poll for document status updates while any document is processing
+  // Poll for document and website status updates while any are processing
   useEffect(() => {
     if (!selectedBaseId) return;
     
     const hasProcessingDocs = documents.some(doc => doc.status === 'processing');
-    if (!hasProcessingDocs) return;
+    const hasProcessingWebsites = websites.some(ws => ws.status === 'processing');
+    if (!hasProcessingDocs && !hasProcessingWebsites) return;
 
     const interval = setInterval(() => {
       fetchDocuments(selectedBaseId);
+      fetchWebsites(selectedBaseId);
     }, 2000); // Poll every 2 seconds
 
     return () => clearInterval(interval);
-  }, [selectedBaseId, documents]);
+  }, [selectedBaseId, documents, websites]);
 
   return (
     <div className="flex min-h-screen bg-white dark:bg-gray-800 dark:text-gray-100 -m-8">
@@ -356,6 +454,65 @@ export default function KnowledgeResourcesView() {
                       </span>
                       <button
                         onClick={() => handleDeleteDocument(doc.id)}
+                        className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="border-t pt-6">
+              <h4 className="font-semibold mb-4">Website Resources</h4>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    type="url"
+                    placeholder="https://example.com"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') handleAddWebsite();
+                    }}
+                    disabled={addingWebsite}
+                  />
+                  <Button onClick={handleAddWebsite} disabled={addingWebsite || !websiteUrl.trim()}>
+                    {addingWebsite ? 'Adding...' : 'Add Website'}
+                  </Button>
+                </div>
+                {websiteError && <p className="text-red-600 text-xs">{websiteError}</p>}
+              </div>
+
+              {websites.length === 0 && (
+                <div className="text-gray-600 text-sm mt-4">No websites added yet.</div>
+              )}
+              <ul className="space-y-2 mt-4">
+                {websites.map(ws => (
+                  <li key={ws.id} className={`flex justify-between items-center p-3 border rounded ${
+                    ws.status === 'failed' ? 'border-red-300 bg-red-50 dark:bg-red-900/20' : 'border-gray-400 shadow-md'
+                  }`}>
+                    <div className="flex-1 min-w-0">
+                      <span className="truncate block text-sm font-medium">{ws.title || ws.url}</span>
+                      <span className="truncate block text-xs text-gray-500 dark:text-gray-400">{ws.url}</span>
+                      {ws.status === 'failed' && (
+                        <span className="text-xs text-red-600 dark:text-red-400 mt-1 block">Scraping failed</span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 ml-2">
+                      <span className={`text-xs flex flex-row gap-2 whitespace-nowrap ${
+                        ws.status === 'failed' ? 'text-red-600' : 'text-gray-500'
+                      }`}>
+                        {ws.status === 'processing' && (
+                          <div className='h-4 w-4 rounded-full border border-t-[2px] border-blue-500 animate-spin'></div>
+                        )}
+                        {ws.status === 'failed' && <AlertTriangle className="w-4 h-4 text-red-600" />}
+                        {ws.status === 'completed' && <Info className="w-4 h-4 text-green-600 dark:text-green-400" />}
+                        {ws.status}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteWebsite(ws.id)}
                         className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded text-red-600 hover:text-red-700"
                       >
                         <Trash2 className="w-4 h-4" />

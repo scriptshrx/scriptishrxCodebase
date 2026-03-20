@@ -524,6 +524,7 @@ model KnowledgeBase {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   documents   KnowledgeDocuments[]
+  websites    KnowledgeWebsites[]
 
   @@index([tenantId])
   @@map("knowledge_base")
@@ -571,4 +572,25 @@ model KnowledgeChunks {
   @@index([tenantId])
   @@index([documentId])
   @@map("knowledge_chunks")
+}
+
+model KnowledgeWebsites {
+  id              String   @id @default(uuid()) @map("id")
+  tenantId        String   @map("tenant_id")
+  knowledgeBaseId String   @map("knowledge_base_id")
+  url             String   @map("url")
+  title           String?  @map("title")
+  status          String   @default("processing") @map("status")
+  scrapedContent  String?  @map("scraped_content")
+  chunkCount      Int      @default(0) @map("chunk_count")
+  metadataJson    Json?    @map("metadata_json")
+  errorMessage    String?  @map("error_message")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  knowledgeBase   KnowledgeBase @relation(fields: [knowledgeBaseId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([knowledgeBaseId])
+  @@map("knowledge_websites")
 }

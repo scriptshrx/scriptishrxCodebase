@@ -19,4 +19,13 @@ router.post('/:knowledgeBaseId/documents', auth, upload.single('file'), controll
 // DELETE /api/knowledge-bases/:knowledgeBaseId/documents/:documentId
 router.delete('/:knowledgeBaseId/documents/:documentId', auth, controller.deleteDocument);
 
+// list websites for a specific KB
+router.get('/:knowledgeBaseId/websites', auth, controller.listWebsites);
+
+// POST /api/knowledge-bases/:knowledgeBaseId/websites
+router.post('/:knowledgeBaseId/websites', auth, controller.addWebsite);
+
+// DELETE /api/knowledge-bases/:knowledgeBaseId/websites/:websiteId
+router.delete('/:knowledgeBaseId/websites/:websiteId', auth, controller.deleteWebsite);
+
 module.exports = router;

@@ -313,22 +313,126 @@ Your goal is to assist users with services, booking, location, directions, and g
  * Get context for voice agent (returns structured data)
  */
 async function getContextForVoice(query, tenantId) {
-  const { results, businessName } = await semanticSearch(query, tenantId, 2);
+  try {
+    // First try semantic search on FAQs and knowledge chunks
+    const { results, businessName } = await semanticSearch(query, tenantId, 2);
 
-  if (results.length > 0) {
+    if (results.length > 0) {
+      return {
+        found: true,
+        answer: results[0].faq.answer,
+        confidence: results[0].score,
+        source: 'knowledge_base'
+      };
+    }
+
+    // If no FAQ results, try searching knowledge chunks
+    const chunks = await searchKnowledgeChunks(query, tenantId, 2);
+    if (chunks.length > 0) {
+      return {
+        found: true,
+        answer: chunks[0].content,
+        confidence: 0.7,
+        source: 'knowledge_chunks'
+      };
+    }
+
+    // If still no results, try searching website content
+    const websiteContext = await searchWebsiteContent(query, tenantId, 2);
+    if (websiteContext.found) {
+      return websiteContext;
+    }
+
     return {
-      found: true,
-      answer: results[0].faq.answer,
-      confidence: results[0].score,
-      source: 'knowledge_base'
+      found: false,
+      message: 'No specific information found',
+      source: 'none'
+    };
+  } catch (err) {
+    console.error('[RAG] getContextForVoice error:', err.message);
+    return {
+      found: false,
+      message: 'Error retrieving context',
+      source: 'none'
     };
   }
+}
 
-  return {
-    found: false,
-    message: 'No specific information found',
-    source: 'none'
-  };
+/**
+ * Search website content for relevant information
+ */
+async function searchWebsiteContent(query, tenantId, topK = 2) {
+  try {
+    // Get all websites for the tenant with completed scraping
+    const websites = await prisma.knowledgeWebsites.findMany({
+      where: {
+        tenantId,
+        status: 'completed',
+        scrapedContent: { not: null }
+      }
+    });
+
+    if (websites.length === 0) {
+      return { found: false };
+    }
+
+    // Simple content search - look for keyword matches in scraped content
+    const queryLower = query.toLowerCase();
+    const queryTerms = queryLower.split(/\s+/).filter(term => term.length > 2);
+
+    let bestMatch = null;
+    let bestScore = 0;
+
+    for (const website of websites) {
+      const contentLower = (website.scrapedContent || '').toLowerCase();
+      
+      // Score based on how many query terms appear in content
+      let score = 0;
+      let contextMatch = '';
+
+      for (const term of queryTerms) {
+        const matches = contentLower.split(term).length - 1;
+        score += matches;
+      }
+
+      // If we found matches, extract relevant context
+      if (score > 0) {
+        // Find a sentence or paragraph that contains at least one query term
+        const sentences = (website.scrapedContent || '').split(/[.!?]\s+/);
+        for (const sentence of sentences) {
+          if (queryTerms.some(term => sentence.toLowerCase().includes(term))) {
+            contextMatch = sentence.trim();
+            break;
+          }
+        }
+
+        if (score > bestScore) {
+          bestScore = score;
+          bestMatch = {
+            content: contextMatch || website.scrapedContent.substring(0, 500),
+            url: website.url,
+            title: website.title
+          };
+        }
+      }
+    }
+
+    if (bestMatch && bestScore > 0) {
+      return {
+        found: true,
+        answer: bestMatch.content,
+        url: bestMatch.url,
+        title: bestMatch.title,
+        confidence: Math.min(bestScore / queryTerms.length, 1),
+        source: 'website'
+      };
+    }
+
+    return { found: false };
+  } catch (err) {
+    console.error('[RAG] searchWebsiteContent error:', err.message);
+    return { found: false };
+  }
 }
 
 /**
@@ -348,6 +452,7 @@ module.exports = {
   keywordSearch,
   searchKnowledgeChunks,
   getContextForVoice,
+  searchWebsiteContent,
   generateEmbedding,
   clearCache,
   getTenantFaqs
