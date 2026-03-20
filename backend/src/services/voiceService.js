@@ -13,6 +13,7 @@ const WebSocket = require('ws');
 const prismaDefault = require('../lib/prisma');
 // Use the concurrent client to avoid prepared statement conflicts
 const prisma = prismaDefault.concurrent || prismaDefault;
+const ragService = require('./ragService');
 const socketService = require('./socketService');
 
 // Phone number helpers
@@ -37,29 +38,24 @@ class VoiceService {
 
     async getGreeting(tenantId, timezone = 'UTC', agent = null) {
         try {
+            // Use greeting from agent config
             if (agent && agent.agentConfig?.prompt?.welcome_message) {
                 return agent.agentConfig.prompt.welcome_message;
             }
-            // Fallback to tenant's custom welcome message
-            const tenant = await prisma.tenant.findUnique({
-                where: { id: tenantId },
-                select: { aiWelcomeMessage: true }
-            });
 
-             const hour = parseInt(new Intl.DateTimeFormat('en-US', {
-            hour: 'numeric',
-            hour12: false,
-            timeZone: timezone || 'UTC'
-        }).format(new Date()));
+            // Fallback to time-based greeting if no agent config
+            const hour = parseInt(new Intl.DateTimeFormat('en-US', {
+                hour: 'numeric',
+                hour12: false,
+                timeZone: timezone || 'UTC'
+            }).format(new Date()));
 
-        let greeting = 'Hello';
-        if (hour < 12) greeting = 'Good morning';
-        else if (hour < 18) greeting = 'Good afternoon';
-        else greeting = 'Good evening';
-            // Use custom welcome message if set, otherwise fall back to generic greeting
-            if (tenant?.aiWelcomeMessage) {
-                return `${greeting}, ${tenant.aiWelcomeMessage}`;
-            }
+            let greeting = 'Hello';
+            if (hour < 12) greeting = 'Good morning';
+            else if (hour < 18) greeting = 'Good afternoon';
+            else greeting = 'Good evening';
+
+            return `${greeting}, thank you for calling. How can I assist you today?`;
         } catch (error) {
             console.error('[VoiceService] Error fetching custom greeting:', error.message);
         }
@@ -106,11 +102,9 @@ class VoiceService {
                 let t = null;
 
                 // Helper: Check if tenant has the AI configured
+                // Agent config is required for voice service (system prompt and welcome message from agent)
                 const isAiConfigured = (tenant) => {
-                    return tenant && 
-                        tenant.aiName && 
-                        tenant.aiWelcomeMessage && 
-                        tenant.customSystemPrompt;
+                    return tenant && tenant.aiName;
                 };
 
                 // Normalize digits for fuzzy matching
@@ -285,29 +279,15 @@ class VoiceService {
                         id: true,
                         name: true,
                         aiName: true,
-                        aiWelcomeMessage: true,
-                        customSystemPrompt: true,
-                        //aiConfig: true,
                         timezone: true
                     }
                 });
-                if (found) {
-                    // Validate that tenant has complete AI configuration
-                    const hasCompleteAiConfig = found.aiName && 
-                                               found.aiWelcomeMessage && 
-                                               found.customSystemPrompt
-                                               //&&found.aiConfig;
-                    
-                    if (hasCompleteAiConfig) {
-                        currentTenant = found;
-                        console.log(`[VoiceService] Tenant refined via params: ${currentTenant.name}`);
-                    } else {
-                        console.warn(`[VoiceService] ⚠️ Tenant "${found.name}" from params has incomplete AI configuration. Using original tenant.`);
-                        console.warn(`  - aiName: ${found.aiName ? '✓' : '✗'}`);
-                        console.warn(`  - aiWelcomeMessage: ${found.aiWelcomeMessage ? '✓' : '✗'}`);
-                        console.warn(`  - customSystemPrompt: ${found.customSystemPrompt ? '✓' : '✗'}`);
-                        console.warn(`  - aiConfig: ${found.aiConfig ? '✓' : '✗'}`);
-                    }
+                if (found && found.aiName) {
+                    currentTenant = found;
+                    console.log(`[VoiceService] Tenant refined via params: ${currentTenant.name}`);
+                } else if (found) {
+                    console.warn(`[VoiceService] ⚠️ Tenant "${found.name}" from params has incomplete AI configuration. Using original tenant.`);
+                    console.warn(`  - aiName: ${found.aiName ? '✓' : '✗'}`);
                 }
             }
 
@@ -425,44 +405,22 @@ class VoiceService {
             return;
         }
 
-        // 1. FORCE FRESH FETCH: Always reload tenant data from database for LATEST customSystemPrompt
-        // This ensures any recent database updates are picked up immediately
+        // 1. Ensure we have latest tenant info
         let tenant = session.tenant;
         if (tenant && tenant.id !== 'fallback') {
             try {
-                console.log(`[VoiceService] 🔄 FORCE FRESH FETCH: Reloading tenant "${tenant.name}" (ID: ${tenant.id}) from database...`);
+                console.log(`[VoiceService] 🔄 Reloading tenant "${tenant.name}" (ID: ${tenant.id}) from database...`);
                 const freshTenant = await prisma.tenant.findUnique({
                     where: { id: tenant.id },
                     select: {
                         id: true,
                         name: true,
-                        aiName: true,
-                        aiWelcomeMessage: true,
-                        customSystemPrompt: true,
-                        aiConfig: true,
                         timezone: true
                     }
                 });
                 if (freshTenant) {
-                    console.log('[VoiceService] Fresh tenant fetched from DB:', JSON.stringify(freshTenant, null, 2));
-                    console.log(`[VoiceService] ✓ Updated customSystemPrompt (length: ${freshTenant.customSystemPrompt?.length || 0} chars)`);
-                    
-                    // Validate that tenant has required AI configuration for voice service
-                    // Note: aiConfig is NOT required - only aiName, aiWelcomeMessage, and customSystemPrompt
-                    const hasCompleteAiConfig = freshTenant.aiName && 
-                                               freshTenant.aiWelcomeMessage && 
-                                               freshTenant.customSystemPrompt;
-                    
-                    if (!hasCompleteAiConfig) {
-                        console.warn(`[VoiceService] ⚠️ Tenant "${freshTenant.name}" has incomplete AI configuration. Skipping.`);
-                        console.warn(`  - aiName: ${freshTenant.aiName ? '✓' : '✗'}`);
-                        console.warn(`  - aiWelcomeMessage: ${freshTenant.aiWelcomeMessage ? '✓' : '✗'}`);
-                        console.warn(`  - customSystemPrompt: ${freshTenant.customSystemPrompt ? '✓' : '✗'}`);
-                        tenant = null;
-                    } else {
-                        tenant = freshTenant;
-                        console.log('[VoiceService] ✓✓ Tenant data REFRESHED successfully from database');
-                    }
+                    console.log('[VoiceService] ✓ Tenant data refreshed from DB');
+                    tenant = freshTenant;
                 } else {
                     console.warn(`[VoiceService] ⚠️ Fresh tenant fetch returned null`);
                 }
@@ -472,9 +430,14 @@ class VoiceService {
             }
         }
 
-        // 2. Get the dynamic company name from the session tenant
-        const aiName = tenant?.aiName || tenant?.name || 'our office';
-        const companyName = tenant?.name || 'our office';
+        // 2. Get the dynamic company name from agent config only
+        let aiName = 'AI Assistant';
+        let companyName = 'our office';
+        
+        if (session.agent && session.agent.agentConfig?.name) {
+            aiName = session.agent.agentConfig.name;
+            companyName = session.agent.agentConfig.name;
+        }
 
         let pricing = 'Pricing is available upon request.';
         if (tenant) {
@@ -486,23 +449,21 @@ class VoiceService {
         let agentConfig = null;
         if (session.agent && session.agent.agentConfig) {
             agentConfig = session.agent.agentConfig;
-            systemPrompt = agentConfig.prompt?.system_prompt || tenant?.customSystemPrompt;
-            console.log('\n========================================');
-            console.log(`🎯 SYSTEM PROMPT SOURCE: Agent config (PRIMARY)`);
-            console.log(`📝 Prompt length: ${systemPrompt?.length || 0} characters`);
-            console.log(`✓ First 200 chars: ${systemPrompt?.slice(0, 200)}`);
-            console.log('========================================\n');
-        } else if (tenant?.customSystemPrompt && tenant.customSystemPrompt.trim()) {
-            systemPrompt = tenant.customSystemPrompt;
-            console.log('\n========================================');
-            console.log(`🎯 SYSTEM PROMPT SOURCE: Tenant customSystemPrompt (FALLBACK)`);
-            console.log(`📝 Prompt length: ${systemPrompt.length} characters`);
-            console.log(`✓ First 200 chars: ${systemPrompt.slice(0, 200)}`);
-            console.log('========================================\n');
-        } else {
+            systemPrompt = agentConfig.prompt?.system_prompt;
+            if (systemPrompt) {
+                console.log('\n========================================');
+                console.log(`🎯 SYSTEM PROMPT SOURCE: Agent config`);
+                console.log(`📝 Prompt length: ${systemPrompt.length} characters`);
+                console.log(`✓ First 200 chars: ${systemPrompt.slice(0, 200)}`);
+                console.log('========================================\n');
+            }
+        }
+
+        // Use default if no agent config prompt
+        if (!systemPrompt) {
             // Fallback to default system prompt
             console.log('\n========================================');
-            console.log(`⚠️ SYSTEM PROMPT SOURCE: DEFAULT (customSystemPrompt is null or empty)`);
+            console.log(`⚠️ SYSTEM PROMPT SOURCE: DEFAULT`);
             console.log('========================================\n');
             systemPrompt = `
     You are an AI call agent representing Scriptishrx, a software solutions company.
@@ -647,6 +608,23 @@ RESTRICTIONS
                 }
             }];
         }
+
+        // Always add RAG knowledge retrieval tool
+        tools.push({
+            type: 'function',
+            name: 'get_knowledge_context',
+            description: 'Search the knowledge base to find relevant information to answer customer questions about services, pricing, FAQs, and company information.',
+            parameters: {
+                type: 'object',
+                properties: {
+                    query: { 
+                        type: 'string', 
+                        description: 'The customer question or search query to find relevant information in the knowledge base'
+                    }
+                },
+                required: ['query']
+            }
+        });
 
         console.log('[VoiceService] Initiating OpenAI WebSocket connection');
         console.log('[VoiceService] System Prompt:', systemPrompt.slice(0, 500) + '...');
@@ -799,6 +777,8 @@ RESTRICTIONS
                         result = await this.handleCheckSchedule(args, tenantIdForTool, session.agent);
                     } else if (msg.name === 'end_call') {
                         result = await this.handleEndCall(args, ws, session);
+                    } else if (msg.name === 'get_knowledge_context') {
+                        result = await this.handleGetKnowledgeContext(args, tenantIdForTool);
                     } else {
                         result = { success: false, message: `Unknown function: ${msg.name}` };
                     }
@@ -968,6 +948,9 @@ RESTRICTIONS
     /**
      * Handle End Call Tool Call
      */
+    /**
+     * Handle End Call Tool Call
+     */
     async handleEndCall(args, ws, session) {
         console.log(`[VoiceService] End Call Request:`, args);
 
@@ -1002,6 +985,50 @@ RESTRICTIONS
             // Still try to close the session even if there was an error
             this.closeSession(ws);
             return { success: false, message: "Error ending call, but session was closed." };
+        }
+    }
+
+    /**
+     * Handle Get Knowledge Context Tool Call (RAG Service)
+     */
+    async handleGetKnowledgeContext(args, tenantId) {
+        console.log(`[VoiceService] Knowledge Context Request for Tenant ${tenantId}:`, args);
+
+        try {
+            const { query } = args;
+
+            if (!query) {
+                return { success: false, message: "Query is required." };
+            }
+
+            if (!tenantId) {
+                return { success: false, message: "Tenant ID is required." };
+            }
+
+            // Call RAG service to get knowledge context
+            const context = await ragService.getContextForVoice(query, tenantId);
+
+            if (context.found) {
+                console.log(`[VoiceService] ✓ Knowledge context found from source: ${context.source}`);
+                return {
+                    success: true,
+                    found: true,
+                    answer: context.answer,
+                    confidence: context.confidence,
+                    source: context.source
+                };
+            } else {
+                console.log(`[VoiceService] ⚠️ No knowledge context found for query: "${query}"`);
+                return {
+                    success: true,
+                    found: false,
+                    message: context.message || 'No relevant information found in the knowledge base.'
+                };
+            }
+
+        } catch (error) {
+            console.error('[VoiceService] Knowledge context error:', error);
+            return { success: false, message: "Error retrieving knowledge context." };
         }
     }
 

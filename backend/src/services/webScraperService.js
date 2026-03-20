@@ -1,5 +1,6 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const puppeteer = require('puppeteer');
 
 /**
  * Web Scraper Service - Extracts content from websites
@@ -10,8 +11,10 @@ const DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKi
 
 /**
  * Scrape website and extract main content
+ * Uses Puppeteer for JavaScript-rendered sites (Next.js, React, Vue, etc.)
  */
 async function scrapeWebsite(url) {
+    let browser = null;
     try {
         console.log(`[Web Scraper] Starting scrape of ${url}`);
 
@@ -19,23 +22,38 @@ async function scrapeWebsite(url) {
         const urlObj = new URL(url);
         const finalUrl = urlObj.toString();
 
-        // Fetch page with timeout
-        const response = await axios.get(finalUrl, {
-            headers: {
-                'User-Agent': DEFAULT_USER_AGENT,
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.5',
-            },
-            timeout: DEFAULT_TIMEOUT,
-            maxRedirects: 5,
-            validateStatus: (status) => status >= 200 && status < 500
+        // Launch headless browser to handle JavaScript-rendered content
+        console.log('[Web Scraper] Launching headless browser...');
+        browser = await puppeteer.launch({
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
-        if (response.status === 404 || response.status === 403) {
-            throw new Error(`HTTP ${response.status}: Page not accessible`);
+        const page = await browser.newPage();
+        
+        // Set timeout and user agent
+        page.setDefaultNavigationTimeout(DEFAULT_TIMEOUT);
+        page.setDefaultTimeout(DEFAULT_TIMEOUT);
+        await page.setUserAgent(DEFAULT_USER_AGENT);
+
+        // Navigate to page and wait for content to load
+        console.log(`[Web Scraper] Navigating to ${finalUrl}`);
+        const response = await page.goto(finalUrl, {
+            waitUntil: 'networkidle2',
+            timeout: DEFAULT_TIMEOUT
+        });
+
+        if (!response || response.status() === 404 || response.status() === 403) {
+            throw new Error(`HTTP ${response?.status()}: Page not accessible`);
         }
 
-        const html = response.data;
+        // Wait a bit for any async content to render
+        await page.waitForTimeout(1000);
+
+        // Get full rendered HTML
+        const html = await page.content();
+        await browser.close();
+        browser = null;
 
         // Parse HTML and extract content
         const $ = cheerio.load(html);
@@ -57,6 +75,9 @@ async function scrapeWebsite(url) {
         };
     } catch (err) {
         console.error(`[Web Scraper] Error scraping ${url}:`, err.message);
+        if (browser) {
+            await browser.close().catch(() => {});
+        }
         throw new Error(`Failed to scrape website: ${err.message}`);
     }
 }
@@ -116,14 +137,30 @@ function extractContent($) {
  * Extract links from a website
  */
 async function extractLinks(url) {
+    let browser = null;
     try {
-        const response = await axios.get(url, {
-            headers: { 'User-Agent': DEFAULT_USER_AGENT },
-            timeout: DEFAULT_TIMEOUT,
-            maxRedirects: 5
+        // Validate URL
+        const urlObj = new URL(url);
+        const finalUrl = urlObj.toString();
+
+        // Launch headless browser for consistent handling
+        browser = await puppeteer.launch({
+            headless: 'new',
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
 
-        const $ = cheerio.load(response.data);
+        const page = await browser.newPage();
+        page.setDefaultNavigationTimeout(DEFAULT_TIMEOUT);
+        await page.setUserAgent(DEFAULT_USER_AGENT);
+
+        await page.goto(finalUrl, { waitUntil: 'networkidle2', timeout: DEFAULT_TIMEOUT });
+        
+        // Get rendered HTML
+        const html = await page.content();
+        await browser.close();
+        browser = null;
+
+        const $ = cheerio.load(html);
         const baseUrl = new URL(url);
         const links = [];
 
@@ -145,6 +182,9 @@ async function extractLinks(url) {
         return [...new Set(links)]; // Remove duplicates
     } catch (err) {
         console.error(`[Web Scraper] Error extracting links from ${url}:`, err.message);
+        if (browser) {
+            await browser.close().catch(() => {});
+        }
         return [];
     }
 }

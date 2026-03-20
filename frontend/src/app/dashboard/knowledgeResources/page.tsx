@@ -361,6 +361,7 @@ export default function KnowledgeResourcesView() {
         )}
         {selectedBaseId && (
           <div className="space-y-6">
+            <div className='flex flex-col gap-4 md:flex-row'>
             <div className="space-y-2">
               <label className="text-sm font-semibold mb-4">Upload Document</label>
               <input 
@@ -426,6 +427,32 @@ export default function KnowledgeResourcesView() {
               </Button>
             </div>
 
+            {/**The website part */}
+
+             <div className="border-t pt-6">
+              <h4 className="font-semibold mb-4">Upload Websites</h4>
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    type="url"
+                    placeholder="https://example.com"
+                    value={websiteUrl}
+                    onChange={(e) => setWebsiteUrl(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') handleAddWebsite();
+                    }}
+                    disabled={addingWebsite}
+                  />
+                  <Button onClick={handleAddWebsite} disabled={addingWebsite || !websiteUrl.trim()}>
+                    {addingWebsite ? 'Adding...' : 'Add Website'}
+                  </Button>
+                </div>
+                {websiteError && <p className="text-red-600 text-xs">{websiteError}</p>}
+              </div>
+
+
+            </div>
+
             <div>
               <h4 className="font-semibold mb-2">Documents</h4>
               {documents.length === 0 && (
@@ -464,27 +491,7 @@ export default function KnowledgeResourcesView() {
               </ul>
             </div>
 
-            <div className="border-t pt-6">
-              <h4 className="font-semibold mb-4">Website Resources</h4>
-              <div className="space-y-3">
-                <div className="flex gap-2">
-                  <Input
-                    type="url"
-                    placeholder="https://example.com"
-                    value={websiteUrl}
-                    onChange={(e) => setWebsiteUrl(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === 'Enter') handleAddWebsite();
-                    }}
-                    disabled={addingWebsite}
-                  />
-                  <Button onClick={handleAddWebsite} disabled={addingWebsite || !websiteUrl.trim()}>
-                    {addingWebsite ? 'Adding...' : 'Add Website'}
-                  </Button>
-                </div>
-                {websiteError && <p className="text-red-600 text-xs">{websiteError}</p>}
-              </div>
-
+           
               {websites.length === 0 && (
                 <div className="text-gray-600 text-sm mt-4">No websites added yet.</div>
               )}

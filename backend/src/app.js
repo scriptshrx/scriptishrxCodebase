@@ -119,8 +119,22 @@ const limiter = rateLimit({
     }
 });
 
+// More lenient limiter for DELETE operations
+const deleteLimiter = rateLimit({
+    windowMs: parseInt(process.env.DELETE_RATE_LIMIT_WINDOW_MS) || 1 * 60 * 1000, // 1 minute
+    max: parseInt(process.env.DELETE_RATE_LIMIT_MAX_REQUESTS) || 50, // 50 deletes per minute
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => req.method !== 'DELETE', // Only apply to DELETE
+    message: {
+        success: false,
+        error: 'Too many delete requests, please try again later.'
+    }
+});
+
 // Apply rate limiting ONLY to API routes, not static files
 app.use('/api', limiter);
+app.use('/api', deleteLimiter);
 
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
