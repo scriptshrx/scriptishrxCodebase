@@ -166,7 +166,9 @@ export default function KnowledgeResourcesView() {
     } catch (err: any) {
       alert('Error deleting document: ' + (err.message || 'Network error'));
     }
-  ;
+  };
+
+  const handleUpload = async () => {
     if (!selectedBaseId) return;
     if (!file) {
       setUploadError('Select a file');
