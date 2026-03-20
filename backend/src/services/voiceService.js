@@ -1319,7 +1319,7 @@ RESTRICTIONS
             availableSlots: finalSlots,
             message: `Found ${finalSlots.length} available slots (mock data).`
         };
-    }
+    
         console.log(`[VoiceService] Sending Booking Reminder for Tenant ${tenantId}:`, args);
 
         const { customerEmail, customerPhone, customerName, bookingDate, product, bookingId } = args;
