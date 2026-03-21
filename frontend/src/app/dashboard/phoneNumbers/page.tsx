@@ -551,7 +551,7 @@ export default function PhoneNumbersView() {
   };
 
   return (
-    <main className=" flex min-h-full bg-gray-50 dark:bg-gray-800 dark:text-gray-100 -m-8 bottom-0 inset-0">
+    <main className=" flex min-h-full bg-gray-50 dark:bg-gray-800 dark:text-gray-100 -m-8 inset-0">
 
       {/* Edit/AssignPhone Modal */}
             {modalOpen && (
@@ -658,7 +658,7 @@ export default function PhoneNumbersView() {
               </div>
             )}
       {/* Left Column */}
-      <div className="w-80 bg-white h-full border-r border-gray-200 flex flex-col dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-80 bg-white h-full border-r border-gray-200 flex flex-col  dark:border-gray-700">
         <div>
         <div className="p-4 mb-2 border-b justify-between gap-2 items-center flex border-gray-200 dark:border-gray-700">
 
