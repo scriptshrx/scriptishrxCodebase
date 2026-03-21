@@ -222,7 +222,7 @@ useEffect(()=>{
               {filteredAgents().length>0&&filteredAgents().map(agent => (
                 <tr
                   key={agent.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer relative"
+                  className="hover:bg-gray-50 dark:hover:bg-gray-700/80 cursor-pointer border-b border-gray-200 dark:border-gray-700 relative"
                 >
                   <td className="px-6 py-4 text-blue-900 dark:text-blue-500 font-bold flex items-center gap-2">
                     <Bot className="text-blue-700 w-4 h-4" />

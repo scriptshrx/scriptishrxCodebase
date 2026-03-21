@@ -551,7 +551,7 @@ export default function PhoneNumbersView() {
   };
 
   return (
-    <main className=" flex min-h-full bg-gray-50 dark:bg-gray-900 dark:text-gray-100 -m-8 bottom-0 inset-0">
+    <main className=" flex min-h-full bg-gray-50 dark:bg-gray-800 dark:text-gray-100 -m-8 bottom-0 inset-0">
 
       {/* Edit/AssignPhone Modal */}
             {modalOpen && (
@@ -706,7 +706,7 @@ export default function PhoneNumbersView() {
       </div>
 
       {/* Right Column */}
-      <div className="flex-1 overflow-y-auto p-8">
+      <div className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-y-auto p-8">
         {!selectedNumber ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center text-gray-500">
