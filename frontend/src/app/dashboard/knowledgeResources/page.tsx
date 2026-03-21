@@ -487,10 +487,10 @@ export default function KnowledgeResourcesView() {
 
               {/**The website part */}
 
-              <div className=" md:border-l border-gray-200 dark:border-gray-700">
-                <h4 className="font-semibold mb-4">Upload Websites</h4>
+              <div className=" space-y-2 border-gray-200 dark:border-gray-700">
+                <h4 className="font-semibold text-sm mb-4">Upload Websites</h4>
                 <div className="space-y-3">
-                  <div className="flex gap-2">
+                  <div className="flex flex-col gap-2">
                     <Input
                       type="url"
                       placeholder="https://example.com"
