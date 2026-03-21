@@ -487,7 +487,7 @@ export default function KnowledgeResourcesView() {
 
               {/**The website part */}
 
-              <div className="border-t md:border-l border-gray-200 dark:border-gray-700 pt-6">
+              <div className=" md:border-l border-gray-200 dark:border-gray-700 pt-6">
                 <h4 className="font-semibold mb-4">Upload Websites</h4>
                 <div className="space-y-3">
                   <div className="flex gap-2">
@@ -503,6 +503,7 @@ export default function KnowledgeResourcesView() {
                     />
                     <Button
                       onClick={handleAddWebsite}
+                      size="default"
                       disabled={addingWebsite || !websiteUrl.trim()}
                     >
                       {addingWebsite ? "Adding..." : "Add URL"}
