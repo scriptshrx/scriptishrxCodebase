@@ -28,7 +28,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
 import { CustomSelect } from "@/components/ui/CustomSelect";
 
 // Force dynamic rendering to prevent prerender errors with client-only hooks

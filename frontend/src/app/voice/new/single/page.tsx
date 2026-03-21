@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/Select";
+import { CustomSelect } from "@/components/ui/CustomSelect";
 
 // Force dynamic rendering to prevent prerender errors with client-only hooks
 export const dynamic = "force-dynamic";
@@ -894,9 +894,9 @@ function SinglePromptAgentContent() {
           </div>
         </div>
         <div className="flex-col flex md:flex-row items-center gap-2">
-          <Select
+          <CustomSelect
             value={llmModel}
-            onChange={(e) => setLlmModel(e.target.value)}
+            onChange={setLlmModel}
             options={[
               { value: "GPT-4o", label: "GPT-4o" },
               { value: "GPT-4o-mini", label: "GPT-4o-mini" },
@@ -904,9 +904,9 @@ function SinglePromptAgentContent() {
             ]}
             className="h-8"
           />
-          <Select
+          <CustomSelect
             value={voiceId}
-            onChange={(e) => setVoiceId(e.target.value)}
+            onChange={setVoiceId}
             options={[
               { value: "Markkio", label: "Markkio" },
               { value: "Jenny", label: "Jenny" },
@@ -915,9 +915,9 @@ function SinglePromptAgentContent() {
             ]}
             className="h-8"
           />
-          <Select
+          <CustomSelect
             value={language}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={setLanguage}
             options={[
               { value: "English", label: "English" },
               { value: "Spanish", label: "Spanish" },
@@ -966,9 +966,9 @@ function SinglePromptAgentContent() {
               <label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                 Welcome Message
               </label>
-              <Select
+              <CustomSelect
                 value={welcomeMode}
-                onChange={(e) => setWelcomeMode(e.target.value)}
+                onChange={setWelcomeMode}
                 options={[
                   {
                     value: "ai",
