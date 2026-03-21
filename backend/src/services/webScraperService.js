@@ -124,7 +124,7 @@ function extractContent($) {
     return text;
 }
 
-/**
+/*
  * Extract links from a website
  */
 async function extractLinks(url) {
