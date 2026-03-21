@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const { execSync } = require('child_process');
 
 /**
  * Web Scraper Service - Extracts content from websites
@@ -8,6 +9,50 @@ const puppeteer = require('puppeteer');
 
 const DEFAULT_TIMEOUT = 10000; // 10 seconds
 const DEFAULT_USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
+
+/**
+ * Find an installed Chromium/Chrome executable
+ */
+function findChromiumExecutable() {
+    const possiblePaths = [
+        '/usr/bin/google-chrome',
+        '/usr/bin/chromium-browser',
+        '/usr/bin/chromium',
+        '/snap/bin/chromium',
+        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        '/Applications/Chromium.app/Contents/MacOS/Chromium',
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe'
+    ];
+
+    // Try each possible path
+    for (const path of possiblePaths) {
+        try {
+            execSync(`test -x "${path}"`, { stdio: 'ignore' });
+            console.log(`[Web Scraper] Found Chrome/Chromium at: ${path}`);
+            return path;
+        } catch {
+            // Path doesn't exist or not executable
+        }
+    }
+
+    // Fallback: try using 'which' command on Unix systems
+    try {
+        const result = execSync('which google-chrome || which chromium-browser || which chromium', {
+            encoding: 'utf-8',
+            stdio: ['pipe', 'pipe', 'ignore']
+        }).trim();
+        if (result) {
+            console.log(`[Web Scraper] Found Chrome/Chromium via which: ${result}`);
+            return result;
+        }
+    } catch {
+        // which command failed
+    }
+
+    console.warn('[Web Scraper] Could not find Chrome/Chromium executable. Puppeteer will attempt default behavior.');
+    return null;
+}
 
 /**
  * Scrape website and extract main content
@@ -24,10 +69,18 @@ async function scrapeWebsite(url) {
 
         // Launch headless browser to handle JavaScript-rendered content
         console.log('[Web Scraper] Launching headless browser...');
-        browser = await puppeteer.launch({
+        const launchOptions = {
             headless: 'new',
             args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        };
+        
+        // Use system-installed Chrome/Chromium if available
+        const chromePath = findChromiumExecutable();
+        if (chromePath) {
+            launchOptions.executablePath = chromePath;
+        }
+        
+        browser = await puppeteer.launch(launchOptions);
 
         const page = await browser.newPage();
         
@@ -144,10 +197,18 @@ async function extractLinks(url) {
         const finalUrl = urlObj.toString();
 
         // Launch headless browser for consistent handling
-        browser = await puppeteer.launch({
+        const launchOptions = {
             headless: 'new',
             args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        };
+        
+        // Use system-installed Chrome/Chromium if available
+        const chromePath = findChromiumExecutable();
+        if (chromePath) {
+            launchOptions.executablePath = chromePath;
+        }
+        
+        browser = await puppeteer.launch(launchOptions);
 
         const page = await browser.newPage();
         page.setDefaultNavigationTimeout(DEFAULT_TIMEOUT);

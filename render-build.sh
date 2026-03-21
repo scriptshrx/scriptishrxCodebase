@@ -4,6 +4,9 @@ set -o errexit
 
 echo "🚀 Starting Render Build..."
 
+# Skip Puppeteer browser download during npm install (Render has system Chrome)
+export PUPPETEER_SKIP_DOWNLOAD=true
+
 # 1. Install specific root dependencies if needed (likely handled by Render's auto detect, but safe to be explicit)
 # npm install
 

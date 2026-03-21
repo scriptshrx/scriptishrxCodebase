@@ -394,7 +394,7 @@ export default function KnowledgeResourcesView() {
           ))}
         </div>
       </aside>
-      <main className="flex-1 p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+      <main className="flex flex-col p-6 overflow-y-auto bg-gray-50 dark:bg-gray-900">
         {!selectedBaseId && (
           <div className="text-gray-600">
             Select or create a knowledge base.
