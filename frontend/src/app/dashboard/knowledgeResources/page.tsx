@@ -503,7 +503,7 @@ export default function KnowledgeResourcesView() {
                     />
                     <Button
                       onClick={handleAddWebsite}
-                      size="default"
+                     
                       disabled={addingWebsite || !websiteUrl.trim()}
                     >
                       {addingWebsite ? "Adding..." : "Add URL"}
