@@ -402,7 +402,7 @@ export default function KnowledgeResourcesView() {
         )}
         {selectedBaseId && (
           <div className="space-y-6 flex flex-col">
-            <div className="flex flex-col gap-4 md:flex-row">
+            <div className="flex flex-col gap-6 md:flex-row">
               <div className="space-y-2">
                 <label className="text-sm font-semibold mb-4">
                   Upload Document
@@ -487,7 +487,7 @@ export default function KnowledgeResourcesView() {
 
               {/**The website part */}
 
-              <div className=" md:border-l border-gray-200 dark:border-gray-700 pt-6">
+              <div className=" md:border-l border-gray-200 dark:border-gray-700">
                 <h4 className="font-semibold mb-4">Upload Websites</h4>
                 <div className="space-y-3">
                   <div className="flex gap-2">
