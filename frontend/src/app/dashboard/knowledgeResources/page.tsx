@@ -401,7 +401,7 @@ export default function KnowledgeResourcesView() {
           </div>
         )}
         {selectedBaseId && (
-          <div className="space-y-6 flex space-y-4 bg-red-500 flex-col">
+          <div className="space-y-6 flex flex-col">
             <div className="flex flex-col gap-4 md:flex-row">
               <div className="space-y-2">
                 <label className="text-sm font-semibold mb-4">
@@ -512,6 +512,7 @@ export default function KnowledgeResourcesView() {
                     <p className="text-red-600 text-xs">{websiteError}</p>
                   )}
                 </div>
+              </div>
               </div>
 
               <div>
@@ -626,7 +627,7 @@ export default function KnowledgeResourcesView() {
                   </li>
                 ))}
               </ul>
-            </div>
+            
           </div>
         )}
       </main>
